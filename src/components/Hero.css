@@ -12,8 +12,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 60vw;
-  height: 60vw;
+  width: clamp(300px, 60vw, 800px);
+  height: clamp(300px, 60vw, 800px);
   background: radial-gradient(circle, var(--accent-glow) 0%, rgba(11,12,16,0) 70%);
   transform: translate(-50%, -50%);
   z-index: 0;

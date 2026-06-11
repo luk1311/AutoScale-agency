@@ -21,7 +21,9 @@ const FooterCTA = () => {
             <h3>Solicita tu Auditoría Gratuita</h3>
             <p>Analizaremos tu proceso actual y te mostraremos exactamente qué áreas puedes automatizar para aumentar ventas y reducir costos.</p>
             
-            <a href="#contacto" className="btn btn-primary btn-large cta-btn">Quiero mi Auditoría Gratuita</a>
+            <a href="https://wa.me/5211234567890?text=Hola,%20vengo%20de%20la%20página%20web%20y%20me%20gustaría%20solicitar%20mi%20auditoría%20gratuita." target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-large cta-btn">
+              Quiero mi Auditoría Gratuita
+            </a>
             <p className="cta-note">*Disponibilidad limitada para garantizar una implementación personalizada.</p>
           </div>
         </div>
