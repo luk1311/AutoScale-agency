@@ -1,0 +1,37 @@
+.footer-cta-section {
+  padding-bottom: 6rem;
+}
+
+.footer-cta-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.1);
+}
+
+.cta-intro {
+  font-size: 1.25rem;
+  color: var(--text-main);
+  margin-bottom: 2rem;
+}
+
+.cta-highlight {
+  font-size: 1.5rem;
+  color: var(--accent-tertiary);
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  background: rgba(45, 212, 191, 0.05);
+  border-radius: 12px;
+  border-left: 4px solid var(--accent-tertiary);
+}
+
+.final-action h3 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.cta-btn {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}

@@ -1,0 +1,27 @@
+.cases-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.use-case-card {
+  flex: 1 1 300px;
+  max-width: 350px;
+  text-align: center;
+  padding: 2.5rem 2rem;
+}
+
+.case-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.use-case-card h3 {
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.use-case-card p {
+  margin-bottom: 0;
+}

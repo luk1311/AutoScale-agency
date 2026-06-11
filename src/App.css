@@ -1,0 +1,4 @@
+/* App.css is mostly empty as we rely on index.css for global styles, but can hold specific layout if needed. */
+.app-container {
+  overflow-x: hidden;
+}
