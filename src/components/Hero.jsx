@@ -1,7 +1,7 @@
 import React from 'react';
 import './Hero.css';
 
-const Hero = () => {
+const Hero = ({ openModal }) => {
   return (
     <section className="section hero-section">
       <div className="hero-glow"></div>
@@ -27,9 +27,9 @@ const Hero = () => {
         </div>
 
         <div className="hero-cta delay-300">
-          <a href="https://wa.me/5211234567890?text=Hola,%20vengo%20de%20la%20página%20web%20y%20me%20gustaría%20solicitar%20mi%20auditoría%20gratuita." target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-large">
+          <button onClick={openModal} className="btn btn-primary btn-large">
             Quiero automatizar mi negocio
-          </a>
+          </button>
           <p className="cta-note">Diagnóstico inicial gratuito. Sin compromiso.</p>
         </div>
       </div>

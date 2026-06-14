@@ -1,7 +1,7 @@
 import React from 'react';
 import './Demo.css';
 
-const Demo = () => {
+const Demo = ({ openModal }) => {
   return (
     <section className="section demo-section" id="demo">
       <div className="container text-center">
@@ -12,9 +12,9 @@ const Demo = () => {
           </p>
           
           <div className="demo-actions">
-            <a href="https://wa.me/5211234567890?text=Hola,%20quiero%20probar%20la%20demostración%20interactiva." target="_blank" rel="noopener noreferrer" className="btn btn-primary">Probar demostración interactiva</a>
+            <button onClick={openModal} className="btn btn-primary">Probar demostración interactiva</button>
             <span className="demo-or">o</span>
-            <a href="https://wa.me/5211234567890?text=Hola,%20quisiera%20hablar%20con%20el%20asistente." target="_blank" rel="noopener noreferrer" className="btn btn-secondary">Hablar con el asistente por WhatsApp</a>
+            <button onClick={openModal} className="btn btn-secondary">Hablar con el asistente por WhatsApp</button>
           </div>
         </div>
       </div>
