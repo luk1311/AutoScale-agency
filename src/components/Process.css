@@ -9,12 +9,13 @@
   position: relative;
 }
 
-.process-timeline::before {
+/* Connecting lines between cards */
+.process-step:not(:last-child)::after {
   content: '';
   position: absolute;
-  top: 30px;
-  left: 50px;
-  right: 50px;
+  top: 61px; /* 32px padding + 29px to center of 60px circle */
+  right: -1.5rem;
+  width: 1.5rem;
   height: 2px;
   background: var(--glass-border);
   z-index: 0;
@@ -57,7 +58,7 @@
   .process-timeline {
     grid-template-columns: repeat(2, 1fr);
   }
-  .process-timeline::before {
+  .process-step::after {
     display: none;
   }
 }
