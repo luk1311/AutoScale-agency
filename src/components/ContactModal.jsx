@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './ContactModal.css';
 
 const ContactModal = ({ onClose }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
     whatsapp: '',
@@ -20,6 +21,7 @@ const ContactModal = ({ onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
     // Construir el mensaje de WhatsApp
     const phoneNumber = "573218641721";
@@ -37,8 +39,10 @@ ${formData.descripcion}`;
     const encodedText = encodeURIComponent(text);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedText}`;
     
-    window.open(whatsappUrl, '_blank');
-    onClose(); // Cerrar el modal después de enviar
+    setTimeout(() => {
+      window.open(whatsappUrl, '_blank');
+      onClose(); // Cerrar el modal después de enviar
+    }, 2500); // 2.5 segundos de retraso
   };
 
   // Prevenir que el clic dentro del modal lo cierre
@@ -51,10 +55,20 @@ ${formData.descripcion}`;
       <div className="modal-content glass-panel" onClick={handleModalClick}>
         <button className="modal-close" onClick={onClose}>&times;</button>
         
-        <h2>Inicia tu <span className="text-gradient">Proyecto</span></h2>
-        <p>Déjanos tus datos para entender mejor lo que necesitas antes de hablar.</p>
-        
-        <form onSubmit={handleSubmit} className="contact-form">
+        {isSubmitting ? (
+          <div className="success-message text-center animate-fade-in" style={{ padding: '3rem 1rem', textAlign: 'center' }}>
+            <h2>¡Generando tu enlace seguro!</h2>
+            <p style={{ marginBottom: '1.5rem', fontSize: '1.1rem' }}>Estamos preparando todo...</p>
+            <div className="spinner" style={{ margin: '0 auto', width: '40px', height: '40px', border: '3px solid var(--glass-border)', borderTop: '3px solid var(--accent-primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+            <p style={{ marginTop: '1.5rem', color: 'var(--accent-primary)' }}>Redirigiéndote a nuestro WhatsApp...</p>
+            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+          </div>
+        ) : (
+          <>
+            <h2>Inicia tu <span className="text-gradient">Proyecto</span></h2>
+            <p>Déjanos tus datos para entender mejor lo que necesitas antes de hablar.</p>
+            
+            <form onSubmit={handleSubmit} className="contact-form">
           <div className="form-group">
             <label htmlFor="nombre">Nombre completo *</label>
             <input type="text" id="nombre" name="nombre" required value={formData.nombre} onChange={handleChange} placeholder="Ej. Juan Pérez" />
@@ -99,6 +113,8 @@ ${formData.descripcion}`;
             Contactar por WhatsApp
           </button>
         </form>
+          </>
+        )}
       </div>
     </div>
   );
