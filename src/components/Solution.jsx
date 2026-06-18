@@ -1,4 +1,3 @@
-import React from 'react';
 import './Solution.css';
 
 const Solution = () => {

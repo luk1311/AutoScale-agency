@@ -1,4 +1,3 @@
-import React from 'react';
 import './UseCases.css';
 
 const UseCases = () => {

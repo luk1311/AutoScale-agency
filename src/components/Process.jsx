@@ -1,4 +1,3 @@
-import React from 'react';
 import './Process.css';
 
 const Process = () => {
