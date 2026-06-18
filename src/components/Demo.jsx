@@ -2,6 +2,13 @@ import React from 'react';
 import './Demo.css';
 
 const Demo = ({ openModal }) => {
+  const openChatWidget = () => {
+    const chatBtn = document.querySelector('.chat-toggle-btn');
+    if (chatBtn) {
+      chatBtn.click();
+    }
+  };
+
   return (
     <section className="section demo-section" id="demo">
       <div className="container text-center">
@@ -12,9 +19,9 @@ const Demo = ({ openModal }) => {
           </p>
           
           <div className="demo-actions">
-            <button onClick={openModal} className="btn btn-primary">Probar demostración interactiva</button>
+            <button onClick={openChatWidget} className="btn btn-primary">Probar asistente en vivo</button>
             <span className="demo-or">o</span>
-            <button onClick={openModal} className="btn btn-secondary">Hablar con el asistente por WhatsApp</button>
+            <button onClick={openModal} className="btn btn-secondary">Solicitar implementación (n8n)</button>
           </div>
         </div>
       </div>

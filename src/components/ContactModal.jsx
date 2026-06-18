@@ -19,22 +19,13 @@ const ContactModal = ({ onClose }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Construir el mensaje de WhatsApp
+    // Construir el mensaje de WhatsApp como respaldo y contacto directo
     const phoneNumber = "573218641721";
-    const text = `¡Hola! Me interesa trabajar con ustedes. Aquí están mis datos:
-
-*Nombre:* ${formData.nombre}
-*WhatsApp:* ${formData.whatsapp}
-*Correo:* ${formData.correo}
-*Empresa:* ${formData.empresa}
-*Servicio de interés:* ${formData.servicio}
-
-*Descripción del proyecto:*
-${formData.descripcion}`;
+    const text = `¡Hola! Me interesa trabajar con ustedes. Aquí están mis datos:\n\n*Nombre:* ${formData.nombre}\n*WhatsApp:* ${formData.whatsapp}\n*Correo:* ${formData.correo}\n*Empresa:* ${formData.empresa}\n*Servicio de interés:* ${formData.servicio}\n\n*Descripción del proyecto:*\n${formData.descripcion}`;
 
     const encodedText = encodeURIComponent(text);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedText}`;
@@ -42,7 +33,7 @@ ${formData.descripcion}`;
     setTimeout(() => {
       window.open(whatsappUrl, '_blank');
       onClose(); // Cerrar el modal después de enviar
-    }, 2500); // 2.5 segundos de retraso
+    }, 2000); // 2 segundos de retraso para mostrar la animación
   };
 
   // Prevenir que el clic dentro del modal lo cierre
