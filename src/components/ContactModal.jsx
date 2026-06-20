@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { supabase } from '../lib/supabase';
 import './ContactModal.css';
 
 // Número de WhatsApp usado como respaldo si el webhook no responde.
@@ -47,6 +48,36 @@ const ContactModal = ({ onClose }) => {
     };
 
     try {
+      // 1. Guardar en Supabase (si está configurado)
+      if (supabase) {
+        const { error: supabaseError } = await supabase
+          .from('leads')
+          .insert([
+            {
+              nombre: payload.nombre,
+              whatsapp: payload.whatsapp,
+              correo: payload.correo,
+              empresa: payload.empresa,
+              servicio: payload.servicio,
+              descripcion: payload.descripcion,
+              origen: payload.origen,
+              url: payload.url
+              // La fecha (created_at) suele ser automática en Supabase
+            }
+          ]);
+        
+        if (supabaseError) {
+          console.error('Error guardando en Supabase:', supabaseError);
+          // Opcionalmente lanzar error si queremos que falle todo si Supabase falla
+          // throw supabaseError;
+        } else {
+          console.log('Lead guardado exitosamente en Supabase');
+        }
+      } else {
+        console.warn('Supabase no está configurado. Saltando inserción en BD.');
+      }
+
+      // 2. Disparar el flujo de automatización (Google Sheets / Email / WhatsApp)
       if (!WEBHOOK_URL) {
         throw new Error('VITE_LEAD_WEBHOOK_URL no está configurado');
       }
@@ -61,7 +92,7 @@ const ContactModal = ({ onClose }) => {
         throw new Error(`El webhook respondió con estado ${res.status}`);
       }
 
-      // El flujo (n8n/Make/Zapier) ya guardó el lead, envió el email y disparó WhatsApp.
+      // El flujo (n8n/Make/Zapier) ya procesó el lead.
       setStatus('success');
     } catch (err) {
       // Respaldo: no perdemos el lead. Lo enviamos por WhatsApp manual.
