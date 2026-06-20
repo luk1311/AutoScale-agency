@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 import './AdminCRM.css';
 
 const AdminCRM = () => {
@@ -105,74 +107,94 @@ const AdminCRM = () => {
     });
   }, [leads, filterStatus, searchTerm]);
 
-  // Exportar a Excel con diseño (Estilo de tabla profesional)
-  const exportToExcel = () => {
+  // Exportar a Excel (Formato nativo .xlsx con diseño profesional)
+  const exportToExcel = async () => {
     if (filteredLeads.length === 0) return;
     
-    const headers = ['Fecha', 'Nombre', 'Correo', 'WhatsApp', 'Empresa', 'Servicio', 'Estado', 'Descripción'];
+    // Crear un nuevo libro de Excel y una hoja
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Leads CRM');
     
-    // Generamos un HTML que Excel interpretará perfectamente con colores y formato
-    let htmlTable = `
-    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-    <head>
-      <meta charset="utf-8" />
-      <style>
-        table { border-collapse: collapse; font-family: Arial, sans-serif; }
-        th { 
-          background-color: #2b6cb0; /* Azul profesional */
-          color: white; 
-          font-weight: bold; 
-          border: 1px solid #1a365d; 
-          padding: 10px;
-          text-align: left;
-        }
-        td { 
-          border: 1px solid #cbd5e0; 
-          padding: 8px; 
-        }
-        .row-even { background-color: #ebf8ff; }
-      </style>
-    </head>
-    <body>
-      <table>
-        <thead>
-          <tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>
-        </thead>
-        <tbody>
-    `;
+    // Configurar columnas con sus anchos
+    worksheet.columns = [
+      { header: 'Fecha', key: 'fecha', width: 20 },
+      { header: 'Nombre', key: 'nombre', width: 25 },
+      { header: 'Correo', key: 'correo', width: 35 },
+      { header: 'WhatsApp', key: 'whatsapp', width: 20 },
+      { header: 'Empresa', key: 'empresa', width: 25 },
+      { header: 'Servicio', key: 'servicio', width: 30 },
+      { header: 'Estado', key: 'estado', width: 15 },
+      { header: 'Descripción', key: 'descripcion', width: 50 },
+    ];
+    
+    // Añadir filas
+    filteredLeads.forEach(lead => {
+      worksheet.addRow({
+        fecha: formatDate(lead.created_at),
+        nombre: lead.nombre || '',
+        correo: lead.correo || '',
+        whatsapp: lead.whatsapp || '',
+        empresa: lead.empresa || '',
+        servicio: lead.servicio || '',
+        estado: lead.status || 'nuevo',
+        descripcion: (lead.descripcion || '').replace(/\n/g, ' ')
+      });
+    });
+    
+    // Dar estilo a la cabecera (Azul con texto blanco)
+    const headerRow = worksheet.getRow(1);
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FF1A73E8' } // Azul estilo Google
+      };
+      cell.font = {
+        color: { argb: 'FFFFFFFF' },
+        bold: true
+      };
+      cell.alignment = { vertical: 'middle', horizontal: 'center' };
+    });
+    headerRow.height = 25;
 
-    filteredLeads.forEach((lead, index) => {
-      const rowClass = index % 2 === 0 ? '' : 'class="row-even"';
-      htmlTable += `
-          <tr ${rowClass}>
-            <td>${formatDate(lead.created_at)}</td>
-            <td>${lead.nombre || ''}</td>
-            <td>${lead.correo || ''}</td>
-            <td>${lead.whatsapp || ''}</td>
-            <td>${lead.empresa || ''}</td>
-            <td>${lead.servicio || ''}</td>
-            <td>${lead.status || 'nuevo'}</td>
-            <td>${(lead.descripcion || '').replace(/\n/g, ' ')}</td>
-          </tr>
-      `;
+    // Añadir Filtros Automáticos
+    worksheet.autoFilter = 'A1:H1';
+    
+    // Inmovilizar la primera fila para que al hacer scroll siempre se vea el encabezado
+    worksheet.views = [
+      { state: 'frozen', ySplit: 1 }
+    ];
+    
+    // Dar estilo a las filas (Bordes y filas intercaladas)
+    worksheet.eachRow((row, rowNumber) => {
+      if (rowNumber > 1) { // Ignorar cabecera
+        if (rowNumber % 2 === 0) {
+          row.eachCell((cell) => {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FFF3F6FC' } // Azul super claro
+            };
+          });
+        }
+        row.alignment = { vertical: 'middle', wrapText: true };
+      }
+      
+      // Bordes para todas las celdas
+      row.eachCell((cell) => {
+        cell.border = {
+          top: { style: 'thin', color: { argb: 'FFD9D9D9' } },
+          left: { style: 'thin', color: { argb: 'FFD9D9D9' } },
+          bottom: { style: 'thin', color: { argb: 'FFD9D9D9' } },
+          right: { style: 'thin', color: { argb: 'FFD9D9D9' } }
+        };
+      });
     });
 
-    htmlTable += `
-        </tbody>
-      </table>
-    </body>
-    </html>
-    `;
-
-    // Tipo de archivo para Excel antiguo (abre HTML sin problema)
-    const blob = new Blob(['\uFEFF' + htmlTable], { type: 'application/vnd.ms-excel;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `Leads_AutoScale_${new Date().toISOString().split('T')[0]}.xls`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Generar archivo real
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, `Leads_AutoScale_${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
   if (!isAuthenticated) {
