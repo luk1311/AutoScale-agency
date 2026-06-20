@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import './AdminCRM.css';
 
@@ -9,6 +9,10 @@ const AdminCRM = () => {
   
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Estados para búsqueda y filtrado
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('todos');
 
   // Autenticación simple
   const handleLogin = (e) => {
@@ -84,6 +88,55 @@ const AdminCRM = () => {
     return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
   };
 
+  // Filtrar los leads usando useMemo para mejor rendimiento
+  const filteredLeads = useMemo(() => {
+    return leads.filter(lead => {
+      // Filtrar por estado
+      const matchStatus = filterStatus === 'todos' || (lead.status || 'nuevo') === filterStatus;
+      
+      // Filtrar por texto (nombre, correo o empresa)
+      const searchLower = searchTerm.toLowerCase();
+      const matchSearch = searchTerm === '' || 
+        (lead.nombre && lead.nombre.toLowerCase().includes(searchLower)) ||
+        (lead.correo && lead.correo.toLowerCase().includes(searchLower)) ||
+        (lead.empresa && lead.empresa.toLowerCase().includes(searchLower));
+        
+      return matchStatus && matchSearch;
+    });
+  }, [leads, filterStatus, searchTerm]);
+
+  // Exportar a CSV
+  const exportToCSV = () => {
+    if (filteredLeads.length === 0) return;
+    
+    const headers = ['Fecha', 'Nombre', 'Correo', 'WhatsApp', 'Empresa', 'Servicio', 'Estado', 'Descripción'];
+    
+    const csvContent = [
+      headers.join(','),
+      ...filteredLeads.map(lead => {
+        return [
+          formatDate(lead.created_at),
+          `"${lead.nombre || ''}"`,
+          `"${lead.correo || ''}"`,
+          `"${lead.whatsapp || ''}"`,
+          `"${lead.empresa || ''}"`,
+          `"${lead.servicio || ''}"`,
+          `"${lead.status || 'nuevo'}"`,
+          `"${(lead.descripcion || '').replace(/"/g, '""').replace(/\n/g, ' ')}"`
+        ].join(',');
+      })
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `leads_autoscale_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="crm-login-container">
@@ -108,7 +161,7 @@ const AdminCRM = () => {
 
   // Cálculos para las tarjetas
   const totalLeads = leads.length;
-  const newLeads = leads.filter(l => l.status === 'nuevo').length;
+  const newLeads = leads.filter(l => (l.status || 'nuevo') === 'nuevo').length;
   const closedLeads = leads.filter(l => l.status === 'ganado').length;
 
   return (
@@ -133,16 +186,44 @@ const AdminCRM = () => {
         </div>
       </div>
 
+      <div className="crm-toolbar glass-panel">
+        <div className="crm-toolbar-search">
+          <input 
+            type="text" 
+            placeholder="🔍 Buscar por nombre, correo o empresa..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="crm-search-input"
+          />
+        </div>
+        <div className="crm-toolbar-filters">
+          <select 
+            value={filterStatus} 
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="crm-filter-select"
+          >
+            <option value="todos">Todos los estados</option>
+            <option value="nuevo">🔴 Nuevos</option>
+            <option value="contactado">🟡 Contactados</option>
+            <option value="propuesta">🔵 Propuesta Enviada</option>
+            <option value="ganado">🟢 Ganados</option>
+          </select>
+          <button className="btn btn-secondary btn-export" onClick={exportToCSV} disabled={filteredLeads.length === 0}>
+            📥 Exportar CSV
+          </button>
+        </div>
+      </div>
+
       <div className="glass-panel crm-table-container">
         <div className="crm-table-header">
-          <h2>Registro de Clientes</h2>
-          <button className="btn btn-primary btn-small" onClick={fetchLeads}>↻ Refrescar</button>
+          <h2>Registro de Clientes ({filteredLeads.length})</h2>
+          <button className="btn btn-primary" onClick={fetchLeads}>↻ Refrescar</button>
         </div>
 
         {loading ? (
-          <p className="text-center">Cargando clientes...</p>
-        ) : leads.length === 0 ? (
-          <p className="text-center">No hay clientes registrados aún.</p>
+          <p className="text-center" style={{ padding: '2rem' }}>Cargando clientes...</p>
+        ) : filteredLeads.length === 0 ? (
+          <p className="text-center" style={{ padding: '2rem' }}>No se encontraron clientes con estos filtros.</p>
         ) : (
           <div className="table-wrapper">
             <table className="crm-table">
@@ -157,7 +238,7 @@ const AdminCRM = () => {
                 </tr>
               </thead>
               <tbody>
-                {leads.map(lead => (
+                {filteredLeads.map(lead => (
                   <tr key={lead.id}>
                     <td>{formatDate(lead.created_at)}</td>
                     <td>
