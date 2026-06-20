@@ -199,3 +199,61 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
 }
+
+/* --- Responsive (Móviles y Tablets) --- */
+@media (max-width: 768px) {
+  .crm-dashboard {
+    padding: 1rem;
+  }
+
+  .crm-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .crm-metrics {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .metric-card {
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .crm-table-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .crm-table-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .crm-table th,
+  .crm-table td {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .crm-login-box {
+    padding: 1rem;
+  }
+  
+  .crm-table th,
+  .crm-table td {
+    padding: 0.8rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .btn-small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
