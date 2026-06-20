@@ -105,36 +105,71 @@ const AdminCRM = () => {
     });
   }, [leads, filterStatus, searchTerm]);
 
-  // Exportar a CSV (Formato blindado para Excel en cualquier idioma)
-  const exportToCSV = () => {
+  // Exportar a Excel con diseño (Estilo de tabla profesional)
+  const exportToExcel = () => {
     if (filteredLeads.length === 0) return;
     
     const headers = ['Fecha', 'Nombre', 'Correo', 'WhatsApp', 'Empresa', 'Servicio', 'Estado', 'Descripción'];
     
-    // Agregamos "sep=;" en la primera línea para forzar a Excel a usar el punto y coma como separador, sin importar la configuración de Windows.
-    const csvContent = "sep=;\n" + [
-      headers.join(';'),
-      ...filteredLeads.map(lead => {
-        return [
-          formatDate(lead.created_at),
-          `"${lead.nombre || ''}"`,
-          `"${lead.correo || ''}"`,
-          `"${lead.whatsapp || ''}"`,
-          `"${lead.empresa || ''}"`,
-          `"${lead.servicio || ''}"`,
-          `"${lead.status || 'nuevo'}"`,
-          `"${(lead.descripcion || '').replace(/"/g, '""').replace(/\n/g, ' ')}"`
-        ].join(';');
-      })
-    ].join('\n');
+    // Generamos un HTML que Excel interpretará perfectamente con colores y formato
+    let htmlTable = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+      <meta charset="utf-8" />
+      <style>
+        table { border-collapse: collapse; font-family: Arial, sans-serif; }
+        th { 
+          background-color: #2b6cb0; /* Azul profesional */
+          color: white; 
+          font-weight: bold; 
+          border: 1px solid #1a365d; 
+          padding: 10px;
+          text-align: left;
+        }
+        td { 
+          border: 1px solid #cbd5e0; 
+          padding: 8px; 
+        }
+        .row-even { background-color: #ebf8ff; }
+      </style>
+    </head>
+    <body>
+      <table>
+        <thead>
+          <tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>
+        </thead>
+        <tbody>
+    `;
 
-    // Usamos Uint8Array para asegurar que los bits del BOM (Byte Order Mark) se escriban exactamente en la cabecera del archivo, obligando a Excel a leer UTF-8.
-    const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
-    const blob = new Blob([bom, csvContent], { type: 'text/csv;charset=utf-8;' });
+    filteredLeads.forEach((lead, index) => {
+      const rowClass = index % 2 === 0 ? '' : 'class="row-even"';
+      htmlTable += `
+          <tr ${rowClass}>
+            <td>${formatDate(lead.created_at)}</td>
+            <td>${lead.nombre || ''}</td>
+            <td>${lead.correo || ''}</td>
+            <td>${lead.whatsapp || ''}</td>
+            <td>${lead.empresa || ''}</td>
+            <td>${lead.servicio || ''}</td>
+            <td>${lead.status || 'nuevo'}</td>
+            <td>${(lead.descripcion || '').replace(/\n/g, ' ')}</td>
+          </tr>
+      `;
+    });
+
+    htmlTable += `
+        </tbody>
+      </table>
+    </body>
+    </html>
+    `;
+
+    // Tipo de archivo para Excel antiguo (abre HTML sin problema)
+    const blob = new Blob(['\uFEFF' + htmlTable], { type: 'application/vnd.ms-excel;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `leads_autoscale_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `Leads_AutoScale_${new Date().toISOString().split('T')[0]}.xls`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -211,8 +246,8 @@ const AdminCRM = () => {
             <option value="propuesta">🔵 Propuesta Enviada</option>
             <option value="ganado">🟢 Ganados</option>
           </select>
-          <button className="btn btn-secondary btn-export" onClick={exportToCSV} disabled={filteredLeads.length === 0}>
-            📥 Exportar CSV
+          <button className="btn btn-secondary btn-export" onClick={exportToExcel} disabled={filteredLeads.length === 0}>
+            📥 Exportar Excel
           </button>
         </div>
       </div>
