@@ -105,14 +105,14 @@ const AdminCRM = () => {
     });
   }, [leads, filterStatus, searchTerm]);
 
-  // Exportar a CSV (Formato optimizado para Excel en español)
+  // Exportar a CSV (Formato blindado para Excel en cualquier idioma)
   const exportToCSV = () => {
     if (filteredLeads.length === 0) return;
     
     const headers = ['Fecha', 'Nombre', 'Correo', 'WhatsApp', 'Empresa', 'Servicio', 'Estado', 'Descripción'];
     
-    // Usamos punto y coma (;) porque Excel en español no reconoce las comas correctamente.
-    const csvContent = [
+    // Agregamos "sep=;" en la primera línea para forzar a Excel a usar el punto y coma como separador, sin importar la configuración de Windows.
+    const csvContent = "sep=;\n" + [
       headers.join(';'),
       ...filteredLeads.map(lead => {
         return [
@@ -128,8 +128,9 @@ const AdminCRM = () => {
       })
     ].join('\n');
 
-    // El prefijo \uFEFF (BOM) le dice a Excel que use la codificación UTF-8 para que las tildes y ñ se vean bien.
-    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    // Usamos Uint8Array para asegurar que los bits del BOM (Byte Order Mark) se escriban exactamente en la cabecera del archivo, obligando a Excel a leer UTF-8.
+    const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+    const blob = new Blob([bom, csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
