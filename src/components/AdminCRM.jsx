@@ -130,6 +130,15 @@ const AdminCRM = () => {
     return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
   };
 
+  // Calcular urgencia: ¿Lleva más de 24h siendo "nuevo"?
+  const checkIsUrgent = (lead) => {
+    if ((lead.status || 'nuevo') !== 'nuevo') return false;
+    const createdAt = new Date(lead.created_at);
+    const now = new Date();
+    const diffHours = (now - createdAt) / (1000 * 60 * 60);
+    return diffHours >= 24;
+  };
+
   // Filtrar los leads usando useMemo para mejor rendimiento
   const filteredLeads = useMemo(() => {
     return leads.filter(lead => {
@@ -358,8 +367,15 @@ const AdminCRM = () => {
               </thead>
               <tbody>
                 {filteredLeads.map(lead => (
-                  <tr key={lead.id}>
-                    <td>{formatDate(lead.created_at)}</td>
+                  <tr key={lead.id} style={checkIsUrgent(lead) ? { backgroundColor: 'rgba(255, 77, 77, 0.05)' } : {}}>
+                    <td>
+                      {formatDate(lead.created_at)}
+                      {checkIsUrgent(lead) && (
+                        <div style={{ color: '#ff4d4d', fontSize: '0.75rem', marginTop: '6px', fontWeight: 'bold' }}>
+                          ⚠️ +24h sin responder
+                        </div>
+                      )}
+                    </td>
                     <td>
                       <strong>{lead.nombre}</strong>
                       <br/>
