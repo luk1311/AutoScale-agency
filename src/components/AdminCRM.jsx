@@ -160,11 +160,6 @@ const AdminCRM = () => {
     // Añadir Filtros Automáticos
     worksheet.autoFilter = 'A1:H1';
     
-    // Inmovilizar la primera fila para que al hacer scroll siempre se vea el encabezado
-    worksheet.views = [
-      { state: 'frozen', ySplit: 1 }
-    ];
-    
     // Dar estilo a las filas (Bordes y filas intercaladas)
     worksheet.eachRow((row, rowNumber) => {
       if (rowNumber > 1) { // Ignorar cabecera
