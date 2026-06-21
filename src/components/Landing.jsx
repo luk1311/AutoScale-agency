@@ -5,7 +5,6 @@ import PainPoints from './PainPoints';
 import Solution from './Solution';
 import Comparison from './Comparison';
 import TechStack from './TechStack';
-import Demo from './Demo';
 import Process from './Process';
 import UseCases from './UseCases';
 import FAQ from './FAQ';
@@ -26,7 +25,6 @@ const Landing = () => {
       <Solution />
       <Comparison />
       <TechStack />
-      <Demo openModal={openModal} />
       <Process />
       <UseCases />
       <FAQ />
