@@ -5,7 +5,10 @@ import { saveAs } from 'file-saver';
 import './AdminCRM.css';
 
 const AdminCRM = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Inicializar el estado comprobando si ya hay una sesión guardada
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('autoscale_crm_auth') === 'true';
+  });
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   
@@ -23,10 +26,17 @@ const AdminCRM = () => {
     
     if (password === correctPassword) {
       setIsAuthenticated(true);
+      localStorage.setItem('autoscale_crm_auth', 'true'); // Guardar sesión
       setError('');
     } else {
       setError('Contraseña incorrecta');
     }
+  };
+
+  // Cerrar sesión
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('autoscale_crm_auth');
   };
 
   // Cargar leads desde Supabase
@@ -223,7 +233,7 @@ const AdminCRM = () => {
     <div className="crm-dashboard">
       <header className="crm-header glass-panel">
         <h1>AutoScale <span className="text-gradient">CRM</span></h1>
-        <button className="btn btn-secondary" onClick={() => setIsAuthenticated(false)}>Salir</button>
+        <button className="btn btn-secondary" onClick={handleLogout}>Salir</button>
       </header>
 
       <div className="crm-metrics">
