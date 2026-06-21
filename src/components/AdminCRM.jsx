@@ -113,6 +113,12 @@ const AdminCRM = () => {
       console.warn('Lead sin número de WhatsApp válido:', lead.id);
       return;
     }
+
+    // Automatización: Si el lead es nuevo, cambiarlo a "contactado" automáticamente
+    if (lead.status === 'nuevo' || !lead.status) {
+      updateLeadStatus(lead.id, 'contactado');
+    }
+
     const text = `¡Hola ${firstName}! Soy de AutoScale Agency. Recibimos tu solicitud sobre "${lead.servicio}". ¿Cómo estás?`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
   };
