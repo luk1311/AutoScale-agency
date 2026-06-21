@@ -1,52 +1,63 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
-import ExcelJS from 'exceljs';
-import { saveAs } from 'file-saver';
 import './AdminCRM.css';
 
+// Columnas que realmente usa el CRM (evita traer datos de más).
+const LEAD_COLUMNS = 'id, created_at, nombre, empresa, correo, whatsapp, servicio, status, descripcion';
+
 const AdminCRM = () => {
-  // Inicializar el estado comprobando si ya hay una sesión guardada
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('autoscale_crm_auth') === 'true';
-  });
+  // Sesión real gestionada por Supabase Auth (no un flag en localStorage).
+  const [session, setSession] = useState(null);
+  // Si Supabase no está configurado, no hay sesión que esperar: listo de entrada.
+  const [authReady, setAuthReady] = useState(() => !supabase);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  
+
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Estados para búsqueda y filtrado
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('todos');
 
-  // Autenticación simple
-  const handleLogin = (e) => {
+  const isAuthenticated = !!session;
+
+  // Suscribirse a la sesión de Supabase Auth
+  useEffect(() => {
+    if (!supabase) return;
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setAuthReady(true);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  // Login con credenciales reales de Supabase Auth
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const correctPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
-    
-    if (password === correctPassword) {
-      setIsAuthenticated(true);
-      localStorage.setItem('autoscale_crm_auth', 'true'); // Guardar sesión
-      setError('');
+    if (!supabase) {
+      setError('Supabase no está configurado');
+      return;
+    }
+    setError('');
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    if (authError) {
+      setError('Credenciales incorrectas');
     } else {
-      setError('Contraseña incorrecta');
+      setPassword('');
     }
   };
 
   // Cerrar sesión
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('autoscale_crm_auth');
+  const handleLogout = async () => {
+    if (supabase) await supabase.auth.signOut();
   };
 
-  // Cargar leads desde Supabase
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchLeads();
-    }
-  }, [isAuthenticated]);
-
-  const fetchLeads = async () => {
+  const fetchLeads = useCallback(async () => {
     setLoading(true);
     if (!supabase) {
       console.error('Supabase no está configurado');
@@ -56,8 +67,9 @@ const AdminCRM = () => {
 
     const { data, error } = await supabase
       .from('leads')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select(LEAD_COLUMNS)
+      .order('created_at', { ascending: false })
+      .limit(1000);
 
     if (error) {
       console.error('Error fetching leads:', error);
@@ -65,16 +77,23 @@ const AdminCRM = () => {
       setLeads(data || []);
     }
     setLoading(false);
-  };
+  }, []);
+
+  // Cargar leads cuando hay sesión activa (diferido para no hacer setState
+  // de forma síncrona dentro del efecto).
+  useEffect(() => {
+    if (isAuthenticated) {
+      queueMicrotask(fetchLeads);
+    }
+  }, [isAuthenticated, fetchLeads]);
 
   // Cambiar estado de un lead
   const updateLeadStatus = async (id, newStatus) => {
     if (!supabase) return;
 
-    // Actualizar UI localmente primero para que se sienta instantáneo
-    setLeads(leads.map(lead => lead.id === id ? { ...lead, status: newStatus } : lead));
+    // Actualización optimista (functional update, sin closure obsoleto)
+    setLeads(prev => prev.map(lead => lead.id === id ? { ...lead, status: newStatus } : lead));
 
-    // Actualizar en base de datos
     const { error } = await supabase
       .from('leads')
       .update({ status: newStatus })
@@ -82,15 +101,20 @@ const AdminCRM = () => {
 
     if (error) {
       console.error('Error updating status:', error);
-      // Revertir si hay error (opcional)
-      fetchLeads();
+      fetchLeads(); // Revertir al estado real
     }
   };
 
-  // Abrir WhatsApp
+  // Abrir WhatsApp (con guardas por si algún campo viene vacío)
   const openWhatsApp = (lead) => {
-    const text = `¡Hola ${lead.nombre.split(' ')[0]}! Soy de AutoScale Agency. Recibimos tu solicitud sobre "${lead.servicio}". ¿Cómo estás?`;
-    window.open(`https://wa.me/${lead.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`, '_blank');
+    const firstName = (lead.nombre || '').split(' ')[0] || 'allí';
+    const phone = (lead.whatsapp || '').replace(/\D/g, '');
+    if (!phone) {
+      console.warn('Lead sin número de WhatsApp válido:', lead.id);
+      return;
+    }
+    const text = `¡Hola ${firstName}! Soy de AutoScale Agency. Recibimos tu solicitud sobre "${lead.servicio}". ¿Cómo estás?`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
   };
 
   // Formatear fecha
@@ -117,10 +141,17 @@ const AdminCRM = () => {
     });
   }, [leads, filterStatus, searchTerm]);
 
-  // Exportar a Excel (Formato nativo .xlsx con diseño profesional)
+  // Exportar a Excel (Formato nativo .xlsx con diseño profesional).
+  // ExcelJS y file-saver se cargan bajo demanda (import dinámico) para no
+  // inflar el bundle inicial: solo se descargan al exportar.
   const exportToExcel = async () => {
     if (filteredLeads.length === 0) return;
-    
+
+    const [{ default: ExcelJS }, { saveAs }] = await Promise.all([
+      import('exceljs'),
+      import('file-saver')
+    ]);
+
     // Crear un nuevo libro de Excel y una hoja
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Leads CRM');
@@ -202,18 +233,35 @@ const AdminCRM = () => {
     saveAs(blob, `Leads_AutoScale_${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
+  if (!authReady) {
+    return (
+      <div className="crm-login-container">
+        <p className="text-center">Cargando…</p>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="crm-login-container">
         <div className="glass-panel crm-login-box">
           <h2>🔐 Acceso Administrativo</h2>
-          <p>Ingresa la contraseña maestra para acceder al CRM.</p>
+          <p>Ingresa tus credenciales para acceder al CRM.</p>
           <form onSubmit={handleLogin} className="crm-login-form">
-            <input 
-              type="password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              placeholder="Contraseña" 
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Correo"
+              autoComplete="username"
+              required
+            />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Contraseña"
+              autoComplete="current-password"
               required
             />
             {error && <p className="crm-error">{error}</p>}

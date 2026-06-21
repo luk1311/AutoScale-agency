@@ -1,5 +1,5 @@
 {
-  "name": "AutoScale Leads Flow",
+  "name": "AutoScale Leads Flow (disparado por Supabase Database Webhook)",
   "nodes": [
     {
       "parameters": {
@@ -9,7 +9,7 @@
         "options": {}
       },
       "id": "e7c653bc-0b2a-4f51-b8ab-f6558e0a35db",
-      "name": "Webhook",
+      "name": "Webhook (Supabase INSERT)",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [250, 300],
@@ -17,37 +17,16 @@
     },
     {
       "parameters": {
-        "operation": "append",
-        "documentId": {
-          "__rl": true,
-          "value": "",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "Sheet1",
-          "mode": "name"
-        },
-        "options": {}
-      },
-      "id": "c1f76f4e-2f17-4be7-ab8c-1e649d05e3f4",
-      "name": "Google Sheets",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4,
-      "position": [450, 300]
-    },
-    {
-      "parameters": {
-        "sendTo": "={{$json.body.correo}}",
-        "subject": "=¡Recibimos tu solicitud, {{$json.body.nombre}}!",
-        "message": "=Hola {{$json.body.nombre}},\n\nGracias por contactar a AutoScale. Hemos recibido tu solicitud sobre {{$json.body.servicio}}.\n\nEn breve nos comunicaremos contigo al WhatsApp {{$json.body.whatsapp}} para agendar el diagnóstico inicial gratuito.\n\nSaludos,\nEl equipo de AutoScale",
+        "sendTo": "={{$json.body.record.correo}}",
+        "subject": "=¡Recibimos tu solicitud, {{$json.body.record.nombre}}!",
+        "message": "=Hola {{$json.body.record.nombre}},\n\nGracias por contactar a AutoScale. Hemos recibido tu solicitud sobre {{$json.body.record.servicio}}.\n\nEn breve nos comunicaremos contigo al WhatsApp {{$json.body.record.whatsapp}} para agendar el diagnóstico inicial gratuito.\n\nSaludos,\nEl equipo de AutoScale",
         "options": {}
       },
       "id": "8b512683-1463-49dc-a2c6-3023e9a7e6b0",
       "name": "Gmail",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2,
-      "position": [650, 300]
+      "position": [500, 300]
     },
     {
       "parameters": {
@@ -55,29 +34,18 @@
         "url": "https://graph.facebook.com/v17.0/YOUR_PHONE_NUMBER_ID/messages",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{$json.body.whatsapp.replace(/[^0-9]/g, '')}}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"¡Hola {{$json.body.nombre}}! Soy el asistente de AutoScale 🤖. Hemos recibido tus datos de {{$json.body.empresa}}. ¿Te gustaría agendar tu diagnóstico gratuito ahora mismo?\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{$json.body.record.whatsapp.replace(/[^0-9]/g, '')}}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"¡Hola {{$json.body.record.nombre}}! Soy el asistente de AutoScale 🤖. Hemos recibido tus datos de {{$json.body.record.empresa}}. ¿Te gustaría agendar tu diagnóstico gratuito ahora mismo?\"\n  }\n}",
         "options": {}
       },
       "id": "2918b958-812d-4cc8-b570-5d6bc9f060d4",
       "name": "WhatsApp API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
-      "position": [850, 300]
+      "position": [750, 300]
     }
   ],
   "connections": {
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "Google Sheets",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Sheets": {
+    "Webhook (Supabase INSERT)": {
       "main": [
         [
           {

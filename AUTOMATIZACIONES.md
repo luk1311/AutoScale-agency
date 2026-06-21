@@ -1,74 +1,88 @@
 # Automatizaciones del formulario de contacto
 
-El formulario (`src/components/ContactModal.jsx`) envía cada lead a **un único
-webhook** de un orquestador sin código (n8n, Make o Zapier). Ese flujo se encarga
-de las 3 automatizaciones, sin exponer ningún token secreto en el navegador.
+**Flujo único — Supabase es la fuente de verdad.** El formulario
+(`src/components/ContactModal.jsx`) hace una sola escritura: inserta el lead en
+la tabla `leads` de Supabase. Esa inserción dispara un **Database Webhook** de
+Supabase hacia n8n, que envía el email y el WhatsApp. El CRM (`/admin`) lee y
+gestiona esos mismos leads. No hay doble escritura ni copias en Google Sheets.
 
 ```
 ContactModal (React)
-      │  POST JSON con los datos del lead
+      │  insert() en la tabla `leads`
       ▼
-  Webhook (n8n / Make / Zapier)
-      ├─► 1. Guarda el lead en Google Sheets / Airtable     (captura)
-      ├─► 2. Email automático de bienvenida al cliente        (Gmail / Resend)
-      └─► 3. Mensaje por WhatsApp Cloud API / Twilio          (WhatsApp API)
+   Supabase  ──(Database Webhook: INSERT)──►  n8n
+      ▲                                         ├─► Email de bienvenida   (Gmail / Resend)
+      │  read / update status                   └─► WhatsApp Cloud API     (Meta / Twilio)
+   CRM (/admin)
 ```
 
-> Si el webhook falla o no está configurado, el formulario abre WhatsApp (`wa.me`)
-> con los datos pre-rellenados como **respaldo**, para no perder nunca el lead.
+> Si el `insert` en Supabase falla (red caída, etc.), el formulario abre WhatsApp
+> (`wa.me`) con los datos pre-rellenados como **respaldo**. Como el lead no llegó
+> a guardarse, no se generan duplicados.
 
-## 1. Configurar la URL del webhook
+## 1. Crear la tabla, RLS y el usuario admin
+
+1. En el **Dashboard de Supabase → SQL Editor**, ejecuta `supabase/schema.sql`.
+   Eso crea la tabla `leads`, los índices, las políticas RLS (el formulario solo
+   puede *insertar*; el CRM, ya autenticado, puede *leer* y *actualizar*).
+2. En **Authentication → Users → Add user**, crea el usuario administrador del CRM
+   (correo + contraseña). Con eso entras en `/admin` vía Supabase Auth.
+
+## 2. Configurar el frontend
 
 1. Copia `.env.example` a `.env.local`.
-2. Pega la URL de tu webhook en `VITE_LEAD_WEBHOOK_URL`.
+2. Rellena `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` con los de tu proyecto.
 3. Reinicia `npm run dev` (Vite solo lee las variables al arrancar).
 
-En producción (Vercel / Netlify / etc.) define la misma variable
-`VITE_LEAD_WEBHOOK_URL` en el panel de variables de entorno del hosting.
+En producción (Vercel / Netlify) define esas mismas dos variables en el panel del
+hosting. **Ya no hay** `VITE_LEAD_WEBHOOK_URL` ni `VITE_ADMIN_PASSWORD`.
 
-## 2. Formato del payload (lo que recibe el webhook)
+## 3. Conectar Supabase con n8n (Database Webhook)
 
-`Content-Type: application/json`
+1. **Dashboard → Database → Webhooks → Create a new hook.**
+   - Tabla: `public.leads`
+   - Eventos: **Insert**
+   - Tipo: **HTTP Request**, método `POST`, URL del webhook de tu flujo n8n.
+2. Importa `n8n-template.json` en n8n y activa el flujo.
+
+Supabase envía al webhook un body con esta forma:
 
 ```json
 {
-  "nombre": "Juan Pérez",
-  "whatsapp": "+57 300 000 0000",
-  "correo": "juan@tuempresa.com",
-  "empresa": "Mi Negocio SAS",
-  "servicio": "Landing Page + IA",
-  "descripcion": "Quiero automatizar la atención por WhatsApp.",
-  "origen": "landing-autoscale",
-  "fecha": "2026-06-18T15:00:00.000Z",
-  "url": "https://tudominio.com/"
+  "type": "INSERT",
+  "table": "leads",
+  "record": {
+    "id": "uuid",
+    "nombre": "Juan Pérez",
+    "whatsapp": "+57 300 000 0000",
+    "correo": "juan@tuempresa.com",
+    "empresa": "Mi Negocio SAS",
+    "servicio": "Landing Page + IA",
+    "descripcion": "Quiero automatizar la atención por WhatsApp.",
+    "status": "nuevo",
+    "origen": "landing-autoscale",
+    "url": "https://tudominio.com/",
+    "created_at": "2026-06-18T15:00:00.000Z"
+  }
 }
 ```
 
-## 3. Armar el flujo (ejemplo con n8n)
+Por eso en n8n los campos se leen como `{{$json.body.record.nombre}}`, etc.
 
-1. **Webhook (Trigger)** — método `POST`. Copia su URL de producción a `.env.local`.
-2. **Google Sheets → Append Row** — mapea cada campo del JSON a una columna.
-   (Alternativa: Airtable → Create Record.)
-3. **Email** — nodo Gmail / SMTP / Resend:
-   - Para: `{{$json.correo}}`
-   - Asunto: `¡Recibimos tu solicitud, {{$json.nombre}}!`
-   - Cuerpo: mensaje de bienvenida + próximos pasos.
-4. **WhatsApp** — nodo WhatsApp Cloud API (Meta) o Twilio:
-   - Notificación interna al equipo, y/o
-   - Mensaje automático de confirmación al `{{$json.whatsapp}}`.
-5. **Respond to Webhook** — devuelve `200`. El frontend muestra la pantalla de
-   éxito solo si la respuesta es `2xx`.
+## 4. El flujo en n8n (resumen del template)
 
-> En **Make** o **Zapier** el patrón es idéntico: módulo *Webhooks → Custom webhook*
-> como disparador y luego los módulos de Sheets / Email / WhatsApp.
+1. **Webhook (Trigger)** — recibe el `INSERT` de Supabase.
+2. **Gmail / Resend** — email de bienvenida a `{{$json.body.record.correo}}`.
+3. **WhatsApp Cloud API (Meta) / Twilio** — mensaje a `{{$json.body.record.whatsapp}}`.
 
-## 4. CORS (importante)
+> Ya **no** hay nodo de Google Sheets: el lead vive en Supabase, que es la única
+> fuente de verdad. Si quieres un espejo en Sheets, añádelo como paso extra, pero
+> no es necesario para el CRM.
 
-El navegador llama al webhook directamente, así que el orquestador debe permitir
-peticiones desde el dominio de la landing:
+## 5. Notas
 
-- **n8n:** define `N8N_CORS_ALLOW_ORIGIN` (o usa un proxy) para tu dominio.
-- **Make / Zapier:** sus webhooks aceptan CORS por defecto.
-
-Si ves errores de CORS en la consola, el formulario seguirá funcionando vía el
-respaldo de WhatsApp mientras lo resuelves.
+- **Sin CORS que resolver:** el navegador ya no llama a n8n directamente; quien lo
+  invoca es Supabase desde su backend.
+- **El "éxito" ya no miente:** el formulario muestra la pantalla de éxito solo
+  cuando el `insert` se confirma. El email/WhatsApp corren de forma asíncrona en
+  n8n disparados por la base de datos.
