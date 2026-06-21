@@ -10,11 +10,16 @@ import UseCases from './UseCases';
 import FAQ from './FAQ';
 import FooterCTA from './FooterCTA';
 import ContactModal from './ContactModal';
+import { trackViewContent } from '../lib/metaPixel';
 
 const Landing = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = () => setIsModalOpen(true);
+  const openModal = () => {
+    setIsModalOpen(true);
+    // Señal de intención: el usuario abrió el formulario de contacto.
+    trackViewContent({ content_name: 'Contacto' });
+  };
   const closeModal = () => setIsModalOpen(false);
 
   return (

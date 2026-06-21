@@ -101,6 +101,31 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [860, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// CAPI: construye el payload del evento Lead con email/telefono hasheados\n// (SHA-256, requisito de Meta). El event_id es el MISMO que disparo el Pixel en\n// el navegador (columna meta_event_id) -> Meta deduplica y no cuenta doble.\n// Nota: el Code node necesita el modulo 'crypto'. Si tu n8n lo bloquea, arranca\n// con NODE_FUNCTION_ALLOW_BUILTIN=crypto (o *).\nconst crypto = require('crypto');\nconst rec = $('Webhook (Supabase INSERT)').item.json.body.record;\n\nconst sha256 = (v) => v ? crypto.createHash('sha256').update(String(v).trim().toLowerCase()).digest('hex') : undefined;\nconst sha256Phone = (v) => {\n  const digits = v ? String(v).replace(/[^0-9]/g, '') : '';\n  return digits ? crypto.createHash('sha256').update(digits).digest('hex') : undefined;\n};\n\nconst user_data = {};\nif (rec.correo) user_data.em = [sha256(rec.correo)];\nif (rec.whatsapp) user_data.ph = [sha256Phone(rec.whatsapp)];\nif (rec.fbc) user_data.fbc = rec.fbc;\nif (rec.fbp) user_data.fbp = rec.fbp;\n\nconst payload = {\n  data: [{\n    event_name: 'Lead',\n    event_time: Math.floor(Date.now() / 1000),\n    event_id: rec.meta_event_id,\n    action_source: 'website',\n    event_source_url: rec.url,\n    user_data,\n    custom_data: { content_name: rec.servicio }\n  }]\n};\n\n// Para validar en Events Manager -> Test Events, define META_TEST_EVENT_CODE:\nif (process.env.META_TEST_EVENT_CODE) {\n  payload.test_event_code = process.env.META_TEST_EVENT_CODE;\n}\n\nreturn [{ json: payload }];"
+      },
+      "id": "5",
+      "name": "Hashear datos (CAPI)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1080, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $env.META_PIXEL_ID }}/events?access_token={{ $env.META_CAPI_TOKEN }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "6",
+      "name": "Meta CAPI (Lead)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 300]
     }
   ],
   "connections": {
@@ -131,6 +156,28 @@
         [
           {
             "node": "Update a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a row": {
+      "main": [
+        [
+          {
+            "node": "Hashear datos (CAPI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hashear datos (CAPI)": {
+      "main": [
+        [
+          {
+            "node": "Meta CAPI (Lead)",
             "type": "main",
             "index": 0
           }

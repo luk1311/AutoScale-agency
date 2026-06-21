@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { trackLead } from '../lib/metaPixel';
+import { getAttribution } from '../lib/attribution';
 import './ContactModal.css';
 
 // Número de WhatsApp usado como respaldo si no se puede guardar el lead.
@@ -48,6 +50,12 @@ const ContactModal = ({ onClose }) => {
       return;
     }
 
+    // event_id compartido Pixel↔CAPI: el navegador dispara el Lead con este ID y
+    // n8n lo reenvía por CAPI con el mismo valor → Meta deduplica (no cuenta doble).
+    const eventId = crypto.randomUUID();
+    // Origen del clic (fbclid/UTMs/_fbp) capturado al cargar la landing.
+    const attribution = getAttribution();
+
     try {
       const insert = supabase.from('leads').insert([
         {
@@ -59,7 +67,10 @@ const ContactModal = ({ onClose }) => {
           descripcion: formData.descripcion,
           status: 'nuevo',
           origen: 'landing-autoscale',
-          url: typeof window !== 'undefined' ? window.location.href : ''
+          url: typeof window !== 'undefined' ? window.location.href : '',
+          // Medición/atribución para Meta (n8n los usa para CAPI).
+          meta_event_id: eventId,
+          ...attribution
           // created_at lo gestiona Supabase automáticamente
         }
       ]);
@@ -75,14 +86,8 @@ const ContactModal = ({ onClose }) => {
       // El lead quedó guardado. Email/WhatsApp los dispara Supabase → n8n.
       setStatus('success');
 
-      // Disparar evento de conversión (Lead) al Píxel de Meta
-      if (typeof window !== 'undefined' && window.fbq) {
-        window.fbq('track', 'Lead', {
-          content_name: formData.servicio,
-          currency: 'USD',
-          value: 0.00
-        });
-      }
+      // Conversión (Lead) al Pixel con el MISMO eventId que reenviará CAPI.
+      trackLead({ eventId, content_name: formData.servicio });
     } catch (err) {
       // Respaldo: no perdemos el lead. Solo llegamos aquí si Supabase falló,
       // por lo que NO hay duplicado: el lead no se guardó.

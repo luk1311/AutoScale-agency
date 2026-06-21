@@ -17,8 +17,29 @@ create table if not exists public.leads (
   descripcion text,
   status      text not null default 'nuevo',
   origen      text,
-  url         text
+  url         text,
+  -- Medición/atribución de Meta (Pixel + CAPI).
+  meta_event_id text,   -- event_id compartido Pixel↔CAPI para deduplicar
+  fbclid        text,   -- clic de Facebook (de la URL)
+  fbc           text,   -- fbclid en formato fb.1.<ts>.<fbclid> para CAPI
+  fbp           text,   -- cookie _fbp que pone el Pixel
+  utm_source    text,
+  utm_medium    text,
+  utm_campaign  text,
+  utm_content   text,
+  utm_term      text
 );
+
+-- Migración idempotente para bases de datos ya existentes (añade columnas Meta).
+alter table public.leads add column if not exists meta_event_id text;
+alter table public.leads add column if not exists fbclid        text;
+alter table public.leads add column if not exists fbc           text;
+alter table public.leads add column if not exists fbp           text;
+alter table public.leads add column if not exists utm_source    text;
+alter table public.leads add column if not exists utm_medium    text;
+alter table public.leads add column if not exists utm_campaign  text;
+alter table public.leads add column if not exists utm_content   text;
+alter table public.leads add column if not exists utm_term      text;
 
 -- Solo permitir estados conocidos (coherente con el frontend).
 alter table public.leads
