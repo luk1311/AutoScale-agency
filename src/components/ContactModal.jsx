@@ -74,6 +74,15 @@ const ContactModal = ({ onClose }) => {
 
       // El lead quedó guardado. Email/WhatsApp los dispara Supabase → n8n.
       setStatus('success');
+
+      // Disparar evento de conversión (Lead) al Píxel de Meta
+      if (typeof window !== 'undefined' && window.fbq) {
+        window.fbq('track', 'Lead', {
+          content_name: formData.servicio,
+          currency: 'USD',
+          value: 0.00
+        });
+      }
     } catch (err) {
       // Respaldo: no perdemos el lead. Solo llegamos aquí si Supabase falló,
       // por lo que NO hay duplicado: el lead no se guardó.
