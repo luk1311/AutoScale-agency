@@ -1,9 +1,15 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import MetricsDashboard from './crm/MetricsDashboard';
+import KanbanBoard from './crm/KanbanBoard';
+import { getCampaign, getChannel } from '../lib/leadHelpers';
 import './AdminCRM.css';
 
-// Columnas que realmente usa el CRM (evita traer datos de más).
-const LEAD_COLUMNS = 'id, created_at, nombre, empresa, correo, whatsapp, servicio, status, descripcion';
+// Columnas que usa el CRM. Incluye atribución de marketing (origen/UTM/fbclid)
+// y el valor estimado del trato para el pipeline.
+const LEAD_COLUMNS =
+  'id, created_at, nombre, empresa, correo, whatsapp, servicio, status, descripcion, ' +
+  'origen, utm_source, utm_medium, utm_campaign, utm_content, utm_term, fbclid, valor_estimado';
 
 const AdminCRM = () => {
   // Sesión real gestionada por Supabase Auth (no un flag en localStorage).
@@ -20,6 +26,9 @@ const AdminCRM = () => {
   // Estados para búsqueda y filtrado
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('todos');
+  const [filterCampaign, setFilterCampaign] = useState('todas');
+  // Vista activa: 'tabla' | 'kanban'
+  const [view, setView] = useState('tabla');
 
   const isAuthenticated = !!session;
 
@@ -105,6 +114,23 @@ const AdminCRM = () => {
     }
   };
 
+  // Asignar/editar el valor estimado del trato (para el pipeline en $).
+  const updateLeadValue = async (id, valor) => {
+    if (!supabase) return;
+
+    setLeads(prev => prev.map(lead => lead.id === id ? { ...lead, valor_estimado: valor } : lead));
+
+    const { error } = await supabase
+      .from('leads')
+      .update({ valor_estimado: valor })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error updating value:', error);
+      fetchLeads();
+    }
+  };
+
   // Abrir WhatsApp (con guardas por si algún campo viene vacío)
   const openWhatsApp = (lead) => {
     const firstName = (lead.nombre || '').split(' ')[0] || 'allí';
@@ -139,22 +165,31 @@ const AdminCRM = () => {
     return diffHours >= 24;
   };
 
+  // Lista de campañas únicas presentes en los leads (para el filtro de atribución).
+  const campaigns = useMemo(() => {
+    const set = new Set(leads.map(getCampaign));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [leads]);
+
   // Filtrar los leads usando useMemo para mejor rendimiento
   const filteredLeads = useMemo(() => {
     return leads.filter(lead => {
       // Filtrar por estado
       const matchStatus = filterStatus === 'todos' || (lead.status || 'nuevo') === filterStatus;
-      
+
+      // Filtrar por campaña/origen
+      const matchCampaign = filterCampaign === 'todas' || getCampaign(lead) === filterCampaign;
+
       // Filtrar por texto (nombre, correo o empresa)
       const searchLower = searchTerm.toLowerCase();
-      const matchSearch = searchTerm === '' || 
+      const matchSearch = searchTerm === '' ||
         (lead.nombre && lead.nombre.toLowerCase().includes(searchLower)) ||
         (lead.correo && lead.correo.toLowerCase().includes(searchLower)) ||
         (lead.empresa && lead.empresa.toLowerCase().includes(searchLower));
-        
-      return matchStatus && matchSearch;
+
+      return matchStatus && matchSearch && matchCampaign;
     });
-  }, [leads, filterStatus, searchTerm]);
+  }, [leads, filterStatus, searchTerm, filterCampaign]);
 
   // Exportar a Excel (Formato nativo .xlsx con diseño profesional).
   // ExcelJS y file-saver se cargan bajo demanda (import dinámico) para no
@@ -170,7 +205,7 @@ const AdminCRM = () => {
     // Crear un nuevo libro de Excel y una hoja
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Leads CRM');
-    
+
     // Configurar columnas con sus anchos
     worksheet.columns = [
       { header: 'Fecha', key: 'fecha', width: 20 },
@@ -180,9 +215,12 @@ const AdminCRM = () => {
       { header: 'Empresa', key: 'empresa', width: 25 },
       { header: 'Servicio', key: 'servicio', width: 30 },
       { header: 'Estado', key: 'estado', width: 15 },
+      { header: 'Origen', key: 'origen', width: 18 },
+      { header: 'Campaña', key: 'campania', width: 28 },
+      { header: 'Valor estimado', key: 'valor', width: 18 },
       { header: 'Descripción', key: 'descripcion', width: 50 },
     ];
-    
+
     // Añadir filas
     filteredLeads.forEach(lead => {
       worksheet.addRow({
@@ -193,10 +231,13 @@ const AdminCRM = () => {
         empresa: lead.empresa || '',
         servicio: lead.servicio || '',
         estado: lead.status || 'nuevo',
+        origen: getChannel(lead).label,
+        campania: getCampaign(lead),
+        valor: Number(lead.valor_estimado) || 0,
         descripcion: (lead.descripcion || '').replace(/\n/g, ' ')
       });
     });
-    
+
     // Dar estilo a la cabecera (Azul con texto blanco)
     const headerRow = worksheet.getRow(1);
     headerRow.eachCell((cell) => {
@@ -214,8 +255,11 @@ const AdminCRM = () => {
     headerRow.height = 25;
 
     // Añadir Filtros Automáticos
-    worksheet.autoFilter = 'A1:H1';
-    
+    worksheet.autoFilter = 'A1:K1';
+
+    // Formato de moneda para la columna de valor
+    worksheet.getColumn('valor').numFmt = '"$"#,##0';
+
     // Dar estilo a las filas (Bordes y filas intercaladas)
     worksheet.eachRow((row, rowNumber) => {
       if (rowNumber > 1) { // Ignorar cabecera
@@ -230,7 +274,7 @@ const AdminCRM = () => {
         }
         row.alignment = { vertical: 'middle', wrapText: true };
       }
-      
+
       // Bordes para todas las celdas
       row.eachCell((cell) => {
         cell.border = {
@@ -287,11 +331,6 @@ const AdminCRM = () => {
     );
   }
 
-  // Cálculos para las tarjetas
-  const totalLeads = leads.length;
-  const newLeads = leads.filter(l => (l.status || 'nuevo') === 'nuevo').length;
-  const closedLeads = leads.filter(l => l.status === 'ganado').length;
-
   return (
     <div className="crm-dashboard">
       <header className="crm-header glass-panel">
@@ -299,34 +338,22 @@ const AdminCRM = () => {
         <button className="btn btn-secondary" onClick={handleLogout}>Salir</button>
       </header>
 
-      <div className="crm-metrics">
-        <div className="glass-panel metric-card">
-          <h3>Total Leads</h3>
-          <p className="metric-value">{totalLeads}</p>
-        </div>
-        <div className="glass-panel metric-card">
-          <h3>Nuevos (Sin contactar)</h3>
-          <p className="metric-value text-gradient">{newLeads}</p>
-        </div>
-        <div className="glass-panel metric-card">
-          <h3>Ventas Cerradas</h3>
-          <p className="metric-value" style={{ color: 'var(--accent-tertiary)' }}>{closedLeads}</p>
-        </div>
-      </div>
+      {/* Dashboard de métricas + embudo */}
+      <MetricsDashboard leads={leads} />
 
       <div className="crm-toolbar glass-panel">
         <div className="crm-toolbar-search">
-          <input 
-            type="text" 
-            placeholder="🔍 Buscar por nombre, correo o empresa..." 
+          <input
+            type="text"
+            placeholder="🔍 Buscar por nombre, correo o empresa..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="crm-search-input"
           />
         </div>
         <div className="crm-toolbar-filters">
-          <select 
-            value={filterStatus} 
+          <select
+            value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
             className="crm-filter-select"
           >
@@ -335,6 +362,17 @@ const AdminCRM = () => {
             <option value="contactado">🟡 Contactados</option>
             <option value="propuesta">🔵 Propuesta Enviada</option>
             <option value="ganado">🟢 Ganados</option>
+          </select>
+          <select
+            value={filterCampaign}
+            onChange={(e) => setFilterCampaign(e.target.value)}
+            className="crm-filter-select"
+            title="Filtrar por campaña / origen"
+          >
+            <option value="todas">Todas las campañas</option>
+            {campaigns.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
           </select>
           <button className="btn btn-secondary btn-export" onClick={exportToExcel} disabled={filteredLeads.length === 0}>
             📥 Exportar Excel
@@ -345,13 +383,38 @@ const AdminCRM = () => {
       <div className="glass-panel crm-table-container">
         <div className="crm-table-header">
           <h2>Registro de Clientes ({filteredLeads.length})</h2>
-          <button className="btn btn-primary" onClick={fetchLeads}>↻ Refrescar</button>
+          <div className="crm-header-actions">
+            <div className="crm-view-toggle">
+              <button
+                className={`crm-view-btn ${view === 'tabla' ? 'crm-view-active' : ''}`}
+                onClick={() => setView('tabla')}
+              >
+                ☰ Tabla
+              </button>
+              <button
+                className={`crm-view-btn ${view === 'kanban' ? 'crm-view-active' : ''}`}
+                onClick={() => setView('kanban')}
+              >
+                ▦ Pipeline
+              </button>
+            </div>
+            <button className="btn btn-primary" onClick={fetchLeads}>↻ Refrescar</button>
+          </div>
         </div>
 
         {loading ? (
           <p className="text-center" style={{ padding: '2rem' }}>Cargando clientes...</p>
         ) : filteredLeads.length === 0 ? (
           <p className="text-center" style={{ padding: '2rem' }}>No se encontraron clientes con estos filtros.</p>
+        ) : view === 'kanban' ? (
+          <div style={{ padding: '1.5rem' }}>
+            <KanbanBoard
+              leads={filteredLeads}
+              onStatusChange={updateLeadStatus}
+              onValueChange={updateLeadValue}
+              onWhatsApp={openWhatsApp}
+            />
+          </div>
         ) : (
           <div className="table-wrapper">
             <table className="crm-table">
@@ -360,56 +423,85 @@ const AdminCRM = () => {
                   <th>Fecha</th>
                   <th>Cliente</th>
                   <th>Contacto</th>
+                  <th>Origen</th>
                   <th>Servicio</th>
+                  <th>Valor</th>
                   <th>Estado</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredLeads.map(lead => (
-                  <tr key={lead.id} style={checkIsUrgent(lead) ? { backgroundColor: 'rgba(255, 77, 77, 0.05)' } : {}}>
-                    <td>
-                      {formatDate(lead.created_at)}
-                      {checkIsUrgent(lead) && (
-                        <div style={{ color: '#ff4d4d', fontSize: '0.75rem', marginTop: '6px', fontWeight: 'bold' }}>
-                          ⚠️ +24h sin responder
-                        </div>
-                      )}
-                    </td>
-                    <td>
-                      <strong>{lead.nombre}</strong>
-                      <br/>
-                      <span className="text-small text-muted">{lead.empresa}</span>
-                    </td>
-                    <td>
-                      <a href={`mailto:${lead.correo}`} className="crm-link">{lead.correo}</a>
-                      <br/>
-                      <span className="text-small">{lead.whatsapp}</span>
-                    </td>
-                    <td>{lead.servicio}</td>
-                    <td>
-                      <select 
-                        className={`crm-status-select status-${lead.status || 'nuevo'}`}
-                        value={lead.status || 'nuevo'}
-                        onChange={(e) => updateLeadStatus(lead.id, e.target.value)}
-                      >
-                        <option value="nuevo">🔴 Nuevo</option>
-                        <option value="contactado">🟡 Contactado</option>
-                        <option value="propuesta">🔵 Propuesta</option>
-                        <option value="ganado">🟢 Ganado</option>
-                      </select>
-                    </td>
-                    <td>
-                      <button 
-                        className="btn btn-whatsapp btn-small"
-                        onClick={() => openWhatsApp(lead)}
-                        title="Enviar WhatsApp"
-                      >
-                        💬 WhatsApp
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {filteredLeads.map(lead => {
+                  const channel = getChannel(lead);
+                  return (
+                    <tr key={lead.id} style={checkIsUrgent(lead) ? { backgroundColor: 'rgba(255, 77, 77, 0.05)' } : {}}>
+                      <td>
+                        {formatDate(lead.created_at)}
+                        {checkIsUrgent(lead) && (
+                          <div style={{ color: '#ff4d4d', fontSize: '0.75rem', marginTop: '6px', fontWeight: 'bold' }}>
+                            ⚠️ +24h sin responder
+                          </div>
+                        )}
+                      </td>
+                      <td>
+                        <strong>{lead.nombre}</strong>
+                        <br/>
+                        <span className="text-small text-muted">{lead.empresa}</span>
+                      </td>
+                      <td>
+                        <a href={`mailto:${lead.correo}`} className="crm-link">{lead.correo}</a>
+                        <br/>
+                        <span className="text-small">{lead.whatsapp}</span>
+                      </td>
+                      <td>
+                        <span className="crm-channel-badge" style={{ color: channel.color, borderColor: channel.color }}>
+                          {channel.emoji} {channel.label}
+                        </span>
+                        <br/>
+                        <span className="text-small text-muted crm-campaign-cell" title={getCampaign(lead)}>
+                          {getCampaign(lead)}
+                        </span>
+                      </td>
+                      <td>{lead.servicio}</td>
+                      <td>
+                        <input
+                          type="number"
+                          className="crm-value-input"
+                          min="0"
+                          step="50000"
+                          defaultValue={lead.valor_estimado ?? ''}
+                          placeholder="$"
+                          onBlur={(e) => {
+                            const raw = e.target.value;
+                            const v = raw === '' ? null : Number(raw);
+                            if (v !== (lead.valor_estimado ?? null)) updateLeadValue(lead.id, v);
+                          }}
+                        />
+                      </td>
+                      <td>
+                        <select
+                          className={`crm-status-select status-${lead.status || 'nuevo'}`}
+                          value={lead.status || 'nuevo'}
+                          onChange={(e) => updateLeadStatus(lead.id, e.target.value)}
+                        >
+                          <option value="nuevo">🔴 Nuevo</option>
+                          <option value="contactado">🟡 Contactado</option>
+                          <option value="propuesta">🔵 Propuesta</option>
+                          <option value="ganado">🟢 Ganado</option>
+                        </select>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-whatsapp btn-small"
+                          onClick={() => openWhatsApp(lead)}
+                          title="Enviar WhatsApp"
+                        >
+                          💬 WhatsApp
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

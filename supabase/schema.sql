@@ -27,7 +27,9 @@ create table if not exists public.leads (
   utm_medium    text,
   utm_campaign  text,
   utm_content   text,
-  utm_term      text
+  utm_term      text,
+  -- Pipeline de ventas: valor estimado del trato (editable desde el CRM).
+  valor_estimado numeric
 );
 
 -- Migración idempotente para bases de datos ya existentes (añade columnas Meta).
@@ -40,6 +42,7 @@ alter table public.leads add column if not exists utm_medium    text;
 alter table public.leads add column if not exists utm_campaign  text;
 alter table public.leads add column if not exists utm_content   text;
 alter table public.leads add column if not exists utm_term      text;
+alter table public.leads add column if not exists valor_estimado numeric;
 
 -- Solo permitir estados conocidos (coherente con el frontend).
 alter table public.leads
