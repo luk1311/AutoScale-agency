@@ -5,6 +5,7 @@ import {
   getCampaign,
   getChannel,
   formatMoney,
+  parseMoneyInput,
 } from '../../lib/leadHelpers';
 import './KanbanBoard.css';
 
@@ -92,10 +93,8 @@ const KanbanBoard = ({ leads, onStatusChange, onValueChange, onWhatsApp }) => {
                         onClick={(e) => e.stopPropagation()}
                         onMouseDown={(e) => e.stopPropagation()}
                         onBlur={(e) => {
-                          const raw = e.target.value;
-                          const v = raw === '' ? null : Number(raw);
-                          const current = lead.valor_estimado ?? null;
-                          if (v !== current) onValueChange(lead.id, v);
+                          const v = parseMoneyInput(e.target.value);
+                          if (v !== parseMoneyInput(lead.valor_estimado)) onValueChange(lead.id, v);
                         }}
                       />
                     </div>

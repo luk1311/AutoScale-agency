@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import MetricsDashboard from './crm/MetricsDashboard';
 import KanbanBoard from './crm/KanbanBoard';
-import { getCampaign, getChannel } from '../lib/leadHelpers';
+import { getCampaign, getChannel, parseMoneyInput } from '../lib/leadHelpers';
 import './AdminCRM.css';
 
 // Columnas que usa el CRM. Incluye atribución de marketing (origen/UTM/fbclid)
@@ -472,9 +472,8 @@ const AdminCRM = () => {
                           defaultValue={lead.valor_estimado ?? ''}
                           placeholder="$"
                           onBlur={(e) => {
-                            const raw = e.target.value;
-                            const v = raw === '' ? null : Number(raw);
-                            if (v !== (lead.valor_estimado ?? null)) updateLeadValue(lead.id, v);
+                            const v = parseMoneyInput(e.target.value);
+                            if (v !== parseMoneyInput(lead.valor_estimado)) updateLeadValue(lead.id, v);
                           }}
                         />
                       </td>

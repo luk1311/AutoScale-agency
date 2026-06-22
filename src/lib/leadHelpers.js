@@ -43,3 +43,12 @@ export function formatMoney(value) {
     maximumFractionDigits: 0,
   });
 }
+
+// Normaliza un valor monetario (de un input o de la BD) a número o null.
+// Evita falsos cambios al comparar: Supabase puede devolver `numeric` como
+// string ("2500000"), y el input lo devuelve como string también.
+export function parseMoneyInput(raw) {
+  if (raw === null || raw === undefined || raw === '') return null;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+}
