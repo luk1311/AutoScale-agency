@@ -13,44 +13,43 @@ export const STATUS_META = {
   ganado:     { label: 'Ganado',     emoji: '🟢', color: '#22c55e' },
 };
 
-// Canales de mensajería directa (leads que entran escribiéndote por DM/chat,
-// no por el formulario web). Coincide con el valor `origen` que escribe la
-// Edge Function `meta-webhook`.
-const DIRECT_CHANNELS = {
-  whatsapp:  { label: 'WhatsApp',  emoji: '💬', color: '#25d366', campaign: 'WhatsApp directo' },
-  instagram: { label: 'Instagram', emoji: '📷', color: '#e1306c', campaign: 'Instagram DM' },
-  facebook:  { label: 'Messenger', emoji: '💙', color: '#0084ff', campaign: 'Messenger directo' },
-};
-
 // Etiqueta legible de la campaña/origen de un lead (para atribución y filtros).
 export function getCampaign(lead) {
-  const origen = (lead.origen || '').toLowerCase();
-  if (DIRECT_CHANNELS[origen]) return DIRECT_CHANNELS[origen].campaign;
   if (lead.utm_campaign) return lead.utm_campaign;
-  if (lead.fbclid) return 'Meta Ads (sin UTM)';
   if (lead.utm_source) return lead.utm_source;
-  return lead.origen || 'Directo';
+  return 'Landing page';
 }
 
-// Canal de alto nivel: de dónde vino el lead (con color e icono).
+// Canal de alto nivel: de dónde vino el cliente antes de llegar a la landing
+// (con color e icono). Se decide por la etiqueta `utm_source` del enlace:
+//   - .../?utm_source=instagram  → Instagram
+//   - .../?utm_source=facebook   → Facebook
+//   - sin etiqueta               → Landing page (llegó directo)
 export function getChannel(lead) {
-  // Mensajería directa (WhatsApp / Instagram / Messenger) tiene prioridad:
-  // estos leads los crea el webhook de Meta con un `origen` explícito.
-  const origen = (lead.origen || '').toLowerCase();
-  if (DIRECT_CHANNELS[origen]) {
-    const c = DIRECT_CHANNELS[origen];
-    return { label: c.label, emoji: c.emoji, color: c.color };
+  const source = (lead.utm_source || '').toLowerCase();
+
+  // Instagram: enlaces con utm_source=instagram (o ig/insta).
+  if (source === 'ig' || source.includes('insta')) {
+    return { label: 'Instagram', emoji: '📷', color: '#e1306c' };
   }
 
-  const source = (lead.utm_source || '').toLowerCase();
-  const isMeta =
-    lead.fbclid ||
-    ['fb', 'meta', 'face', 'ig', 'insta'].some((k) => source.includes(k));
+  // Facebook: enlaces con utm_source=facebook (o fb/face).
+  if (source === 'fb' || source.includes('face')) {
+    return { label: 'Facebook', emoji: '💙', color: '#1877f2' };
+  }
 
-  if (isMeta) return { label: 'Meta Ads', emoji: '📘', color: '#1877f2' };
-  if (source.includes('google')) return { label: 'Google', emoji: '🔍', color: '#ea4335' };
-  if (lead.utm_source) return { label: lead.utm_source, emoji: '🔗', color: '#8b5cf6' };
-  return { label: 'Directo', emoji: '🌐', color: '#9ca3af' };
+  // Google (por si lo usas a futuro).
+  if (source.includes('google')) {
+    return { label: 'Google', emoji: '🔍', color: '#ea4335' };
+  }
+
+  // Cualquier otra fuente etiquetada que no sea de las anteriores.
+  if (lead.utm_source) {
+    return { label: lead.utm_source, emoji: '🔗', color: '#8b5cf6' };
+  }
+
+  // Sin etiqueta de origen: el cliente llegó directo a la landing page.
+  return { label: 'Landing page', emoji: '🌐', color: '#22c55e' };
 }
 
 // Formato de dinero (COP, sin decimales). Cambia 'COP' si operas en otra moneda.

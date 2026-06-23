@@ -8,6 +8,17 @@
 const STORAGE_KEY = 'autoscale_attribution';
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
 
+// Enlaces "bonitos": rutas cortas que marcan el origen del cliente sin ensuciar
+// la URL con ?utm_source=... Comparte estos en tus biografías:
+//   tulanding.com/ig  →  Instagram      tulanding.com/fb  →  Facebook
+// Al entrar, se guarda el origen y la barra de direcciones queda limpia (en /).
+const PATH_SOURCES = {
+  '/ig': 'instagram',
+  '/instagram': 'instagram',
+  '/fb': 'facebook',
+  '/facebook': 'facebook',
+};
+
 function readCookie(name) {
   if (typeof document === 'undefined') return '';
   const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
@@ -30,6 +41,14 @@ export function captureAttribution() {
   for (const k of UTM_KEYS) {
     const v = params.get(k);
     if (v) utms[k] = v;
+  }
+
+  // Enlace bonito (/ig, /fb, ...): define el origen y limpia la URL a "/".
+  const path = window.location.pathname.toLowerCase().replace(/\/+$/, '');
+  const prettySource = PATH_SOURCES[path];
+  if (prettySource && !utms.utm_source) {
+    utms.utm_source = prettySource;
+    window.history.replaceState(null, '', '/');
   }
 
   const existing = sessionStorage.getItem(STORAGE_KEY);
