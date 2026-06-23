@@ -13,8 +13,19 @@ export const STATUS_META = {
   ganado:     { label: 'Ganado',     emoji: '🟢', color: '#22c55e' },
 };
 
+// Canales de mensajería directa (leads que entran escribiéndote por DM/chat,
+// no por el formulario web). Coincide con el valor `origen` que escribe la
+// Edge Function `meta-webhook`.
+const DIRECT_CHANNELS = {
+  whatsapp:  { label: 'WhatsApp',  emoji: '💬', color: '#25d366', campaign: 'WhatsApp directo' },
+  instagram: { label: 'Instagram', emoji: '📷', color: '#e1306c', campaign: 'Instagram DM' },
+  facebook:  { label: 'Messenger', emoji: '💙', color: '#0084ff', campaign: 'Messenger directo' },
+};
+
 // Etiqueta legible de la campaña/origen de un lead (para atribución y filtros).
 export function getCampaign(lead) {
+  const origen = (lead.origen || '').toLowerCase();
+  if (DIRECT_CHANNELS[origen]) return DIRECT_CHANNELS[origen].campaign;
   if (lead.utm_campaign) return lead.utm_campaign;
   if (lead.fbclid) return 'Meta Ads (sin UTM)';
   if (lead.utm_source) return lead.utm_source;
@@ -23,6 +34,14 @@ export function getCampaign(lead) {
 
 // Canal de alto nivel: de dónde vino el lead (con color e icono).
 export function getChannel(lead) {
+  // Mensajería directa (WhatsApp / Instagram / Messenger) tiene prioridad:
+  // estos leads los crea el webhook de Meta con un `origen` explícito.
+  const origen = (lead.origen || '').toLowerCase();
+  if (DIRECT_CHANNELS[origen]) {
+    const c = DIRECT_CHANNELS[origen];
+    return { label: c.label, emoji: c.emoji, color: c.color };
+  }
+
   const source = (lead.utm_source || '').toLowerCase();
   const isMeta =
     lead.fbclid ||

@@ -44,6 +44,18 @@ alter table public.leads add column if not exists utm_content   text;
 alter table public.leads add column if not exists utm_term      text;
 alter table public.leads add column if not exists valor_estimado numeric;
 
+-- Canales de mensajeria directa (WhatsApp Business / Instagram / Messenger).
+-- Los crea la Edge Function `meta-webhook` cuando alguien te escribe por DM/chat.
+-- Estos contactos pueden no traer correo ni telefono, asi que estos dejan de ser
+-- obligatorios; ademas guardamos el id externo (wa_id/PSID/IGSID) para no duplicar.
+alter table public.leads alter column whatsapp drop not null;
+alter table public.leads alter column correo  drop not null;
+alter table public.leads add column if not exists canal_externo_id text;
+alter table public.leads add column if not exists username         text;
+create unique index if not exists leads_canal_externo_uidx
+  on public.leads (origen, canal_externo_id)
+  where canal_externo_id is not null;
+
 -- Solo permitir estados conocidos (coherente con el frontend).
 alter table public.leads
   drop constraint if exists leads_status_check;
