@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import MetricsDashboard from './crm/MetricsDashboard';
 import KanbanBoard from './crm/KanbanBoard';
 import { getCampaign, getChannel, parseMoneyInput } from '../lib/leadHelpers';
+import { CheckCircle2, Inbox, Loader2 } from 'lucide-react';
 import './AdminCRM.css';
 
 // Columnas que usa el CRM. Incluye atribución de marketing (origen/UTM/fbclid)
@@ -29,6 +30,12 @@ const AdminCRM = () => {
   const [filterCampaign, setFilterCampaign] = useState('todas');
   // Vista activa: 'tabla' | 'kanban'
   const [view, setView] = useState('tabla');
+  const [toastMessage, setToastMessage] = useState('');
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
 
   const isAuthenticated = !!session;
 
@@ -111,6 +118,8 @@ const AdminCRM = () => {
     if (error) {
       console.error('Error updating status:', error);
       fetchLeads(); // Revertir al estado real
+    } else {
+      showToast('Estado actualizado correctamente');
     }
   };
 
@@ -128,6 +137,8 @@ const AdminCRM = () => {
     if (error) {
       console.error('Error updating value:', error);
       fetchLeads();
+    } else {
+      showToast('Valor actualizado correctamente');
     }
   };
 
@@ -403,9 +414,15 @@ const AdminCRM = () => {
         </div>
 
         {loading ? (
-          <p className="text-center" style={{ padding: '2rem' }}>Cargando clientes...</p>
+          <div className="crm-empty-state">
+            <Loader2 className="animate-spin" size={48} color="var(--accent-primary)" style={{ marginBottom: '1rem', animation: 'spin 1s linear infinite' }} />
+            <p>Cargando clientes...</p>
+          </div>
         ) : filteredLeads.length === 0 ? (
-          <p className="text-center" style={{ padding: '2rem' }}>No se encontraron clientes con estos filtros.</p>
+          <div className="crm-empty-state">
+            <Inbox size={48} color="var(--text-muted)" style={{ marginBottom: '1rem' }} />
+            <p>No se encontraron clientes con estos filtros.</p>
+          </div>
         ) : view === 'kanban' ? (
           <div style={{ padding: '1.5rem' }}>
             <KanbanBoard
@@ -506,6 +523,13 @@ const AdminCRM = () => {
           </div>
         )}
       </div>
+
+      {toastMessage && (
+        <div className="crm-toast">
+          <CheckCircle2 color="var(--accent-tertiary)" size={20} />
+          {toastMessage}
+        </div>
+      )}
     </div>
   );
 };

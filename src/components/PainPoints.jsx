@@ -1,3 +1,4 @@
+import { MessageSquare, Ghost, Network, AlertTriangle } from 'lucide-react';
 import './PainPoints.css';
 
 const PainPoints = () => {
@@ -5,22 +6,22 @@ const PainPoints = () => {
     {
       title: "Mensajes acumulados",
       description: "Tu equipo dedica horas respondiendo las mismas preguntas una y otra vez.",
-      icon: "💬"
+      icon: <MessageSquare size={36} color="var(--accent-primary)" />
     },
     {
       title: "Prospectos que desaparecen",
       description: "Personas interesadas escriben fuera de horario y nunca reciben atención inmediata.",
-      icon: "👻"
+      icon: <Ghost size={36} color="var(--accent-primary)" />
     },
     {
       title: "Procesos desorganizados",
       description: "Información dispersa entre WhatsApp, Instagram, correos y hojas de cálculo.",
-      icon: "📉"
+      icon: <Network size={36} color="var(--accent-primary)" />
     },
     {
       title: "Falta de seguimiento",
       description: "Muchos clientes potenciales se pierden simplemente porque nadie les dio continuidad.",
-      icon: "⚠️"
+      icon: <AlertTriangle size={36} color="var(--accent-primary)" />
     }
   ];
 
@@ -36,8 +37,8 @@ const PainPoints = () => {
 
         <div className="grid grid-cols-2">
           {points.map((point, index) => (
-            <div className="glass-panel pain-point-card" key={index}>
-              <div className="pain-icon">{point.icon}</div>
+            <div className={`glass-panel pain-point-card animate-fade-in delay-${(index % 3 + 1) * 100}`} key={index}>
+              <div className="pain-icon" style={{ marginBottom: '1rem' }}>{point.icon}</div>
               <h3>{point.title}</h3>
               <p>{point.description}</p>
             </div>
