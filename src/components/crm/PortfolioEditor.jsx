@@ -52,6 +52,9 @@ const PortfolioEditor = () => {
       description: '',
       image: '',
       tags: [],
+      website_url: '',
+      full_content: '',
+      metrics: [],
       is_active: false
     });
     setSelectedFile(null);
@@ -208,6 +211,23 @@ const PortfolioEditor = () => {
     const value = e.target.value;
     const tagsArray = value.split(',').map(t => t.trim()).filter(t => t !== '');
     updateField('tags', tagsArray);
+  };
+
+  const addMetric = () => {
+    const currentMetrics = activeProject.metrics || [];
+    updateField('metrics', [...currentMetrics, { value: '', label: '' }]);
+  };
+
+  const updateMetric = (index, field, value) => {
+    const newMetrics = [...(activeProject.metrics || [])];
+    newMetrics[index][field] = value;
+    updateField('metrics', newMetrics);
+  };
+
+  const removeMetric = (index) => {
+    const newMetrics = [...(activeProject.metrics || [])];
+    newMetrics.splice(index, 1);
+    updateField('metrics', newMetrics);
   };
 
   if (loading) {
@@ -372,6 +392,73 @@ const PortfolioEditor = () => {
                     <span className="text-muted text-small">Si está desactivado, no aparecerá en tu landing page ni portafolio.</span>
                   </span>
                 </label>
+              </div>
+
+              <div className="form-group" style={{ marginTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '2rem' }}>
+                <h3 style={{ marginBottom: '1rem', color: 'var(--accent-primary)' }}>Detalles Extendidos (Página del Proyecto)</h3>
+                
+                <div className="form-group">
+                  <label>Enlace del sitio web (Opcional)</label>
+                  <input 
+                    type="text" 
+                    value={activeProject.website_url || ''} 
+                    onChange={(e) => updateField('website_url', e.target.value)}
+                    placeholder="https://www.ejemplo.com"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Historia del Proyecto (Desafío y Solución)</label>
+                  <textarea 
+                    value={activeProject.full_content || ''} 
+                    onChange={(e) => updateField('full_content', e.target.value)}
+                    placeholder="Describe en detalle cómo ayudaste a este cliente..."
+                    rows="6"
+                  ></textarea>
+                </div>
+
+                <div className="form-group">
+                  <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    Métricas Destacadas
+                    <button className="btn btn-secondary btn-sm" onClick={addMetric} type="button">
+                      <Plus size={14} /> Añadir Métrica
+                    </button>
+                  </label>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+                    {(!activeProject.metrics || activeProject.metrics.length === 0) && (
+                      <p className="text-muted text-small">No has añadido métricas. Añade algunas para mostrar los resultados obtenidos.</p>
+                    )}
+                    {(activeProject.metrics || []).map((metric, index) => (
+                      <div key={index} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '8px' }}>
+                        <div style={{ flex: 1 }}>
+                          <input 
+                            type="text" 
+                            value={metric.value} 
+                            onChange={(e) => updateMetric(index, 'value', e.target.value)}
+                            placeholder="Ej. +300% o $50K"
+                            style={{ marginBottom: '0.5rem', fontSize: '1.2rem', fontWeight: 'bold' }}
+                          />
+                          <input 
+                            type="text" 
+                            value={metric.label} 
+                            onChange={(e) => updateMetric(index, 'label', e.target.value)}
+                            placeholder="Ej. Aumento en Ventas"
+                          />
+                        </div>
+                        <button 
+                          className="btn btn-secondary btn-sm" 
+                          onClick={() => removeMetric(index)} 
+                          style={{ color: '#ff4d4d', borderColor: 'rgba(255, 77, 77, 0.3)', padding: '0.5rem' }}
+                          title="Eliminar métrica"
+                          type="button"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Preview de la tarjeta */}

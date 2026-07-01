@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ExternalLink, ArrowRight, Loader2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import './Portfolio.css';
 
@@ -53,12 +53,12 @@ const Portfolio = ({ openModal }) => {
               <div className="portfolio-image-wrapper">
                 <img src={project.image} alt={project.title} className="portfolio-image" />
                 <div className="portfolio-overlay">
-                  <a href="#" className="portfolio-link-btn" aria-label="Ver Proyecto"><ExternalLink size={24} /></a>
+                  <Link to={`/portafolio/${project.id}`} className="portfolio-link-btn" aria-label="Ver Proyecto"><ExternalLink size={24} /></Link>
                 </div>
               </div>
               <div className="portfolio-content">
                 <span className="portfolio-category">{project.category}</span>
-                <h3 className="portfolio-title">{project.title}</h3>
+                <Link to={`/portafolio/${project.id}`} style={{ textDecoration: 'none' }}><h3 className="portfolio-title" style={{ transition: 'color 0.3s' }} onMouseOver={(e) => e.target.style.color = 'var(--accent-primary)'} onMouseOut={(e) => e.target.style.color = '#fff'}>{project.title}</h3></Link>
                 <p className="portfolio-description">{project.description}</p>
                 <div className="portfolio-tags">
                   {(project.tags || []).map((tag, i) => (

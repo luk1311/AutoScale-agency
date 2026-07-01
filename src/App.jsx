@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Landing from './components/Landing';
 import AdminCRM from './components/AdminCRM';
 import PortfolioPage from './components/PortfolioPage';
+import ProjectDetails from './components/ProjectDetails';
 import './App.css';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/admin" element={<AdminCRM />} />
         <Route path="/portafolio" element={<PortfolioPage />} />
+        <Route path="/portafolio/:id" element={<ProjectDetails />} />
       </Routes>
     </Router>
   );
