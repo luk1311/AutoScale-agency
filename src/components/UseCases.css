@@ -25,3 +25,34 @@
 .use-case-card p {
   margin-bottom: 0;
 }
+
+@media (max-width: 768px) {
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .use-case-card {
+    padding: 1.5rem 1rem;
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .case-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .use-case-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+  
+  .use-case-card p {
+    display: none;
+  }
+}
