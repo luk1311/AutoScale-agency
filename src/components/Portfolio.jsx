@@ -61,7 +61,7 @@ const Portfolio = ({ openModal }) => {
                 <h3 className="portfolio-title">{project.title}</h3>
                 <p className="portfolio-description">{project.description}</p>
                 <div className="portfolio-tags">
-                  {project.tags.map((tag, i) => (
+                  {(project.tags || []).map((tag, i) => (
                     <span className="portfolio-tag" key={i}>{tag}</span>
                   ))}
                 </div>
