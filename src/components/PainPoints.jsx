@@ -35,7 +35,7 @@ const PainPoints = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-2">
+        <div className="pain-points-grid">
           {points.map((point, index) => (
             <div className={`glass-panel pain-point-card animate-fade-in delay-${(index % 3 + 1) * 100}`} key={index}>
               <div className="pain-icon" style={{ marginBottom: '1rem' }}>{point.icon}</div>

@@ -31,3 +31,34 @@
   margin-bottom: 0;
   font-size: 1.05rem;
 }
+
+.pain-points-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .pain-points-grid {
+    gap: 1rem;
+  }
+  
+  .pain-point-card {
+    padding: 1.5rem;
+  }
+  
+  .pain-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .pain-point-card h3 {
+    font-size: 1.2rem;
+  }
+  
+  .pain-point-card p {
+    font-size: 0.95rem;
+  }
+}
