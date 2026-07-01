@@ -88,48 +88,44 @@
 }
 
 .portfolio-content {
-  padding: 2rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
 .portfolio-category {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--accent-tertiary);
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
 }
 
 .portfolio-title {
-  font-size: 1.15rem;
+  font-size: 1.4rem;
   color: #fff;
-  margin-bottom: 0.8rem;
+  margin-bottom: 1rem;
 }
 
 .portfolio-description {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  line-height: 1.5;
-  margin-bottom: 1.2rem;
-  flex-grow: 1;
+  display: none; /* Oculto para un diseño horizontal minimalista */
 }
 
 .portfolio-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
 .portfolio-tag {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-main);
-  padding: 0.25rem 0.6rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 50px;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 500;
 }
 
