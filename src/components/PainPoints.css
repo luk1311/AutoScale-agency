@@ -44,7 +44,9 @@
   }
   
   .pain-point-card {
-    padding: 1.5rem;
+    padding: 1.5rem 1rem;
+    align-items: center;
+    text-align: center;
   }
   
   .pain-icon {
@@ -55,10 +57,11 @@
   }
   
   .pain-point-card h3 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    margin-bottom: 0;
   }
   
   .pain-point-card p {
-    font-size: 0.95rem;
+    display: none;
   }
 }
