@@ -2,8 +2,9 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import MetricsDashboard from './crm/MetricsDashboard';
 import KanbanBoard from './crm/KanbanBoard';
+import PortfolioEditor from './crm/PortfolioEditor';
 import { getCampaign, getChannel, parseMoneyInput } from '../lib/leadHelpers';
-import { CheckCircle2, Inbox, Loader2 } from 'lucide-react';
+import { CheckCircle2, Inbox, Loader2, LayoutGrid, Users } from 'lucide-react';
 import './AdminCRM.css';
 
 // Columnas que usa el CRM. Incluye atribución de marketing (origen/UTM/fbclid)
@@ -30,6 +31,8 @@ const AdminCRM = () => {
   const [filterCampaign, setFilterCampaign] = useState('todas');
   // Vista activa: 'tabla' | 'kanban'
   const [view, setView] = useState('tabla');
+  // Pestaña activa del CRM: 'leads' | 'portfolio'
+  const [activeTab, setActiveTab] = useState('leads');
   const [toastMessage, setToastMessage] = useState('');
 
   const showToast = (msg) => {
@@ -344,13 +347,35 @@ const AdminCRM = () => {
 
   return (
     <div className="crm-dashboard">
-      <header className="crm-header glass-panel">
-        <h1>AutoScale <span className="text-gradient">CRM</span></h1>
+      <header className="crm-header glass-panel" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          <h1>AutoScale <span className="text-gradient">CRM</span></h1>
+          <nav className="crm-main-tabs" style={{ display: 'flex', gap: '1rem' }}>
+            <button 
+              className={`btn ${activeTab === 'leads' ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => setActiveTab('leads')}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <Users size={16} /> Leads
+            </button>
+            <button 
+              className={`btn ${activeTab === 'portfolio' ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => setActiveTab('portfolio')}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <LayoutGrid size={16} /> Portafolio
+            </button>
+          </nav>
+        </div>
         <button className="btn btn-secondary" onClick={handleLogout}>Salir</button>
       </header>
 
-      {/* Dashboard de métricas + embudo */}
-      <MetricsDashboard leads={leads} />
+      {activeTab === 'portfolio' ? (
+        <PortfolioEditor />
+      ) : (
+        <>
+          {/* Dashboard de métricas + embudo */}
+          <MetricsDashboard leads={leads} />
 
       <div className="crm-toolbar glass-panel">
         <div className="crm-toolbar-search">
@@ -529,6 +554,8 @@ const AdminCRM = () => {
           <CheckCircle2 color="var(--accent-tertiary)" size={20} />
           {toastMessage}
         </div>
+      )}
+        </>
       )}
     </div>
   );

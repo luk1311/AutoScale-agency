@@ -4,6 +4,7 @@ import Hero from './Hero';
 import PainPoints from './PainPoints';
 import Stats from './Stats';
 import Services from './Services';
+import Portfolio from './Portfolio';
 import Solution from './Solution';
 import Comparison from './Comparison';
 import TechStack from './TechStack';
@@ -30,6 +31,7 @@ const Landing = () => {
       <PainPoints />
       <Stats />
       <Services />
+      <Portfolio openModal={openModal} />
       <Comparison />
       <TechStack />
       <div id="proceso">

@@ -60,7 +60,9 @@
 }
 
 .tech-note {
-  display: inline-block;
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
   padding: 1.5rem 3rem;
   text-align: center;
   border: 1px solid var(--accent-primary);
@@ -89,6 +91,12 @@
 @media (max-width: 992px) {
   .tech-groups-wrapper {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .tech-group:last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 100%;
+    max-width: 400px;
   }
 }
 

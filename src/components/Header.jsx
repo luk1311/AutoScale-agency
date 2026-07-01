@@ -18,6 +18,7 @@ const Header = ({ openModal }) => {
         <nav className="main-nav desktop-only">
           <a href="#stats" className="nav-link">Impacto</a>
           <a href="#servicios" className="nav-link">Servicios</a>
+          <a href="#portafolio" className="nav-link">Portafolio</a>
           <a href="#proceso" className="nav-link">Proceso</a>
           <a href="#casos" className="nav-link">Casos</a>
         </nav>
@@ -40,6 +41,7 @@ const Header = ({ openModal }) => {
         <nav className="mobile-nav">
           <a href="#stats" className="mobile-nav-link" onClick={toggleMenu}>Impacto</a>
           <a href="#servicios" className="mobile-nav-link" onClick={toggleMenu}>Servicios</a>
+          <a href="#portafolio" className="mobile-nav-link" onClick={toggleMenu}>Portafolio</a>
           <a href="#proceso" className="mobile-nav-link" onClick={toggleMenu}>Proceso</a>
           <a href="#casos" className="mobile-nav-link" onClick={toggleMenu}>Casos</a>
           <button 
