@@ -79,9 +79,32 @@ const ProjectDetails = () => {
             </div>
 
             {project.description && (
-              <p style={{ fontSize: '1.3rem', color: 'var(--text-muted)', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6' }}>
-                {project.description}
-              </p>
+              <div className="glass-panel" style={{
+                maxWidth: '700px',
+                margin: '0 auto',
+                padding: '1.5rem 2rem',
+                borderRadius: '16px',
+                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                borderLeft: '1px solid rgba(255, 255, 255, 0.05)',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                position: 'relative',
+                marginTop: '-4rem',
+                marginBottom: '2rem',
+                backdropFilter: 'blur(15px)',
+                background: 'rgba(15, 15, 20, 0.85)'
+              }}>
+                <p style={{ 
+                  fontSize: '1.05rem', 
+                  color: 'rgba(255,255,255,0.9)', 
+                  lineHeight: '1.6', 
+                  margin: 0,
+                  fontStyle: 'italic',
+                  fontWeight: '300',
+                  textAlign: 'center'
+                }}>
+                  "{project.description}"
+                </p>
+              </div>
             )}
           </div>
 
