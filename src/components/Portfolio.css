@@ -200,7 +200,17 @@
 
   .project-hero-image.apple-card {
     padding: 0 !important;
-    margin-bottom: 1.5rem !important;
+    margin-bottom: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-bottom: none !important;
+  }
+
+  .project-description-panel.apple-card {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-top: none !important;
+    margin-top: 0 !important;
   }
 
   /* Truncamiento para reducir el texto según feedback */
