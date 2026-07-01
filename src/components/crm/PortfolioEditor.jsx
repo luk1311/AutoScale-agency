@@ -304,6 +304,7 @@ const PortfolioEditor = () => {
                     onChange={(e) => updateField('category', e.target.value)}
                   >
                     <option value="Desarrollo Web">Desarrollo Web</option>
+                    <option value="E-commerce">E-commerce</option>
                     <option value="IA & Automatización">IA & Automatización</option>
                     <option value="Meta Ads">Meta Ads</option>
                     <option value="UI/UX">UI/UX</option>

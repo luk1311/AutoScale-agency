@@ -42,7 +42,7 @@ const PortfolioPage = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const categories = ['Todos', 'Desarrollo Web', 'IA & Automatización', 'Meta Ads', 'UI/UX', 'Otros'];
+  const categories = ['Todos', 'Desarrollo Web', 'E-commerce', 'IA & Automatización', 'Meta Ads', 'UI/UX', 'Otros'];
 
   const filteredProjects = filter === 'Todos' 
     ? allProjects 
