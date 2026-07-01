@@ -3,6 +3,8 @@ import { supabase } from '../../lib/supabase';
 import { Plus, Save, Trash2, Image as ImageIcon, CheckCircle2, Loader2, Upload } from 'lucide-react';
 import './PortfolioEditor.css';
 
+const SUGGESTED_TAGS = ['Shopify', 'React', 'Klaviyo', 'Web Design', 'SEO', 'Meta Ads', 'Make.com', 'Next.js', 'UI/UX'];
+
 const PortfolioEditor = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -213,6 +215,15 @@ const PortfolioEditor = () => {
     setActiveProject(prev => ({ ...prev, tags: tagsArray, _rawTags: value }));
   };
 
+  const handleAddSuggestedTag = (tag) => {
+    const currentTags = activeProject.tags || [];
+    if (!currentTags.includes(tag)) {
+      const newTags = [...currentTags, tag];
+      const newRawTags = newTags.join(', ');
+      setActiveProject(prev => ({ ...prev, tags: newTags, _rawTags: newRawTags }));
+    }
+  };
+
   const addMetric = () => {
     const currentMetrics = activeProject.metrics || [];
     updateField('metrics', [...currentMetrics, { value: '', label: '' }]);
@@ -377,6 +388,35 @@ const PortfolioEditor = () => {
                     onChange={handleTagsChange}
                     placeholder="Shopify, React, Klaviyo..."
                   />
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.8rem' }}>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}>Sugerencias:</span>
+                    {SUGGESTED_TAGS.map(tag => (
+                      <span 
+                        key={tag} 
+                        onClick={() => handleAddSuggestedTag(tag)}
+                        style={{
+                          fontSize: '0.8rem',
+                          padding: '0.2rem 0.6rem',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid var(--glass-border)',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          color: 'var(--text-main)',
+                          transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.background = 'var(--accent-primary)';
+                          e.target.style.borderColor = 'var(--accent-primary)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.background = 'rgba(255,255,255,0.05)';
+                          e.target.style.borderColor = 'var(--glass-border)';
+                        }}
+                      >
+                        + {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
 
