@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import './Header.css';
 
 const Header = ({ openModal }) => {
@@ -10,9 +11,9 @@ const Header = ({ openModal }) => {
   return (
     <header className="main-header">
       <div className="container header-container">
-        <div className="logo">
+        <Link to="/" className="logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ textDecoration: 'none' }}>
           <span className="logo-text">Auto<span className="text-gradient">Scale</span></span>
-        </div>
+        </Link>
         
         {/* Desktop Nav */}
         <nav className="main-nav desktop-only">
