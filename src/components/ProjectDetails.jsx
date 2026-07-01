@@ -74,8 +74,8 @@ const ProjectDetails = () => {
             <span style={{ color: 'var(--accent-tertiary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>{project.category}</span>
             <h1 style={{ fontSize: '4rem', marginTop: '1rem', marginBottom: '2rem', lineHeight: '1.2' }}>{project.title}</h1>
             
-            <div className="project-hero-image" style={{ width: '100%', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', position: 'relative' }}>
-              <img src={project.image} alt={project.title} style={{ width: '100%', height: 'auto', display: 'block' }} />
+            <div className="project-hero-image" style={{ width: '100%', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', position: 'relative', aspectRatio: '21/9', maxHeight: '500px' }}>
+              <img src={project.image} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
           </div>
 
