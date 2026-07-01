@@ -475,7 +475,6 @@ const PortfolioEditor = () => {
                   <div className="portfolio-content-mini">
                     <span className="portfolio-category-mini">{activeProject.category || 'Categoría'}</span>
                     <h3 className="portfolio-title-mini">{activeProject.title || 'Título del Proyecto'}</h3>
-                    <p className="portfolio-description-mini">{activeProject.description || 'Descripción del proyecto...'}</p>
                     <div className="portfolio-tags-mini">
                       {(activeProject.tags || []).slice(0, 3).map((tag, i) => (
                         <span className="portfolio-tag-mini" key={i}>{tag}</span>

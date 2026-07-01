@@ -49,16 +49,13 @@ const Portfolio = ({ openModal }) => {
               <p>Cargando proyectos destacados...</p>
             </div>
           ) : projects.map((project, index) => (
-            <div className="portfolio-card glass-panel" key={index}>
+            <Link to={`/portafolio/${project.id}`} className="portfolio-card glass-panel" key={index} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column' }}>
               <div className="portfolio-image-wrapper">
                 <img src={project.image} alt={project.title} className="portfolio-image" />
-                <div className="portfolio-overlay">
-                  <Link to={`/portafolio/${project.id}`} className="portfolio-link-btn" aria-label="Ver Proyecto"><ExternalLink size={24} /></Link>
-                </div>
               </div>
               <div className="portfolio-content">
                 <span className="portfolio-category">{project.category}</span>
-                <Link to={`/portafolio/${project.id}`} style={{ textDecoration: 'none' }}><h3 className="portfolio-title" style={{ transition: 'color 0.3s' }} onMouseOver={(e) => e.target.style.color = 'var(--accent-primary)'} onMouseOut={(e) => e.target.style.color = '#fff'}>{project.title}</h3></Link>
+                <h3 className="portfolio-title" style={{ transition: 'color 0.3s' }} onMouseOver={(e) => e.target.style.color = 'var(--accent-primary)'} onMouseOut={(e) => e.target.style.color = '#fff'}>{project.title}</h3>
                 <p className="portfolio-description">{project.description}</p>
                 <div className="portfolio-tags">
                   {(project.tags || []).map((tag, i) => (
@@ -66,7 +63,7 @@ const Portfolio = ({ openModal }) => {
                   ))}
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         
