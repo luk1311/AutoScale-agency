@@ -72,8 +72,14 @@ const ProjectDetails = () => {
 
           <div className="project-hero" style={{ marginBottom: '4rem' }}>
             <span style={{ color: 'var(--accent-tertiary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>{project.category}</span>
-            <h1 style={{ fontSize: '4rem', marginTop: '1rem', marginBottom: '2rem', lineHeight: '1.2' }}>{project.title}</h1>
+            <h1 style={{ fontSize: '4rem', marginTop: '1rem', marginBottom: project.description ? '1.5rem' : '3rem', lineHeight: '1.2' }}>{project.title}</h1>
             
+            {project.description && (
+              <p style={{ fontSize: '1.3rem', color: 'var(--text-muted)', maxWidth: '800px', margin: '0 auto 3rem auto', lineHeight: '1.6' }}>
+                {project.description}
+              </p>
+            )}
+
             <div className="project-hero-image" style={{ width: '100%', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', position: 'relative', margin: '0 auto' }}>
               <img src={project.image} alt={project.title} style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
             </div>
@@ -84,7 +90,7 @@ const ProjectDetails = () => {
             <div className="project-story">
               <h3 style={{ fontSize: '2rem', marginBottom: '1.5rem', color: 'var(--accent-primary)' }}>El Desafío y la Solución</h3>
               <div className="rich-text" style={{ fontSize: '1.1rem', lineHeight: '1.8', color: 'var(--text-muted)', whiteSpace: 'pre-wrap' }}>
-                {project.full_content || project.description || "Detalles del proyecto en construcción..."}
+                {project.full_content || "Detalles del proyecto en construcción..."}
               </div>
             </div>
 

@@ -126,7 +126,7 @@ const PortfolioEditor = () => {
       return;
     }
 
-    const { id, ...projectData } = activeProject;
+    const { id, _rawTags, ...projectData } = activeProject;
     projectData.image = finalImageUrl;
 
     if (id === 'new') {
@@ -210,7 +210,7 @@ const PortfolioEditor = () => {
   const handleTagsChange = (e) => {
     const value = e.target.value;
     const tagsArray = value.split(',').map(t => t.trim()).filter(t => t !== '');
-    updateField('tags', tagsArray);
+    setActiveProject(prev => ({ ...prev, tags: tagsArray, _rawTags: value }));
   };
 
   const addMetric = () => {
@@ -373,7 +373,7 @@ const PortfolioEditor = () => {
                   <label>Etiquetas (separadas por coma)</label>
                   <input 
                     type="text" 
-                    value={(activeProject.tags || []).join(', ')} 
+                    value={activeProject._rawTags !== undefined ? activeProject._rawTags : (activeProject.tags || []).join(', ')} 
                     onChange={handleTagsChange}
                     placeholder="Shopify, React, Klaviyo..."
                   />
