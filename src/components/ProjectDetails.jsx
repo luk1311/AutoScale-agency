@@ -74,12 +74,12 @@ const ProjectDetails = () => {
             <span style={{ color: 'var(--accent-tertiary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>{project.category}</span>
             <h1 className="project-title-text" style={{ fontSize: '4rem', marginTop: '1rem', marginBottom: '3rem', lineHeight: '1.2' }}>{project.title}</h1>
             
-            <div className="project-hero-image" style={{ width: '100%', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', position: 'relative', margin: '0 auto 3rem auto' }}>
+            <div className="project-hero-image apple-card" style={{ width: '100%', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', position: 'relative', margin: '0 auto 3rem auto' }}>
               <img src={project.image} alt={project.title} style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
             </div>
 
             {project.description && (
-              <div className="glass-panel project-description-panel" style={{
+              <div className="glass-panel project-description-panel apple-card text-truncate-card" style={{
                 maxWidth: '700px',
                 margin: '0 auto',
                 padding: '1.5rem 2rem',
@@ -110,14 +110,14 @@ const ProjectDetails = () => {
 
           <div className="project-content-grid">
             
-            <div className="project-story">
+            <div className="project-story apple-card text-truncate-card">
               <h3 style={{ fontSize: '2rem', marginBottom: '1.5rem', color: 'var(--accent-primary)' }}>El Desafío y la Solución</h3>
               <div className="rich-text" style={{ fontSize: '1.1rem', lineHeight: '1.8', color: 'var(--text-muted)', whiteSpace: 'pre-wrap' }}>
                 {project.full_content || "Detalles del proyecto en construcción..."}
               </div>
             </div>
 
-            <div className="project-sidebar glass-panel" style={{ padding: '2rem', borderRadius: '16px', position: 'sticky', top: '120px' }}>
+            <div className="project-sidebar glass-panel apple-card" style={{ padding: '2rem', borderRadius: '16px', position: 'sticky', top: '120px' }}>
               {project.website_url && (
                 <a href={project.website_url} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ display: 'flex', justifyContent: 'center', width: '100%', padding: '1rem', marginBottom: '2rem' }}>
                   Visitar Sitio Web <ExternalLink size={18} style={{ marginLeft: '10px' }} />

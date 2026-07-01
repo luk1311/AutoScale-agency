@@ -177,8 +177,8 @@
   
   .project-content-grid {
     display: flex !important;
-    flex-direction: column-reverse !important;
-    gap: 2.5rem !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
   }
 
   .project-title-text {
@@ -186,19 +186,30 @@
     margin-bottom: 1.5rem !important;
   }
 
-  .project-hero-image {
-    border-radius: 0 !important;
-    width: 100vw !important;
-    margin-left: calc(-50vw + 50%) !important;
-    margin-right: calc(-50vw + 50%) !important;
-    max-width: 100vw !important;
-    margin-bottom: 2rem !important;
+  .apple-card {
+    background: #1c1c1e !important;
+    border-radius: 24px !important;
+    padding: 2rem 1.5rem !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+    border: 1px solid rgba(255,255,255,0.03) !important;
+    backdrop-filter: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
-  .project-description-panel {
-    margin-top: 1rem !important;
-    padding: 1.5rem !important;
-    width: 100% !important;
+  .project-hero-image.apple-card {
+    padding: 0 !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* Truncamiento para reducir el texto según feedback */
+  .text-truncate-card p,
+  .text-truncate-card .rich-text {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 4 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
   }
 
   .metrics-grid {
@@ -208,7 +219,7 @@
   }
 
   .metric-item {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.05);
     padding: 1rem;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -220,6 +231,5 @@
 
   .project-sidebar {
     position: static !important;
-    padding: 1.5rem !important;
   }
 }
