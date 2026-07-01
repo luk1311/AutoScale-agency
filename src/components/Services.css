@@ -74,6 +74,34 @@
 
 @media (max-width: 768px) {
   .services-grid {
-    grid-template-columns: 1fr;
+    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .service-card {
+    padding: 1.5rem 1rem;
+    align-items: center;
+    text-align: center;
+  }
+
+  .service-icon {
+    font-size: 1.8rem;
+    padding: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .service-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+  
+  .service-card p {
+    display: none;
+  }
+  
+  .service-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    width: calc(50% - 0.5rem);
+    justify-self: center;
   }
 }

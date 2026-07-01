@@ -55,4 +55,10 @@
   .use-case-card p {
     display: none;
   }
+  
+  .use-case-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    width: calc(50% - 0.5rem);
+    justify-self: center;
+  }
 }
