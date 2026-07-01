@@ -70,7 +70,7 @@ const ProjectDetails = () => {
             <ArrowLeft size={18} style={{ marginRight: '8px' }} /> Volver al Portafolio
           </Link>
 
-          <div className="project-hero" style={{ marginBottom: '4rem' }}>
+          <div className="project-hero" style={{ marginBottom: '4rem', textAlign: 'center' }}>
             <span style={{ color: 'var(--accent-tertiary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>{project.category}</span>
             <h1 style={{ fontSize: '4rem', marginTop: '1rem', marginBottom: project.description ? '1.5rem' : '3rem', lineHeight: '1.2' }}>{project.title}</h1>
             
