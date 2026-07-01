@@ -93,3 +93,40 @@
   font-size: 0.9rem;
   color: var(--text-muted);
 }
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 7rem 1.5rem 3rem;
+    min-height: auto;
+  }
+
+  .hero-badge {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .hero-benefits {
+    padding: 1.2rem;
+  }
+
+  .hero-benefits li {
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .btn-large {
+    font-size: 1.1rem;
+    padding: 1rem 1.5rem;
+    width: 100%;
+  }
+
+  .cta-note {
+    font-size: 0.8rem;
+  }
+}

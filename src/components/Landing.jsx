@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Header from './Header';
 import Hero from './Hero';
 import PainPoints from './PainPoints';
+import Stats from './Stats';
+import Services from './Services';
 import Solution from './Solution';
 import Comparison from './Comparison';
 import TechStack from './TechStack';
@@ -17,7 +19,6 @@ const Landing = () => {
 
   const openModal = () => {
     setIsModalOpen(true);
-    // Señal de intención: el usuario abrió el formulario de contacto.
     trackViewContent({ content_name: 'Contacto' });
   };
   const closeModal = () => setIsModalOpen(false);
@@ -27,11 +28,16 @@ const Landing = () => {
       <Header openModal={openModal} />
       <Hero openModal={openModal} />
       <PainPoints />
-      <Solution />
+      <Stats />
+      <Services />
       <Comparison />
       <TechStack />
-      <Process />
-      <UseCases />
+      <div id="proceso">
+        <Process />
+      </div>
+      <div id="casos">
+        <UseCases />
+      </div>
       <FAQ />
       <FooterCTA openModal={openModal} />
       {isModalOpen && <ContactModal onClose={closeModal} />}
