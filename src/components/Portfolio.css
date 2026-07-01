@@ -148,9 +148,21 @@
   color: var(--accent-primary);
 }
 
+.project-content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
 @media (max-width: 992px) {
   .portfolio-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .project-content-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
   }
 }
 
@@ -158,7 +170,12 @@
   .portfolio-grid {
     grid-template-columns: 1fr;
   }
+  
   .portfolio-image-wrapper {
     height: 200px;
+  }
+  
+  .project-content-grid {
+    gap: 2rem;
   }
 }
