@@ -2,30 +2,12 @@ import './FooterCTA.css';
 
 const FooterCTA = ({ openModal }) => {
   return (
-    <section className="section footer-cta-section" id="contacto">
+    <section className="section footer-cta-section" id="contacto" style={{ padding: '4rem 0', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
       <div className="container text-center">
-        <div className="footer-cta-content glass-panel">
-          <h2>Descubre cuánto dinero <span className="text-gradient">podrías ahorrar</span></h2>
-          <p className="cta-intro">
-            Cada mensaje sin responder es una oportunidad perdida.<br/>
-            Cada tarea repetitiva que realiza tu equipo es tiempo que podría dedicarse a vender.
-          </p>
-          
-          <div className="cta-highlight">
-            Automatizar no es un gasto.<br/>
-            <strong>Es una inversión para crecer más rápido, atender mejor y aumentar tus ingresos.</strong>
-          </div>
-
-          <div className="final-action">
-            <h3>Solicita tu Auditoría Gratuita</h3>
-            <p>Analizaremos tu proceso actual y te mostraremos exactamente qué áreas puedes automatizar para aumentar ventas y reducir costos.</p>
-            
-            <button onClick={openModal} className="btn btn-primary btn-large cta-btn">
-              Quiero mi Auditoría Gratuita
-            </button>
-            <p className="cta-note">*Disponibilidad limitada para garantizar una implementación personalizada.</p>
-          </div>
-        </div>
+        <h2 style={{ marginBottom: '2rem', fontSize: '2.5rem' }}>¿Listo para <span className="text-gradient">escalar</span> tu negocio?</h2>
+        <button onClick={openModal} className="btn btn-primary btn-large cta-btn" style={{ padding: '1rem 3rem', fontSize: '1.2rem' }}>
+          Iniciar tu Proyecto
+        </button>
       </div>
     </section>
   );
