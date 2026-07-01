@@ -109,11 +109,28 @@ const ProjectDetails = () => {
                 </div>
               )}
 
-              <div className="project-tags-sidebar" style={{ marginTop: '3rem' }}>
-                <h4 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1.2rem' }}>Tecnologías & Servicios</h4>
-                <div className="portfolio-tags">
+              <div className="project-tags-sidebar" style={{ marginTop: (project.metrics && project.metrics.length > 0) || project.website_url ? '3rem' : '0' }}>
+                <h4 style={{ marginBottom: '1.2rem', color: '#fff', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-tertiary)', display: 'inline-block' }}></span>
+                  Tecnologías & Servicios
+                </h4>
+                <div className="portfolio-tags" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
                   {(project.tags || []).map((tag, index) => (
-                    <span key={index} className="portfolio-tag" style={{ background: 'rgba(99, 102, 241, 0.1)', borderColor: 'rgba(99, 102, 241, 0.3)', color: '#fff' }}>{tag}</span>
+                    <span key={index} className="portfolio-tag" style={{ 
+                      background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%)', 
+                      borderColor: 'rgba(168, 85, 247, 0.4)', 
+                      color: '#fff',
+                      fontWeight: '500',
+                      padding: '0.5rem 1rem',
+                      borderRadius: '30px',
+                      boxShadow: '0 4px 15px rgba(168, 85, 247, 0.1)',
+                      transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+                    }}
+                    onMouseOver={(e) => { e.target.style.transform = 'translateY(-2px)'; e.target.style.boxShadow = '0 6px 20px rgba(168, 85, 247, 0.25)'; }}
+                    onMouseOut={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = '0 4px 15px rgba(168, 85, 247, 0.1)'; }}
+                    >
+                      {tag}
+                    </span>
                   ))}
                 </div>
               </div>
