@@ -176,6 +176,50 @@
   }
   
   .project-content-grid {
-    gap: 2rem;
+    display: flex !important;
+    flex-direction: column-reverse !important;
+    gap: 2.5rem !important;
+  }
+
+  .project-title-text {
+    font-size: 2.2rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .project-hero-image {
+    border-radius: 0 !important;
+    width: 100vw !important;
+    margin-left: calc(-50vw + 50%) !important;
+    margin-right: calc(-50vw + 50%) !important;
+    max-width: 100vw !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .project-description-panel {
+    margin-top: 1rem !important;
+    padding: 1.5rem !important;
+    width: 100% !important;
+  }
+
+  .metrics-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem !important;
+  }
+
+  .metric-item {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .metric-value {
+    font-size: 1.8rem !important;
+  }
+
+  .project-sidebar {
+    position: static !important;
+    padding: 1.5rem !important;
   }
 }

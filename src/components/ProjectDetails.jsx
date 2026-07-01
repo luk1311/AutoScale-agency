@@ -72,14 +72,14 @@ const ProjectDetails = () => {
 
           <div className="project-hero" style={{ marginBottom: '4rem', textAlign: 'center' }}>
             <span style={{ color: 'var(--accent-tertiary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>{project.category}</span>
-            <h1 style={{ fontSize: '4rem', marginTop: '1rem', marginBottom: '3rem', lineHeight: '1.2' }}>{project.title}</h1>
+            <h1 className="project-title-text" style={{ fontSize: '4rem', marginTop: '1rem', marginBottom: '3rem', lineHeight: '1.2' }}>{project.title}</h1>
             
             <div className="project-hero-image" style={{ width: '100%', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', position: 'relative', margin: '0 auto 3rem auto' }}>
               <img src={project.image} alt={project.title} style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
             </div>
 
             {project.description && (
-              <div className="glass-panel" style={{
+              <div className="glass-panel project-description-panel" style={{
                 maxWidth: '700px',
                 margin: '0 auto',
                 padding: '1.5rem 2rem',
@@ -127,11 +127,11 @@ const ProjectDetails = () => {
               {project.metrics && project.metrics.length > 0 && (
                 <div className="project-metrics">
                   <h4 style={{ marginBottom: '1.5rem', color: '#fff', fontSize: '1.2rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>Resultados Destacados</h4>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  <div className="metrics-grid" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                     {project.metrics.map((metric, index) => (
                       <div key={index} className="metric-item">
-                        <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--accent-secondary)', lineHeight: '1' }}>{metric.value}</div>
-                        <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>{metric.label}</div>
+                        <div className="metric-value" style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--accent-secondary)', lineHeight: '1' }}>{metric.value}</div>
+                        <div className="metric-label" style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>{metric.label}</div>
                       </div>
                     ))}
                   </div>
