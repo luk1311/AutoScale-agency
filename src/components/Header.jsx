@@ -32,7 +32,7 @@ const Header = ({ openModal }) => {
             Iniciar Proyecto
           </button>
           <button className="mobile-menu-btn" onClick={toggleMenu}>
-            {isMobileMenuOpen ? <X size={24} color="#fff" /> : <Menu size={24} color="#fff" />}
+            {isMobileMenuOpen ? <X size={24} color="#1d1d1f" /> : <Menu size={24} color="#1d1d1f" />}
           </button>
         </div>
       </div>
