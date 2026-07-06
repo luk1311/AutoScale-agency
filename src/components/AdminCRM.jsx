@@ -4,7 +4,7 @@ import MetricsDashboard from './crm/MetricsDashboard';
 import KanbanBoard from './crm/KanbanBoard';
 import PortfolioEditor from './crm/PortfolioEditor';
 import { getCampaign, getChannel, parseMoneyInput } from '../lib/leadHelpers';
-import { CheckCircle2, Inbox, Loader2, LayoutGrid, Users } from 'lucide-react';
+import { CheckCircle2, Inbox, Loader2, LayoutGrid, Users, BookOpen } from 'lucide-react';
 import './AdminCRM.css';
 
 // Columnas que usa el CRM. Incluye atribución de marketing (origen/UTM/fbclid)
@@ -376,12 +376,27 @@ const AdminCRM = () => {
             >
               <LayoutGrid size={16} /> Portafolio
             </button>
+            <button 
+              className={`btn ${activeTab === 'playbook' ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => setActiveTab('playbook')}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <BookOpen size={16} /> Playbook
+            </button>
           </nav>
         </div>
         <button className="btn btn-secondary" onClick={handleLogout}>Salir</button>
       </header>
 
-      {activeTab === 'portfolio' ? (
+      {activeTab === 'playbook' ? (
+        <div style={{ height: 'calc(100vh - 80px)', width: '100%', padding: '1rem', boxSizing: 'border-box' }}>
+          <iframe 
+            src="/AutoScale_Playbook.html" 
+            title="AutoScale Playbook"
+            style={{ width: '100%', height: '100%', border: 'none', borderRadius: '12px', background: '#fff', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}
+          />
+        </div>
+      ) : activeTab === 'portfolio' ? (
         <PortfolioEditor />
       ) : (
         <>

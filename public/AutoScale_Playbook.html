@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoScale — Playbook de Ventas</title>
+<style>
+  :root{
+    --sidebar:#0f172a; --sidebar-2:#1e293b; --muted:#94a3b8; --line:#e2e8f0;
+    --primary:#6366f1; --primary-d:#4f46e5; --ink:#0f172a; --body:#334155;
+    --bg:#f1f5f9; --card:#ffffff; --accent:#22c55e; --warn:#f59e0b; --mark:#fde047;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    color:var(--body);background:var(--bg);line-height:1.6}
+  a{color:var(--primary-d);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  .layout{display:flex;min-height:100vh}
+
+  /* Sidebar */
+  .sidebar{width:280px;background:var(--sidebar);color:#cbd5e1;position:fixed;top:0;left:0;bottom:0;
+    display:flex;flex-direction:column;padding:0;z-index:50;transition:transform .25s ease}
+  .brand{padding:22px 22px 16px;border-bottom:1px solid #24324a}
+  .brand h1{margin:0;font-size:19px;color:#fff;letter-spacing:.3px}
+  .brand .logo{display:inline-flex;align-items:center;gap:9px}
+  .brand .dot{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#818cf8,#22d3ee);
+    display:inline-block}
+  .brand p{margin:8px 0 0;font-size:12px;color:var(--muted)}
+  .search-wrap{padding:14px 16px;border-bottom:1px solid #24324a}
+  .search-wrap input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #334155;
+    background:#0b1220;color:#e2e8f0;font-size:14px;outline:none}
+  .search-wrap input::placeholder{color:#64748b}
+  .search-count{font-size:11px;color:var(--muted);margin-top:6px;min-height:14px}
+  nav{padding:12px 10px;overflow-y:auto;flex:1}
+  nav a.navlink{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:10px;
+    color:#cbd5e1;font-size:14.5px;font-weight:500;margin-bottom:3px}
+  nav a.navlink:hover{background:var(--sidebar-2);text-decoration:none;color:#fff}
+  nav a.navlink.active{background:var(--primary);color:#fff}
+  nav a.navlink .ico{font-size:17px;width:22px;text-align:center}
+  .nav-sep{color:#475569;font-size:11px;text-transform:uppercase;letter-spacing:1px;
+    padding:16px 14px 6px;font-weight:700}
+  nav a.ext{color:#93c5fd;font-size:13.5px}
+  nav a.ext:hover{background:var(--sidebar-2)}
+
+  /* Content */
+  .content{margin-left:280px;flex:1;padding:0 0 80px}
+  .hero{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;padding:38px 44px 34px}
+  .hero h2{margin:0 0 6px;font-size:30px;font-weight:800;letter-spacing:.2px}
+  .hero p{margin:0;opacity:.92;font-size:15px}
+  .hero .chips{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+  .hero .chip{background:rgba(255,255,255,.16);padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:600}
+  .wrap{max-width:960px;margin:0 auto;padding:0 44px}
+
+  section.doc-sec{margin-top:34px;background:var(--card);border:1px solid var(--line);
+    border-radius:16px;padding:30px 34px;box-shadow:0 1px 3px rgba(15,23,42,.04)}
+
+  /* Markdown typography */
+  .doc h1{font-size:24px;color:var(--ink);margin:.2em 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line);font-weight:800}
+  .doc h2{font-size:19px;color:var(--ink);margin:1.4em 0 .5em;font-weight:700}
+  .doc h3{font-size:16px;color:var(--primary-d);margin:1.2em 0 .4em;font-weight:700}
+  .doc p{margin:.6em 0}
+  .doc ul,.doc ol{margin:.5em 0;padding-left:1.4em}
+  .doc li{margin:.28em 0}
+  .doc code{background:#eef2ff;color:#4338ca;padding:2px 6px;border-radius:6px;font-size:.88em;
+    font-family:'Consolas','SF Mono',monospace}
+  .doc a{word-break:break-word}
+  .doc hr{border:none;border-top:1px solid var(--line);margin:1.6em 0}
+  .doc strong{color:var(--ink)}
+
+  /* Tables */
+  .doc table{border-collapse:collapse;width:100%;margin:1em 0;font-size:13.5px;display:block;overflow-x:auto}
+  .doc th,.doc td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  .doc th{background:#eef2ff;color:var(--ink);font-weight:700;white-space:nowrap}
+  .doc tr:nth-child(even) td{background:#f8fafc}
+
+  /* Blockquotes = message cards */
+  .doc blockquote{position:relative;background:#f8fafc;border-left:4px solid var(--primary);
+    margin:.9em 0;padding:14px 18px;border-radius:0 12px 12px 0;color:#1e293b}
+  .doc blockquote p{margin:.3em 0}
+  .copy-btn{position:absolute;top:8px;right:8px;background:var(--primary);color:#fff;border:none;
+    border-radius:8px;padding:5px 10px;font-size:11.5px;font-weight:600;cursor:pointer;opacity:.85}
+  .copy-btn:hover{opacity:1}
+
+  /* Checkboxes */
+  .doc input[type=checkbox]{margin-right:8px;transform:scale(1.15)}
+
+  mark{background:var(--mark);padding:0 2px;border-radius:3px}
+
+  /* Mobile */
+  .topbar{display:none;position:sticky;top:0;background:var(--sidebar);color:#fff;
+    padding:12px 16px;align-items:center;gap:12px;z-index:40}
+  .topbar button{background:none;border:1px solid #475569;color:#fff;border-radius:8px;
+    padding:6px 11px;font-size:18px;cursor:pointer;line-height:1}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:45}
+
+  @media(max-width:900px){
+    .sidebar{transform:translateX(-100%);width:270px}
+    .sidebar.open{transform:translateX(0)}
+    .content{margin-left:0}
+    .topbar{display:flex}
+    .overlay.show{display:block}
+    .wrap,.hero{padding-left:20px;padding-right:20px}
+    section.doc-sec{padding:22px 18px}
+  }
+
+  @media print{
+    .sidebar,.topbar,.copy-btn,.search-wrap{display:none}
+    .content{margin:0}
+    section.doc-sec{break-inside:avoid;box-shadow:none;border:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button id="menuBtn" aria-label="Menú">☰</button>
+  <strong>AutoScale Playbook</strong>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="logo"><span class="dot"></span><h1>AutoScale</h1></span>
+      <p>Playbook de Ventas · Barranquilla</p>
+    </div>
+    <div class="search-wrap">
+      <input id="search" type="search" placeholder="🔍 Buscar en el playbook…" autocomplete="off">
+      <div class="search-count" id="searchCount"></div>
+    </div>
+    <nav id="nav">
+      <a class="navlink" href="#sec-metas"><span class="ico">🎯</span> Plan 90 días</a>
+      <a class="navlink" href="#sec-oferta"><span class="ico">💼</span> Oferta y precios</a>
+      <a class="navlink" href="#sec-prospeccion"><span class="ico">🔎</span> Prospección (82)</a>
+      <a class="navlink" href="#sec-mensajes"><span class="ico">💬</span> Mensajes + paso a paso</a>
+      <a class="navlink" href="#sec-objeciones"><span class="ico">🛡️</span> Objeciones</a>
+      <a class="navlink" href="#sec-checklist"><span class="ico">🗓️</span> Checklist semanal</a>
+      <div class="nav-sep">Enlaces rápidos</div>
+      <a class="ext navlink" href="https://www.autoscale.site/admin" target="_blank"><span class="ico">🗂️</span> CRM (/admin)</a>
+      <a class="ext navlink" href="https://nail-studio-tau-five.vercel.app" target="_blank"><span class="ico">💅</span> Demo Nail Studio</a>
+      <a class="ext navlink" href="https://multicasas-web.vercel.app/" target="_blank"><span class="ico">🏗️</span> Demo MultiCasas</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <div class="hero">
+      <h2>Playbook de Ventas — AutoScale</h2>
+      <p>Todo tu sistema de prospección en un solo lugar. Actualizado 05/07/2026.</p>
+      <div class="chips">
+        <span class="chip">🎯 Meta: 3 clientes en 90 días</span>
+        <span class="chip">📇 82 prospectos · 49 en CRM</span>
+        <span class="chip">📍 Barranquilla + Colombia</span>
+      </div>
+    </div>
+    <div class="wrap">
+      <section class="doc-sec" id="sec-metas"><div class="doc" data-md="md-metas"></div></section>
+      <section class="doc-sec" id="sec-oferta"><div class="doc" data-md="md-oferta"></div></section>
+      <section class="doc-sec" id="sec-prospeccion"><div class="doc" data-md="md-prospeccion"></div></section>
+      <section class="doc-sec" id="sec-mensajes"><div class="doc" data-md="md-mensajes"></div></section>
+      <section class="doc-sec" id="sec-objeciones"><div class="doc" data-md="md-objeciones"></div></section>
+      <section class="doc-sec" id="sec-checklist"><div class="doc" data-md="md-checklist"></div></section>
+    </div>
+  </main>
+</div>
+
+<!-- ===================== CONTENIDO (markdown) ===================== -->
+<script type="text/markdown" id="md-metas">
+# AutoScale — Plan de 90 días (Meta: primeros clientes)
+
+> Documento vivo. Actualízalo cada lunes. Fecha de inicio: 2026-07-05.
+
+## 🎯 Metas en 3 niveles
+
+- **North Star (12 meses):** Agencia con ingreso recurrente estable y sistema de entrega replicable.
+- **90 días (hasta ~2026-10-05):** 3 clientes de pago en nicho belleza/estética + 1 caso con resultados medibles.
+- **Este mes:** Empaquetar oferta + 100 negocios en lista + 10 conversaciones reales.
+- **Esta semana:** Primeros DMs enviados a los prospectos ⭐.
+
+## 🧭 Estrategia (una frase)
+
+Vender el MISMO stack que ya construí (desarrollo web + automatización WhatsApp/Email con n8n + CRM)
+a negocios locales de belleza/estética y a constructoras de prefabricadas, usando Nail Studio y
+MultiCasas como demos.
+
+## 📦 La oferta (CERRADA) — enfoque: desarrollo web + automatizaciones n8n (sin ads)
+
+| Plan | Setup | Mensual |
+|---|---|---|
+| Esencial (web + captura + WhatsApp/Email auto) | $990.000 | $220.000 |
+| **Pro** ⭐ (+ CRM + automatizaciones extra) | $1.790.000 | $350.000 |
+| Automatización a medida (+ flujos n8n personalizados) | desde $2.900.000 | $490.000 |
+
+- **Precio fundador (primeros 3 clientes, a cambio de testimonio):** Plan Pro $790.000 setup + $220.000/mes.
+
+## 🗓️ Roadmap
+
+### Mes 1 — Munición y prospección
+- [x] Definir UN paquete con precio cerrado
+- [x] Nail Studio → caso de estudio presentable
+- [x] MultiCasas → caso de estudio presentable
+- [x] Lista de prospectos investigada (~82 negocios)
+- [ ] 10 conversaciones reales iniciadas
+
+### Mes 2 — Primeros cierres
+- [ ] Cerrar 1–2 clientes a precio fundador
+- [ ] Entrega impecable con el stack propio
+- [ ] Documentar resultados (leads generados)
+
+### Mes 3 — Prueba social y subir precio
+- [ ] Usar resultados para cerrar 2–3 clientes más
+- [ ] Subir a precio normal
+- [ ] Sistematizar la entrega para el equipo
+
+## 👥 Roles del equipo
+
+- **Prospección/ventas:** ____________________
+- **Entrega/desarrollo:** ____________________
+- **Diseño/creativos:** ____________________ (apoyo: agente Creative Director + skill banner-design)
+
+## 🔁 Ritmo
+
+- **Lunes (30 min):** revisar números + fijar meta de la semana.
+- **Viernes (15 min):** ¿se cumplió? ¿qué frenó?
+</script>
+
+<script type="text/markdown" id="md-oferta">
+# AutoScale — Oferta productizada (para vender)
+
+## Reposicionamiento
+
+**No vendes "una página web". Vendes un sistema web + automatizaciones que convierte
+visitas de Instagram en citas por WhatsApp, en automático — y le ahorra horas al negocio.**
+
+Enfoque: **desarrollo web + automatizaciones con n8n** (sin gestión de ads).
+Nicho objetivo: negocios locales de belleza/estética (barberías, salones, uñas, spa, estética).
+
+## Los 3 planes
+
+| Plan | Qué incluye | Setup | Mensual |
+|---|---|---|---|
+| **Esencial** | Landing/web optimizada móvil + captura de leads + WhatsApp/Email automático (n8n) | $990.000 | $220.000 |
+| **Pro** ⭐ | Esencial + CRM /admin para gestionar leads + automatizaciones extra en n8n (recordatorios de cita, seguimiento de leads) + reportes | $1.790.000 | $350.000 |
+| **Automatización a medida** | Pro + flujos n8n personalizados (integración con su agenda, inventario, base de clientes, etc.) | desde $2.900.000 | $490.000 |
+
+## 🔥 Precio Fundador (solo primeros 3 clientes)
+
+Plan Pro por **$790.000 setup (antes $1.790.000) + $220.000/mes**.
+A cambio de: **testimonio en video + permiso de caso de estudio**.
+
+## Pitch en una frase
+
+> "Ayudo a [barberías/salones] a llenar su agenda con una web + automatizaciones que convierten sus seguidores en citas por WhatsApp automáticamente — sin que tengan que estar respondiendo mensajes todo el día. Ya lo tengo funcionando, te muestro un ejemplo."
+
+## Casos de estudio disponibles
+
+- Nail Studio (demo en vivo) · MultiCasas (demo en vivo) · Mundo Patitas (tu propia tienda).
+</script>
+
+<script type="text/markdown" id="md-prospeccion">
+# Prospección — Lista maestra (82 negocios)
+
+> **Lista maestra (no borrar).** Este documento tiene los **82 negocios** investigados. En el CRM
+> están cargados solo los **49 con Instagram, web o WhatsApp**. Los otros 33 (solo nombre/dirección)
+> quedan aquí como referencia para contactarlos por otro método.
+
+## 🎯 Cliente ideal (ICP)
+
+- Belleza/estética local: barberías, salones, uñas, spa, estética, depilación, cejas/pestañas.
+- Buen prospecto: Instagram activo pero **web pobre o sin web**; 1.000–30.000 seguidores; recibe citas por DM.
+- Evitar: cadenas grandes, cuentas muertas, sin forma de contacto.
+
+## 🔎 Dónde encontrarlos
+
+1. Instagram por ubicación de tu ciudad.
+2. Hashtags: `#uñasbarranquilla` `#barberiabarranquilla` `#salondebellezabarranquilla` `#riomar` `#barranquillanorte`.
+3. Google Maps: "salón de uñas", "barbería", "spa" en tu ciudad.
+4. "Cuentas similares" de un buen prospecto.
+
+## 💅 Salones de uñas / Nail
+| # | Negocio | Instagram | Zona | Notas |
+|---|---------|-----------|------|-------|
+| 1 | Nail Boutique | @nailboutiquebaq | Calle 93 #49c-274 · tel 605 3125076 | 84k (grande) |
+| 2 | MEVAK Nails Spa | @mevakspa_nails | Cl 72 #52-60 / Cl 82 #46-58 | ~6k ⭐ |
+| 3 | Fiore Studio | (buscar @) | Cra 52c #90-79, Riomar | 5.0★ |
+| 4 | MakeupMe Studio | (buscar @) | Cra 59b #79-100, El Golf | tiene web |
+| 5 | Sugar Rose | @sugarrose_nails | Calle 86 #47-05 | salón grande |
+| 6 | Iconik Beauty Nails | @iconikbeautynails | Barranquilla | semipermanente |
+| 7 | Bellanella Nail Spa | (buscar @) | Calle 120 #42-112 | ⭐ |
+| 8 | Laura Nails | @lauranailbq | Barranquilla | ⭐ |
+| 9 | 11:11 Beauty & Coffee | (buscar @) | Calle 84 #42h-13 | 4.9★ |
+| 10 | Isabella Salón & Nails Spa | @isabella.baq | Barranquilla | ⭐ |
+| 11 | Vanity Deluxe | (buscar @) | Cra 42F #76-89, Cdad Jardín | ⭐ |
+| 12 | Paraíso de Uñas | (buscar @) | Cra 50 #50b-58 | ⭐ |
+| 13 | Magic Nails | tumagicnails.com | Barranquilla | |
+| 14 | Posh Nails N Hair | @poshnailsnhair | Barranquilla | |
+
+## 💈 Barberías
+| # | Negocio | Instagram | Zona | Notas |
+|---|---------|-----------|------|-------|
+| 15 | La Barba VIP | @labarbavip | Barranquilla | 44k (grande) |
+| 16 | Champions Barbershop | @championsbarbershopl | Calle 57 #37-83 | ⭐ |
+| 17 | The VIP Beard | (buscar @) | Cl 96 #46-32, Riomar | 4.7★ |
+| 18 | Barbershop Bluebeard | (buscar @) | Cl 71 #33-47 | ⭐ |
+| 19 | Niche Barber Shop | (buscar @) | Cl 72 #41b-27 | ⭐ |
+| 20 | Barbudos Barbershop | (buscar @) | Cl 72 #62-27 | 4.8★ ⭐ |
+| 21 | South Beach Barber Shop | (buscar @) | Calle 98 #52-115 | |
+| 22 | Vikingos Barber Club | (buscar @) | Las Mercedes | ⭐ |
+| 23 | Miami V.A Barbershop | (buscar @) | Cra 46 #59-54 | 4.9★ ⭐ |
+| 24 | Barber Shop Mr. Franco | (buscar @) | Cl 58 | ⭐ |
+| 25 | Don Juan Barber Club | (buscar @) | Cl 93 #71-49, Riomar | ⭐ |
+| 26 | Made In Barbershop | (buscar @) | Cra 71 #80-149, Riomar | ⭐ |
+| 27 | The King of Barbers | (buscar @) | Cl 79 #44-11 | ⭐ |
+| 28 | The Boogeyman BS | @theboogeymanbs | Cra 46 #79-163 | ⭐ |
+| 29 | The King Barber Shop | (buscar @) | Cra 55 | ⭐ |
+| 30 | Barbero Don Bigotes | (buscar @) | Norte | ⭐ |
+| 31 | Barrio Fino Barber Shop | (buscar @) | Cra 1e #46e-17 | ⭐ |
+| 32 | Balber VIP | (buscar @) | Cl 84B #40A-12 | ⭐ |
+| 33 | Prestige Barbershop | (buscar @) | Barranquilla | ⭐ |
+| 34 | Priority Barber | (buscar @) | Barranquilla | ⭐ |
+| 35 | Negro Barber Shop | (buscar @) | Barranquilla | ⭐ |
+
+## 💇 Belleza / Spa / Peluquería / Estética
+| # | Negocio | Instagram | Zona | Notas |
+|---|---------|-----------|------|-------|
+| 36 | Slaka Beauty Spa | @slakabeautyspa | Barranquilla | 28k |
+| 37 | Prana Spa | @pranaspaa | Barranquilla | 61k (grande) |
+| 38 | Jorge Centeno Salón y Spa | @jorgitocenteno_ | Barranquilla | 33k |
+| 39 | Sarah Beauty Wellness | @sarahbeauty.wellness | Barranquilla | faciales premium |
+| 40 | Amana Centro de Belleza y Spa | @amana.spacenter | Barranquilla | 22k |
+| 41 | Salón de Belleza Astry | @saladebellezaastry | Barranquilla | ⭐ |
+| 42 | Molto Bella | (buscar @) | Barranquilla | ⭐ |
+| 43 | Miranda's Salón y Estética | (buscar @) | Cra 65 #75-39 | 4.9★ ⭐ |
+| 44 | Biomedical Skin Center | (buscar @) | Calle 98 #51B-76 | 5.0★ |
+| 45 | Danny Moreno Salón | (buscar @) | Cl 93 #47-101, Riomar | ⭐ |
+| 46 | Peluquería Amores | (buscar @) | Cra 44 #72-63 | ⭐ |
+| 47 | Analis Rivera Stylos | (buscar @) | Cl 76 #46-60 | ⭐ |
+| 48 | Ellas Peluquería | (buscar @) | Cl 67 #46-69 | ⭐ |
+| 49 | Sandra Sierra Alisados y Keratinas | sandrasierra.co | Barranquilla | |
+| 50 | Spa Total You · Vertex | (buscar @) | Cra 46 #74-45 | ⭐ |
+| 51 | Paola Bonilla Makeup Studio | (buscar @) | Cra 52 #92, Riomar | ⭐ |
+| 52 | Centro Integral Médico SPA | @cim_spa | Barranquilla | "el más grande" |
+| 53 | Amatista Spa | @amatista_spa | Barranquilla | facial y corporal ⭐ |
+| 54 | Claudia Chacón Belleza y Estética | claudiachacon.co | Barranquilla | |
+| 55 | Centro de Estética Darío Cabello | dariocabello.com | Barranquilla | depilación |
+
+## 👁️ Cejas y pestañas / Lash
+| # | Negocio | Instagram | Zona | Notas |
+|---|---------|-----------|------|-------|
+| 56 | Pretty Lash | @prettylashoficial | CC Palmas Mall | 61k |
+| 57 | Studio Lashes Barcelona | @studiolashesbarcelona | Barranquilla | microblading |
+| 58 | MB Cejas y Pestañas | @mb_cejasypestanas | Barranquilla | ⭐ |
+| 59 | Max Lash & Brow Studio | @maxlashestudio | Barranquilla | ⭐ |
+
+# 🏗️ Nicho 2 — Constructoras / prefabricadas (Colombia)
+
+> Demo: **MultiCasas** → https://multicasas-web.vercel.app/. Ángulo: su web no convierte y pierden
+> interesados. Vendes web con **cotizador** + captura → **CRM** + WhatsApp automático. Ticket más alto.
+
+| # | Empresa | Instagram/Web | Zona | Notas |
+|---|---------|---------------|------|-------|
+| 1 | Atlántica Casas y Prefabricados | @atlantica_casas | BQ · Cra 38 #74-334 · tel 605 3461854 | ⭐ local |
+| 2 | Edificasas | (buscar @) | BQ · Calle 30 | ⭐ local |
+| 3 | Vivienda Prefabricada Ltda | viviendaprefabricadaltda.com | BQ | ⭐ local |
+| 4 | Planeta Prefabricado | planetaprefabricado.co | Costa/Nacional | |
+| 5 | Constructores de Su Casa | @constructoresdesucasa.colombia | Nacional | 4.1k ⭐ |
+| 6 | Casas Prefabricadas Modulares | @prefabricada.co | Bogotá · tel 300 7366006 | 3.3k ⭐ |
+| 7 | Casas Prefabricadas JAH | @casasprefabricadasjah | Colombia | ⭐ |
+| 8 | Custom Home Colombia | customhomecolombia.com | Nacional | |
+| 9 | Vimob | @vimob | Bogotá | eco-friendly |
+| 10 | Inside Home | insidehome.com.co | Medellín | 14 años |
+| 11 | Casas Prefabricadas Colombia | casasprefabricadascolombia.com | Nacional | |
+| 12 | Concasaya | concasaya.com | Bogotá | ⭐ |
+| 13 | InnovaCasas | @innovacasas | Medellín/Cali · tel 301 6110028 | |
+| 14 | Cypres | casascypres.com | Nacional | 42 años (grande) |
+| 15 | AB Casalista | abcasalista.com | Bogotá | |
+| 16 | Woodpecker WPC | woodpecker.com.co | Nacional | marca grande |
+| 17 | Casas Modulares SAS | @casas_modularessas | Nacional | 64k (grande) |
+| 18 | Arbeláez Prefabricados | @arbelaezprefabricados | Nacional | 71k (grande) |
+| 19 | Casas Prefabricadas Full Houses | @constructorafullh | Medellín | ⭐ |
+| 20 | Constru Casas | construcasasprefabricados.com.co | Medellín | ⭐ |
+| 21 | Construcol | construcolprefabricados.com | Medellín | ⭐ |
+| 22 | Modularte | modularte.com.co | Nacional | premium/glamping |
+| 23 | Modularq Constructora | constructoramodularq.com | BQ/Bogotá/Pereira | |
+
+## 📊 Números meta (semana 1)
+
+- Contactar: 25–30 · Respuestas: 5–8 · Demos: 2–3 → primer cliente fundador en 3–4 semanas.
+</script>
+
+<script type="text/markdown" id="md-mensajes">
+# Mensajes listos + Paso a paso de contacto
+
+Demo belleza: https://nail-studio-tau-five.vercel.app · Demo construcción: https://multicasas-web.vercel.app/
+
+## 🧭 PASO A PASO
+
+**Por cada prospecto (repite):**
+1. En el CRM, clic en **📷 Contactar** → te abre su Instagram/web (y lo marca 🟡 Contactado solo).
+2. Mira su perfil 5 segundos → busca un detalle real.
+3. Copia el mensaje, reemplaza `[detalle]` con lo que viste.
+4. Pega y envía por DM de Instagram (o chat/WhatsApp de su web).
+5. Si responde → Mensaje 2 (con link de demo).
+6. Si agenda → Mensaje 3 (cierre) y muévelo a 🔵 Propuesta.
+
+**Reglas:** 10–12 al día · siempre personaliza el `[detalle]` · entre semana 9am–7pm.
+
+**Mensaje 2 — belleza:**
+> ¡Genial! 🙌 Mira este ejemplo → https://nail-studio-tau-five.vercel.app — es una web que convierte a tus seguidores en citas: la clienta llena sus datos y le llega WhatsApp + correo automático, y a ti te queda todo ordenado en un panel. ¿Tienes 10 min esta semana y te lo muestro en vivo con tu negocio?
+
+**Mensaje 2 — construcción:**
+> ¡Genial! 🙌 Mira → https://multicasas-web.vercel.app/ — tiene cotizador, capta los datos del interesado y dispara WhatsApp + correo automático; el equipo ve todo en un panel. ¿Tienes 10 min esta semana?
+
+**Mensaje 3 — cierre (ambos):**
+> Perfecto. ¿Te sirve [día/hora] o [día/hora]? Te dejo la demo lista con [negocio] puesto para que veas cómo se vería. Ojo que este mes tomo solo **3 negocios a precio de lanzamiento**. 😉
+
+## 💅 BATCH 1 — Uñas (Lunes · 9)
+
+**MEVAK Nails Spa**
+> ¡Hola! 👋 Vi MEVAK Nails Spa y me encantó [detalle]. Soy Luka, de Barranquilla — armo webs + agendamiento automático por WhatsApp para salones de uñas. Le monté el sistema a un nail studio y ahora las clientas agendan solas, sin perder mensajes. ¿Te muestro un ejemplo de 1 min para MEVAK?
+
+**Laura Nails**
+> ¡Hola Laura! 👋 Vi tu Instagram y me encantó [detalle]. Soy Luka, de Barranquilla — hago webs + agendamiento por WhatsApp para salones de uñas. Tus clientas podrían agendar solas y no perderías mensajes en el DM. ¿Te muestro un ejemplo de 1 min?
+
+**Isabella Salón & Nails Spa**
+> ¡Hola! 👋 Me encantó Isabella Salón & Nails Spa [detalle]. Soy Luka, de Barranquilla — armo webs + agendamiento por WhatsApp para salones de belleza y uñas. Las clientas agendan solas y queda todo organizado. ¿Te muestro en 1 min cómo se vería?
+
+**Iconik Beauty Nails**
+> ¡Hola! 👋 Me encantó Iconik Beauty Nails [detalle: ej. las semipermanentes]. Soy Luka, de Barranquilla — hago webs + agendamiento por WhatsApp para salones de uñas. Las clientas agendan solas y no se pierde ningún mensaje. ¿Te muestro en 1 min cómo quedaría?
+
+**Posh Nails N Hair**
+> ¡Hola! 👋 Vi Posh Nails N Hair y me encantó [detalle]. Soy Luka, de Barranquilla — armo webs + agendamiento automático por WhatsApp para salones de uñas y belleza. Tus clientas agendarían solas por WhatsApp. ¿Te muestro un ejemplo de 1 min?
+
+**Sugar Rose**
+> ¡Hola! 👋 Vi Sugar Rose y me encantó [detalle]. Soy Luka, de Barranquilla — armo webs + agendamiento automático por WhatsApp para salones de belleza y uñas. Ideal para que tus clientas agenden solas sin saturar el DM. ¿Te muestro un ejemplo de 1 min?
+
+**MakeupMe Studio** (tiene web)
+> ¡Hola! 👋 Vi MakeupMe Studio, se ven súper profesionales [detalle]. Soy Luka, de Barranquilla — le agrego a salones como el tuyo el agendamiento automático por WhatsApp + CRM para que las clientas reserven solas. ¿Te muestro en 1 min cómo funcionaría?
+
+**Magic Nails** (tiene web)
+> ¡Hola! 👋 Vi Magic Nails y me encantó [detalle]. Soy Luka, de Barranquilla — hago webs + agendamiento automático por WhatsApp para salones de uñas. Tus clientas agendarían solas por WhatsApp. ¿Te muestro en 1 min cómo quedaría?
+
+**Nail Boutique** (grande, 84k)
+> ¡Hola! 👋 Sigo el trabajo de Nail Boutique, es de otro nivel [detalle]. Soy Luka, de Barranquilla — armo sistemas de agendamiento por WhatsApp + web para salones de uñas. Con el volumen que manejan, automatizar las reservas les ahorraría muchísimo. ¿Te muestro un ejemplo de 1 min?
+
+## 💈 BATCH 2 — Barberías (Martes · 3)
+
+**Champions Barbershop**
+> ¡Qué más! 👋 Estaba viendo Champions Barbershop y se ve un trabajo brutal [detalle: ej. los degradados]. Soy Luka, de Barranquilla — hago webs + reserva de turnos automática por WhatsApp para barberías. La idea: que tus clientes reserven turno solos, sin que pares de cortar para contestar el chat. ¿Te tiro un ejemplo de 1 min?
+
+**The Boogeyman BS**
+> ¡Qué más! 👋 Vi The Boogeyman BS y me gustó un montón el estilo [detalle]. Soy Luka, de Barranquilla — armo webs + reserva de turnos por WhatsApp para barberías. Tus clientes reservarían solos y no perderías mensajes. ¿Te tiro un ejemplo de 1 min?
+
+**La Barba VIP** (grande, 44k)
+> ¡Qué más! 👋 Sigo a La Barba VIP, tienen una marca muy fuerte [detalle]. Soy Luka, de Barranquilla — armo sistemas de reserva de turnos por WhatsApp + web para barberías. Con su volumen, automatizar los turnos les ahorraría un montón de tiempo. ¿Te muestro un ejemplo de 1 min?
+
+## 💇 BATCH 3 — Belleza/Spa + Cejas/Pestañas (Miércoles · 15)
+
+**Slaka Beauty Spa**
+> ¡Hola! 👋 Me encantó Slaka Beauty Spa [detalle]. Soy Luka, de Barranquilla — armo webs + automatización de WhatsApp para salones de belleza. Las clientas agendan solas y te llega todo organizado, sin responder mensajes todo el día. ¿Te muestro en 1 min cómo se vería?
+
+**Prana Spa**
+> ¡Hola! 👋 Me encantó Prana Spa [detalle]. Soy Luka, de Barranquilla — hago webs + agendamiento por WhatsApp para spas y salones. Tus clientas reservarían solas y quedaría todo ordenado en un panel. ¿Te muestro un ejemplo de 1 min?
+
+**Jorge Centeno Salón y Spa**
+> ¡Hola! 👋 Me encantó el trabajo de Jorge Centeno Salón y Spa [detalle]. Soy Luka, de Barranquilla — armo webs + automatización de WhatsApp para salones de belleza. Las clientas agendan solas sin saturar el DM. ¿Te muestro en 1 min cómo se vería?
+
+**Amana Centro de Belleza y Spa**
+> ¡Hola! 👋 Me encantó Amana Centro de Belleza y Spa [detalle]. Soy Luka, de Barranquilla — hago webs + agendamiento por WhatsApp para salones de belleza. Las clientas reservan solas y te queda todo organizado. ¿Te muestro un ejemplo de 1 min?
+
+**Sarah Beauty Wellness**
+> ¡Hola! 👋 Me encantó Sarah Beauty Wellness [detalle: ej. los faciales]. Soy Luka, de Barranquilla — armo webs + automatización de WhatsApp para centros de belleza. Tus clientas agendarían solas por WhatsApp. ¿Te muestro en 1 min cómo quedaría?
+
+**Salón de Belleza Astry**
+> ¡Hola! 👋 Me encantó Salón de Belleza Astry [detalle]. Soy Luka, de Barranquilla — hago webs + agendamiento por WhatsApp para salones de belleza. Las clientas agendan solas, sin perder mensajes. ¿Te muestro un ejemplo de 1 min?
+
+**Amatista Spa**
+> ¡Hola! 👋 Me encantó Amatista Spa [detalle: ej. facial y corporal]. Soy Luka, de Barranquilla — armo webs + automatización de WhatsApp para spas. Tus clientas reservarían solas y te llega todo organizado. ¿Te muestro en 1 min cómo se vería?
+
+**Centro Integral Médico SPA**
+> ¡Hola! 👋 Me encantó Centro Integral Médico SPA [detalle]. Soy Luka, de Barranquilla — hago webs + automatización de WhatsApp + CRM para centros de estética. Con su tamaño, automatizar las citas les ahorraría muchísimo. ¿Te muestro un ejemplo de 1 min?
+
+**Sandra Sierra Alisados y Keratinas** (web)
+> ¡Hola Sandra! 👋 Me encantó tu trabajo de alisados [detalle]. Soy Luka, de Barranquilla — armo webs + agendamiento por WhatsApp para salones de belleza. Tus clientas agendarían solas por WhatsApp. ¿Te muestro en 1 min cómo se vería?
+
+**Claudia Chacón Belleza y Estética** (web)
+> ¡Hola Claudia! 👋 Me encantó tu trabajo [detalle]. Soy Luka, de Barranquilla — hago webs + automatización de WhatsApp para centros de estética. Las clientas reservarían solas y quedaría todo organizado. ¿Te muestro un ejemplo de 1 min?
+
+**Centro de Estética Darío Cabello** (web)
+> ¡Hola! 👋 Me encantó Centro de Estética Darío Cabello [detalle: ej. la depilación]. Soy Luka, de Barranquilla — armo webs + automatización de WhatsApp para centros de estética. Tus clientas agendarían solas por WhatsApp. ¿Te muestro en 1 min cómo funcionaría?
+
+**Pretty Lash**
+> ¡Hola! 👋 Vi Pretty Lash y me encantó tu trabajo de [detalle: pestañas/cejas]. Soy Luka, de Barranquilla — hago webs + agendamiento por WhatsApp para estudios de cejas y pestañas. Tus clientas reservarían su cita solas y no se te perderían mensajes. ¿Te muestro un ejemplo de 1 min?
+
+**MB Cejas y Pestañas**
+> ¡Hola! 👋 Vi MB Cejas y Pestañas y me encantó [detalle]. Soy Luka, de Barranquilla — armo webs + agendamiento por WhatsApp para estudios de cejas y pestañas. Tus clientas agendarían solas. ¿Te muestro en 1 min cómo quedaría?
+
+**Max Lash & Brow Studio**
+> ¡Hola! 👋 Vi Max Lash & Brow Studio y me encantó tu trabajo de [detalle]. Soy Luka, de Barranquilla — hago webs + agendamiento por WhatsApp para estudios de cejas y pestañas. Tus clientas reservarían su cita solas. ¿Te muestro un ejemplo de 1 min?
+
+**Studio Lashes Barcelona**
+> ¡Hola! 👋 Vi Studio Lashes Barcelona y me encantó [detalle: ej. el microblading]. Soy Luka, de Barranquilla — armo webs + agendamiento por WhatsApp para estudios de cejas y pestañas. Tus clientas agendarían solas por WhatsApp. ¿Te muestro en 1 min cómo se vería?
+
+## 🏗️ BATCH 4 — Construcción (Jueves · 22)
+
+**Plantilla (personaliza [empresa] y [detalle]):**
+> ¡Hola! 👋 Vi [empresa] y me encantó su portafolio de casas [detalle: campestres/modernas]. Soy Luka, de una agencia — armo webs con **cotizador** + automatización de WhatsApp para empresas de casas prefabricadas. El problema típico del sector: llegan muchos interesados por Instagram/WhatsApp pero se pierden sin seguimiento. Le monté el sistema a una constructora: la web capta al interesado, le manda WhatsApp automático y queda todo en un CRM para ventas. ¿Te muestro el ejemplo en 1 min?
+
+**Empresas:** Atlántica · Vivienda Prefabricada Ltda · Constructores de Su Casa · Casas Prefabricadas Modulares · JAH · Full Houses · Constru Casas · Construcol · Concasaya · Custom Home · Planeta Prefabricado · Casas Prefabricadas Colombia · Vimob · Inside Home · InnovaCasas · Cypres · AB Casalista · Woodpecker · Modularte · Modularq · Casas Modulares SAS · Arbeláez Prefabricados.
+</script>
+
+<script type="text/markdown" id="md-objeciones">
+# Respuestas a objeciones (listas para el DM)
+
+> Regla de oro: tu meta en el DM NO es cerrar la venta, es **pasar a una llamada/demo**.
+> No discutas precio por chat: lleva la conversación a mostrar el ejemplo en vivo.
+
+## 💰 "¿Cuánto cuesta?"
+> Buena pregunta 🙌 Depende de si quieres solo la web o también el CRM y las automatizaciones, por eso prefiero mostrártelo primero en 10 min y ahí te digo el número exacto para [negocio]. Pero para que tengas idea: los planes arrancan en $990.000 y este mes tengo 3 cupos a precio de lanzamiento. ¿Te va una llamada rápida [día/hora]?
+
+## 🌐 "Ya tengo página / Instagram"
+> ¡Perfecto! Esto no reemplaza tu Instagram — lo potencia. Hoy la gente te ve y se va; el sistema **captura al interesado y le escribe solo por WhatsApp**, y te agenda la cita sin que respondas. ¿Te muestro en 1 min la diferencia con un ejemplo real?
+
+## ⏰ "No tengo tiempo ahora"
+> Tranquilo, justo por eso te escribo 🙌 El sistema es para ahorrarte tiempo (deja de responder los mismos mensajes). Son 10 min, cuando puedas. ¿Te queda mejor mañana temprano o en la tarde?
+
+## 😬 "Está caro / no tengo presupuesto"
+> Te entiendo. Pregunta rápida: ¿cuánto vale para ti un cliente nuevo al mes? Con que el sistema te traiga 2–3, ya se pagó solo. Y por ser de los primeros te dejo el precio de lanzamiento ($790.000 en vez de $1.790.000). ¿Lo vemos en una llamada y decides sin compromiso?
+
+## 🤔 "Déjame pensarlo"
+> ¡Claro, con toda! Solo te comento que este mes tengo **3 cupos** a precio de lanzamiento y ya van [1/2]. ¿Te aparto uno mientras lo piensas esta semana, sin compromiso? Así no lo pierdes.
+
+## ❓ "¿Y si no funciona?"
+> Justa la duda 🙌 Por eso te muestro un ejemplo YA funcionando: [link demo]. Ahí ves la web, el formulario y el WhatsApp automático en vivo. No es promesa, es algo que ya está montado. ¿Le echamos un ojo juntos en 10 min?
+
+## 📄 "Mándame información"
+> ¡De una! Te dejo el ejemplo en vivo → [link demo]. Pero mejor que un PDF: en 10 min te lo muestro con el nombre de [negocio] puesto, para que veas cómo quedaría el tuyo. ¿Te va [día/hora]?
+
+## 🤨 "¿Ustedes quiénes son? / ¿es confiable?"
+> Claro, soy Luka, de AutoScale (Barranquilla). Armamos webs + automatización para negocios locales. Mira un trabajo real → [link demo]. Con gusto una videollamada para que veas que somos personas reales 🙌 ¿Te va [día/hora]?
+
+## 🙅 "Ya tengo quien me maneja eso"
+> ¡Genial que ya inviertas en eso! ¿Y tienes el agendamiento automático por WhatsApp + el CRM funcionando? Si no, en 1 min te muestro cómo se complementa con lo que ya tienes. Sin compromiso.
+
+## ❌ "No me interesa"
+> ¡Sin problema, gracias por responder! Te dejo el ejemplo por si algún día te sirve → [link demo]. Cualquier cosa, aquí estoy. ¡Éxitos con [negocio]! 🙌
+
+## Cuando SÍ aceptan la llamada
+> ¡Perfecto! ¿Me pasas tu WhatsApp y te escribo para coordinar? O si prefieres, dime [día/hora] y te llamo. Te preparo la demo con [negocio] ya puesto. 🙌
+
+## Notas de oro
+- Responde SIEMPRE con una pregunta que lleve a la llamada.
+- Usa la escasez real (3 cupos) — no la inventes cada semana.
+- Si piden precio: rango + valor + llamada. Nunca solo el número.
+- Si dicen que no, cierra bien: dejas puerta abierta y buena imagen.
+</script>
+
+<script type="text/markdown" id="md-checklist">
+# Checklist diario de outreach (semana del 6–10 julio)
+
+> Objetivo de la semana: **~50 negocios contactados → 3–4 demos agendadas**.
+
+## ⏱️ Rutina diaria (~60–90 min)
+
+- [ ] **(15 min) Preparar:** elige los negocios del día, mira cada perfil 30 seg, anota el `[detalle]`.
+- [ ] **(35 min) Enviar Mensaje 1** personalizado a los del día.
+- [ ] **(10 min) Responder** a quienes contestaron → Mensaje 2 con demo.
+- [ ] **(10 min) Seguimientos** a los de días anteriores sin respuesta.
+- [ ] **(5 min) Actualizar** estados en el CRM + tracker.
+
+## 🗓️ Plan por día
+
+- [ ] **Lunes — Uñas** (⭐ primero).
+- [ ] **Martes — Barberías.**
+- [ ] **Miércoles — Belleza/spa + lash.**
+- [ ] **Jueves — Construcción** + seguimientos.
+- [ ] **Viernes — Rematar + agendar demos.**
+
+## 📊 Tracker diario
+| Día | Enviados | Respuestas | Demos | Notas |
+|-----|----------|------------|-------|-------|
+| Lun |  |  |  |  |
+| Mar |  |  |  |  |
+| Mié |  |  |  |  |
+| Jue |  |  |  |  |
+| Vie |  |  |  |  |
+| **Total** |  |  |  |  |
+
+## ✅ Antes de arrancar
+- [ ] Demo Nail Studio abre WhatsApp a **tu número** (+57 311 6691969). ✔ hecho
+- [ ] WhatsApp Business listo (foto, nombre "AutoScale", bienvenida).
+- [ ] Links de demo a mano.
+
+## 🎯 Conversión de referencia
+~50 contactados → ~10–15 respuestas → 3–4 demos → **1 cliente fundador** en 3–4 semanas.
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+(function(){
+  var docs = Array.prototype.slice.call(document.querySelectorAll('.doc'));
+
+  function render(){
+    docs.forEach(function(d){
+      var md = document.getElementById(d.getAttribute('data-md'));
+      var raw = md ? md.textContent.trim() : '';
+      try{
+        if(window.marked){
+          d.innerHTML = (marked.parse ? marked.parse(raw) : marked(raw));
+        } else { throw new Error('no marked'); }
+      }catch(e){
+        var pre = document.createElement('pre');
+        pre.style.whiteSpace='pre-wrap'; pre.textContent = raw; d.innerHTML=''; d.appendChild(pre);
+      }
+      // Botón copiar en cada mensaje (blockquote)
+      d.querySelectorAll('blockquote').forEach(function(bq){
+        var b=document.createElement('button');
+        b.className='copy-btn'; b.type='button'; b.textContent='📋 Copiar';
+        bq.appendChild(b);
+      });
+      d.dataset.orig = d.innerHTML;
+    });
+  }
+
+  // Copiar (delegación, sobrevive a re-render de búsqueda)
+  document.querySelector('.content').addEventListener('click', function(e){
+    var btn = e.target.closest('.copy-btn'); if(!btn) return;
+    var bq = btn.closest('blockquote'); if(!bq) return;
+    var text = Array.prototype.slice.call(bq.childNodes).filter(function(n){
+      return !(n.nodeType===1 && n.classList && n.classList.contains('copy-btn'));
+    }).map(function(n){return n.textContent;}).join('').trim();
+    (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function(){
+      btn.textContent='✅ Copiado'; setTimeout(function(){btn.textContent='📋 Copiar';},1500);
+    }).catch(function(){ btn.textContent='Ctrl+C'; });
+  });
+
+  // Búsqueda con resaltado + filtro de secciones
+  var input = document.getElementById('search');
+  var count = document.getElementById('searchCount');
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.doc-sec'));
+
+  function clearSearch(){
+    docs.forEach(function(d){ d.innerHTML = d.dataset.orig; });
+    sections.forEach(function(s){ s.style.display=''; });
+    count.textContent='';
+  }
+  function esc(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+  input.addEventListener('input', function(){
+    var q = input.value.trim();
+    clearSearch();
+    if(q.length < 2) return;
+    var re = new RegExp(esc(q),'gi');
+    var total = 0;
+    docs.forEach(function(d){
+      var walker = document.createTreeWalker(d, NodeFilter.SHOW_TEXT, {
+        acceptNode:function(n){
+          if(!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          if(n.parentNode && n.parentNode.closest && n.parentNode.closest('.copy-btn')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(function(n){
+        re.lastIndex=0;
+        if(re.test(n.nodeValue)){
+          var span=document.createElement('span');
+          span.innerHTML = n.nodeValue.replace(re, function(m){ total++; return '<mark>'+m+'</mark>'; });
+          n.parentNode.replaceChild(span,n);
+        }
+      });
+    });
+    sections.forEach(function(s){ s.style.display = s.querySelector('mark') ? '' : 'none'; });
+    count.textContent = total + ' resultado' + (total===1?'':'s');
+    var first=document.querySelector('mark'); if(first) first.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+
+  // Nav activo al hacer scroll
+  var navlinks = Array.prototype.slice.call(document.querySelectorAll('.navlink[href^="#"]'));
+  if('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){
+          navlinks.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+en.target.id); });
+        }
+      });
+    }, {rootMargin:'-40% 0px -55% 0px'});
+    sections.forEach(function(s){ obs.observe(s); });
+  }
+
+  // Menú móvil
+  var sidebar=document.getElementById('sidebar'), overlay=document.getElementById('overlay'), menuBtn=document.getElementById('menuBtn');
+  function toggle(open){ sidebar.classList.toggle('open',open); overlay.classList.toggle('show',open); }
+  menuBtn.addEventListener('click', function(){ toggle(!sidebar.classList.contains('open')); });
+  overlay.addEventListener('click', function(){ toggle(false); });
+  document.getElementById('nav').addEventListener('click', function(e){ if(e.target.closest('a')) toggle(false); });
+
+  render();
+})();
+</script>
+</body>
+</html>
