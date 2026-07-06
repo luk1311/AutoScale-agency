@@ -10,7 +10,7 @@ import './AdminCRM.css';
 // Columnas que usa el CRM. Incluye atribución de marketing (origen/UTM/fbclid)
 // y el valor estimado del trato para el pipeline.
 const LEAD_COLUMNS =
-  'id, created_at, nombre, empresa, correo, whatsapp, servicio, status, descripcion, ' +
+  'id, created_at, nombre, empresa, correo, whatsapp, servicio, status, descripcion, url, ' +
   'origen, utm_source, utm_medium, utm_campaign, utm_content, utm_term, fbclid, valor_estimado';
 
 const AdminCRM = () => {
@@ -145,22 +145,33 @@ const AdminCRM = () => {
     }
   };
 
-  // Abrir WhatsApp (con guardas por si algún campo viene vacío)
+  // Abrir el canal de contacto del lead: WhatsApp si tiene número; si no, su perfil
+  // (Instagram/web guardado en `url`), útil para prospectos de salida sin teléfono.
   const openWhatsApp = (lead) => {
-    const firstName = (lead.nombre || '').split(' ')[0] || 'allí';
     const phone = (lead.whatsapp || '').replace(/\D/g, '');
-    if (!phone) {
-      console.warn('Lead sin número de WhatsApp válido:', lead.id);
+    const profile = (lead.url || '').trim();
+
+    let target = null;
+    if (phone) {
+      const firstName = (lead.nombre || '').split(' ')[0] || 'allí';
+      const text = `¡Hola ${firstName}! Soy de AutoScale Agency. Recibimos tu solicitud sobre "${lead.servicio}". ¿Cómo estás?`;
+      target = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+    } else if (profile) {
+      target = profile.startsWith('http') ? profile : `https://${profile}`;
+    }
+
+    if (!target) {
+      console.warn('Lead sin WhatsApp ni perfil para contactar:', lead.id);
+      showToast('Este lead no tiene WhatsApp ni Instagram guardado todavía');
       return;
     }
 
-    // Automatización: Si el lead es nuevo, cambiarlo a "contactado" automáticamente
+    // Automatización: Si el lead es nuevo, marcarlo como "contactado" automáticamente.
     if (lead.status === 'nuevo' || !lead.status) {
       updateLeadStatus(lead.id, 'contactado');
     }
 
-    const text = `¡Hola ${firstName}! Soy de AutoScale Agency. Recibimos tu solicitud sobre "${lead.servicio}". ¿Cómo estás?`;
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+    window.open(target, '_blank', 'noopener,noreferrer');
   };
 
   // Formatear fecha
@@ -535,9 +546,9 @@ const AdminCRM = () => {
                         <button
                           className="btn btn-whatsapp btn-small"
                           onClick={() => openWhatsApp(lead)}
-                          title="Enviar WhatsApp"
+                          title={(lead.whatsapp || '').replace(/\D/g, '') ? 'Enviar WhatsApp' : 'Abrir Instagram/perfil'}
                         >
-                          💬 WhatsApp
+                          {(lead.whatsapp || '').replace(/\D/g, '') ? '💬 WhatsApp' : '📷 Contactar'}
                         </button>
                       </td>
                     </tr>

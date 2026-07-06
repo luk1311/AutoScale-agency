@@ -103,7 +103,7 @@ const KanbanBoard = ({ leads, onStatusChange, onValueChange, onWhatsApp }) => {
                       className="btn btn-whatsapp btn-small kanban-wa"
                       onClick={() => onWhatsApp(lead)}
                     >
-                      💬 WhatsApp
+                      {(lead.whatsapp || '').replace(/\D/g, '') ? '💬 WhatsApp' : '📷 Contactar'}
                     </button>
                   </div>
                 );
