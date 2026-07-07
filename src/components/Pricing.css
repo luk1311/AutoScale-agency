@@ -267,7 +267,7 @@
     scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;              /* Firefox */
-    padding: 1.5rem 0.25rem 0.5rem;     /* espacio arriba para el badge -12px */
+    padding: 1.5rem 1rem 3.5rem;        /* Padding inferior grande (3.5rem) para que la sombra NO se corte */
   }
   .pricing-grid::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
@@ -302,8 +302,10 @@
   /* En el carrusel neutralizamos scale/hover para que no salte ni se corte */
   .pricing-card,
   .pricing-card.popular,
+  .elite-card,
   .pricing-card:hover,
   .pricing-card.popular:hover,
+  .elite-card:hover,
   .pricing-card.glass-panel:hover {
     transform: none !important;
   }
