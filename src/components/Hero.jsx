@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { Sparkles, ArrowUpRight, PlayCircle, ShieldCheck } from 'lucide-react';
-import Spline from '@splinetool/react-spline';
 import './Hero.css';
 
 const Hero = ({ openModal }) => {
@@ -73,8 +72,14 @@ const Hero = ({ openModal }) => {
         {/* Content (Right Aligned 3D Visual) */}
         <div className="hero-visual">
           <div className="spline-wrapper animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            {/* PLACEHOLDER URL: Waiting for user to provide their .splinecode */}
-            <Spline scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode" />
+            <iframe 
+              src="https://my.spline.design/mockupcopycopy-wBanv7IJIHTZgkQfvXtEIq9x-XyS/" 
+              frameBorder="0" 
+              width="100%" 
+              height="100%" 
+              style={{ border: 'none', background: 'transparent' }}
+              title="AutoScale 3D Hero"
+            ></iframe>
           </div>
         </div>
 
