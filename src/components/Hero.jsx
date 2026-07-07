@@ -31,7 +31,18 @@ const Hero = ({ openModal }) => {
   return (
     <section className="section hero-section" ref={contentRef}>
       
-      {/* Removed static immersive background */}
+      {/* Full Background 3D Visual */}
+      <div className="hero-spline-bg">
+        <iframe 
+          src="https://my.spline.design/mockupcopycopy-wBanv7IJIHTZgkQfvXtEIq9x-XyS/" 
+          frameBorder="0" 
+          width="100%" 
+          height="100%" 
+          style={{ border: 'none', background: 'transparent' }}
+          title="AutoScale 3D Hero"
+        ></iframe>
+      </div>
+      
       
       <div className="container hero-container">
         
@@ -66,20 +77,6 @@ const Hero = ({ openModal }) => {
               <ShieldCheck size={16} className="note-icon" />
               Auditamos tu proceso actual de forma gratuita.
             </p>
-          </div>
-        </div>
-
-        {/* Content (Right Aligned 3D Visual) */}
-        <div className="hero-visual">
-          <div className="spline-wrapper animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            <iframe 
-              src="https://my.spline.design/mockupcopycopy-wBanv7IJIHTZgkQfvXtEIq9x-XyS/" 
-              frameBorder="0" 
-              width="100%" 
-              height="100%" 
-              style={{ border: 'none', background: 'transparent' }}
-              title="AutoScale 3D Hero"
-            ></iframe>
           </div>
         </div>
 

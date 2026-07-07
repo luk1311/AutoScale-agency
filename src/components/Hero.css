@@ -5,43 +5,32 @@
   align-items: center;
   padding: 8rem 0 4rem;
   overflow: hidden;
-  background-color: var(--bg-color); /* Light theme base */
+  background-color: #0b0c10; /* Dark theme base for Spline */
 }
 
-/* Auroras sutiles para reemplazar la imagen plana */
-.hero-section::before {
-  content: '';
+/* Fullscreen Spline Background */
+.hero-spline-bg {
   position: absolute;
-  top: -10%;
-  right: -10%;
-  width: 700px;
-  height: 700px;
-  background: radial-gradient(circle, var(--aurora-blue) 0%, transparent 70%);
-  filter: blur(80px);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 0;
-  pointer-events: none;
+  pointer-events: auto; /* Permite interactuar con el 3D en escritorio */
 }
 
-.hero-section::after {
-  content: '';
-  position: absolute;
-  bottom: -20%;
-  left: -10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, var(--aurora-purple) 0%, transparent 70%);
-  filter: blur(80px);
-  z-index: 0;
-  pointer-events: none;
+.hero-spline-bg iframe {
+  width: 100%;
+  height: 100%;
 }
 
 .hero-container {
   position: relative;
   z-index: 2;
   width: 100%;
-  display: grid;
-  grid-template-columns: 1.2fr 1fr; /* Text on left, space on right */
+  display: flex;
   align-items: center;
+  pointer-events: none; /* Permite que el click atraviese hacia el canvas */
 }
 
 .hero-content {
@@ -51,6 +40,7 @@
   align-items: flex-start; /* Left aligned */
   text-align: left;
   max-width: 650px;
+  pointer-events: auto; /* Reactiva los clicks para el contenido */
 }
 
 .hero-badge {
@@ -78,7 +68,7 @@
   margin-bottom: 0;
   font-size: clamp(3rem, 4.5vw, 4.5rem);
   line-height: 1.08;
-  color: var(--ink);
+  color: #ffffff;
   font-weight: 700;
   letter-spacing: -0.03em;
 }
@@ -92,7 +82,7 @@
 
 .hero-subtitle {
   font-size: 1.15rem;
-  color: var(--text-muted);
+  color: #e2e8f0;
   max-width: 500px;
   margin-bottom: 1rem;
   line-height: 1.65;
@@ -168,7 +158,6 @@
 
 @media (max-width: 900px) {
   .hero-container {
-    grid-template-columns: 1fr;
     justify-content: center;
   }
   .hero-content {
@@ -178,37 +167,10 @@
   }
 }
 
-.hero-visual {
-  width: 100%;
-  height: 600px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 2;
-}
-
-.spline-wrapper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-}
-
-.spline-wrapper canvas {
-  width: 100% !important;
-  height: 100% !important;
-  outline: none;
-}
-
 @media (max-width: 992px) {
   .hero-container {
-    grid-template-columns: 1fr;
     text-align: center;
-    gap: 2rem;
+    justify-content: center;
   }
 
   .hero-content {
@@ -225,10 +187,6 @@
   .hero-cta {
     align-items: center;
   }
-
-  .hero-visual {
-    height: 350px;
-  }
 }
 
 @media (max-width: 768px) {
@@ -236,11 +194,7 @@
     padding: 8.5rem 1.5rem 3rem; /* Extra padding to prevent header overlap */
   }
 
-  .hero-visual {
-    height: 350px;
-  }
-
-  .spline-wrapper {
+  .hero-spline-bg {
     pointer-events: none; /* Previene que el 3D bloquee el scroll táctil del celular */
   }
 
@@ -275,7 +229,4 @@
     margin-top: 0.8rem;
   }
 
-  .hero-visual {
-    height: 300px;
-  }
 }
