@@ -34,9 +34,9 @@
   height: 100%;
   background: linear-gradient(
     90deg,
-    rgba(246, 247, 251, 0.96) 0%,
-    rgba(246, 247, 251, 0.86) 40%,
-    rgba(246, 247, 251, 0.32) 62%,
+    rgba(246, 247, 251, 0.85) 0%,
+    rgba(246, 247, 251, 0.65) 40%,
+    rgba(246, 247, 251, 0.15) 62%,
     transparent 84%
   );
   z-index: 1;
@@ -186,8 +186,8 @@
   .hero-bg-overlay {
     background: linear-gradient(
       180deg,
-      rgba(251, 251, 253, 0.95) 0%,
-      rgba(251, 251, 253, 0.8) 100%
+      rgba(251, 251, 253, 0.85) 0%,
+      rgba(251, 251, 253, 0.4) 100%
     );
   }
 }
