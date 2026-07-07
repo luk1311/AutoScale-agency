@@ -268,9 +268,14 @@
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;              /* Firefox */
-    padding: 1.5rem 1rem 2.2rem;        /* Un padding inferior intermedio para la sombra */
+    padding: 1.5rem 1.7rem 2.9rem;      /* Agregamos +0.7rem al padding para liberar la sombra */
   }
   .pricing-grid::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+  .pricing-grid::after {
+    content: '';
+    flex: 0 0 1.7rem; /* Hack vital para que el navegador respete el espacio derecho al hacer scroll y no corte la sombra */
+  }
 
   .pricing-card {
     flex: 0 0 92%;                       /* la siguiente tarjeta "asoma" menos, dando más ancho */
