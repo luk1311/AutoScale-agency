@@ -11,8 +11,8 @@ const WHATSAPP_PHONE = '573218641721';
 const INSERT_TIMEOUT_MS = 12000;
 
 const ContactModal = ({ onClose }) => {
-  // 'idle' | 'submitting' | 'success' | 'whatsapp'
   const [status, setStatus] = useState('idle');
+  const [formError, setFormError] = useState('');
   const [formData, setFormData] = useState({
     nombre: '',
     whatsapp: '',
@@ -38,6 +38,13 @@ const ContactModal = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (status === 'submitting') return; // Evita envíos dobles
+
+    if (!formData.nombre || !formData.whatsapp || !formData.correo || !formData.empresa || !formData.descripcion) {
+      setFormError('Por favor, completa todos los campos obligatorios (*)');
+      return;
+    }
+    setFormError('');
+
     setStatus('submitting');
 
     // Supabase es la única fuente de verdad. Al insertar el lead, un Database
@@ -144,7 +151,12 @@ const ContactModal = ({ onClose }) => {
             <h2>Inicia tu <span className="text-gradient">Proyecto</span></h2>
             <p>Déjanos tus datos para entender mejor lo que necesitas antes de hablar.</p>
 
-            <form onSubmit={handleSubmit} className="contact-form">
+            <form onSubmit={handleSubmit} className="contact-form" noValidate>
+              {formError && (
+                <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', padding: '0.8rem 1rem', borderRadius: '8px', fontSize: '0.95rem', border: '1px solid rgba(239, 68, 68, 0.2)', marginBottom: '0.5rem' }}>
+                  {formError}
+                </div>
+              )}
               <div className="form-group">
                 <label htmlFor="nombre">Nombre completo *</label>
                 <input type="text" id="nombre" name="nombre" required value={formData.nombre} onChange={handleChange} placeholder="Ej. Juan Pérez" />
