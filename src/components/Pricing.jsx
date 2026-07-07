@@ -80,7 +80,13 @@ const Pricing = ({ openModal }) => {
             
             <ul className="pricing-features">
               <li><Check size={20} className="check-icon" /> <span>Todo lo del plan Esencial</span></li>
-              <li><Check size={20} className="check-icon" /> <span><strong>Automatización n8n:</strong> Respuesta inmediata WhatsApp/Email</span></li>
+              <li>
+                <Check size={20} className="check-icon" /> 
+                <span className="feature-text">
+                  <strong className="feature-title">Automatización n8n:</strong>
+                  <span className="feature-subtext">Respuesta inmediata WhatsApp/Email</span>
+                </span>
+              </li>
               <li><Check size={20} className="check-icon" /> <span>CRM personalizado (/admin)</span></li>
               <li><Check size={20} className="check-icon" /> <span>Gestión de estado de Leads</span></li>
               <li><Check size={20} className="check-icon" /> <span>Analíticas y exportación Excel</span></li>
@@ -106,7 +112,13 @@ const Pricing = ({ openModal }) => {
             
             <ul className="pricing-features">
               <li><Check size={20} className="check-icon" /> <span>Todo lo del plan Pro</span></li>
-              <li><Check size={20} className="check-icon" /> <span><strong>Agente IA WhatsApp 24/7</strong> (Responde dudas y agenda citas)</span></li>
+              <li>
+                <Check size={20} className="check-icon" /> 
+                <span className="feature-text">
+                  <strong className="feature-title">Agente IA WhatsApp 24/7</strong>
+                  <span className="feature-subtext">(Responde dudas y agenda citas)</span>
+                </span>
+              </li>
               <li><Check size={20} className="check-icon" /> <span>Recordatorios 24h automáticos</span></li>
               <li><Check size={20} className="check-icon" /> <span>Reactivación de clientes inactivos</span></li>
               <li><Check size={20} className="check-icon" /> <span>Sincronización con ERP/Calendario</span></li>

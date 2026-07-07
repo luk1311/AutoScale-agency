@@ -176,6 +176,21 @@
   color: var(--accent); /* Emerald pop in dark mode */
 }
 
+.feature-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.feature-title {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.elite-card .feature-title {
+  color: #fff;
+}
+
 .btn-full {
   width: 100%;
   margin-top: auto;
@@ -249,7 +264,7 @@
     margin: 1.5rem 0 0;
     overflow-x: auto;
     overflow-y: hidden;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;              /* Firefox */
     padding: 1.5rem 0.25rem 0.5rem;     /* espacio arriba para el badge -12px */
