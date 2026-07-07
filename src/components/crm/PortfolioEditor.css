@@ -75,8 +75,8 @@
 }
 
 .portfolio-list-item.active {
-  background: rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.3);
+  background: rgba(0, 0, 0, 0.05);
+  border-color: var(--accent-primary);
 }
 
 .status-dot {
