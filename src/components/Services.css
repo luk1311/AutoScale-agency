@@ -33,15 +33,15 @@
 /* Columna de Texto */
 .showcase-text-col {
   flex: 1;
-  padding: 30vh 0; /* Espacio para que el primero y el último puedan quedar en el centro */
+  padding: 20vh 0; /* Espacio para que el primero y el último puedan quedar en el centro */
   display: flex;
   flex-direction: column;
-  gap: 30vh;
+  gap: 15vh;
 }
 
 .showcase-text-item {
-  opacity: 0.3;
-  transform: translateX(-20px);
+  opacity: 0.15;
+  transform: translateX(-15px);
   transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
@@ -92,8 +92,8 @@
 
 .sticky-visual-container {
   position: sticky;
-  top: 20vh;
-  height: 60vh;
+  top: 15vh;
+  height: 70vh;
   width: 100%;
   border-radius: 40px;
   background: #F8F9FB;
