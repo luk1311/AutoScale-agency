@@ -29,7 +29,7 @@ const Hero = ({ openModal }) => {
   }, []);
 
   return (
-    <section className="section hero-section dark-theme" ref={contentRef}>
+    <section className="section hero-section apple-theme" ref={contentRef}>
       <div className="container hero-container">
         
         {/* Content (Left Aligned) */}
