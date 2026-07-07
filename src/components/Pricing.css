@@ -79,6 +79,7 @@
   text-transform: uppercase;
   letter-spacing: 1.5px;
   box-shadow: 0 4px 15px rgba(91, 75, 230, 0.4);
+  white-space: nowrap;
 }
 
 .pricing-name {
@@ -177,14 +178,13 @@
 }
 
 .feature-text {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+  display: block;
 }
 
 .feature-title {
   color: var(--ink);
   font-weight: 700;
+  margin-right: 0.3rem;
 }
 
 .elite-card .feature-title {
@@ -272,8 +272,9 @@
   .pricing-grid::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
   .pricing-card {
-    flex: 0 0 82%;                       /* la siguiente tarjeta "asoma" */
+    flex: 0 0 92%;                       /* la siguiente tarjeta "asoma" menos, dando más ancho */
     scroll-snap-align: center;
+    padding: 2.5rem 1.2rem;              /* Menos padding horizontal para que el texto respire */
   }
 
   /* En el carrusel neutralizamos scale/hover para que no salte ni se corte */
