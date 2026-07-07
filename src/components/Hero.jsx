@@ -36,8 +36,8 @@ const Hero = ({ openModal }) => {
         <img 
           id="hero-bg-img"
           className="hero-bg-img"
-          src="/hero-light-bg.png" 
-          alt="Oficina moderna con MacBook"
+          src="/hero.jpeg" 
+          alt="AutoScale Hero Background"
         />
         {/* Soft overlay to ensure text readability if needed */}
         <div className="hero-bg-overlay"></div>

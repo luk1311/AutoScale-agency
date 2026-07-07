@@ -3,6 +3,9 @@ import { supabase } from '../lib/supabase';
 import MetricsDashboard from './crm/MetricsDashboard';
 import KanbanBoard from './crm/KanbanBoard';
 import PortfolioEditor from './crm/PortfolioEditor';
+// Playbook interno: se empaqueta en la app (NO es un archivo público). Solo se
+// renderiza dentro del /admin autenticado vía iframe srcDoc.
+import playbookHtml from '../assets/playbook.html?raw';
 import { getCampaign, getChannel, parseMoneyInput } from '../lib/leadHelpers';
 import { CheckCircle2, Inbox, Loader2, LayoutGrid, Users, BookOpen } from 'lucide-react';
 import './AdminCRM.css';
@@ -390,8 +393,8 @@ const AdminCRM = () => {
 
       {activeTab === 'playbook' ? (
         <div style={{ height: 'calc(100vh - 80px)', width: '100%', padding: '1rem', boxSizing: 'border-box' }}>
-          <iframe 
-            src="/AutoScale_Playbook.html" 
+          <iframe
+            srcDoc={playbookHtml}
             title="AutoScale Playbook"
             style={{ width: '100%', height: '100%', border: 'none', borderRadius: '12px', background: '#fff', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}
           />
