@@ -71,13 +71,14 @@ const PortfolioPage = () => {
                 key={cat}
                 onClick={() => setFilter(cat)}
                 style={{
-                  background: filter === cat ? 'var(--accent-primary)' : 'rgba(255,255,255,0.05)',
-                  border: `1px solid ${filter === cat ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)'}`,
-                  color: filter === cat ? '#fff' : 'var(--text-main)',
+                  background: filter === cat ? 'var(--ink)' : '#ffffff',
+                  border: `1px solid ${filter === cat ? 'var(--ink)' : 'rgba(0,0,0,0.08)'}`,
+                  color: filter === cat ? '#ffffff' : 'var(--ink)',
                   padding: '0.6rem 1.5rem',
                   borderRadius: '50px',
                   cursor: 'pointer',
                   fontWeight: '600',
+                  boxShadow: filter === cat ? '0 4px 12px rgba(0,0,0,0.1)' : '0 2px 8px rgba(0,0,0,0.02)',
                   transition: 'all 0.3s ease'
                 }}
               >
@@ -98,14 +99,13 @@ const PortfolioPage = () => {
               </div>
             ) : (
               filteredProjects.map((project, index) => (
-              <Link to={`/portafolio/${project.id}`} className="portfolio-card glass-panel" key={index} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column' }}>
+              <Link to={`/portafolio/${project.id}`} className="portfolio-card" key={index} style={{ textDecoration: 'none' }}>
                 <div className="portfolio-image-wrapper">
                   <img src={project.image} alt={project.title} className="portfolio-image" />
                 </div>
                 <div className="portfolio-content">
                   <span className="portfolio-category">{project.category}</span>
-                  <h3 className="portfolio-title" style={{ transition: 'color 0.3s' }} onMouseOver={(e) => e.target.style.color = 'var(--accent-primary)'} onMouseOut={(e) => e.target.style.color = '#fff'}>{project.title}</h3>
-                  <p className="portfolio-description">{project.description}</p>
+                  <h3 className="portfolio-title">{project.title}</h3>
                   <div className="portfolio-tags">
                     {(project.tags || []).map((tag, i) => (
                       <span className="portfolio-tag" key={i}>{tag}</span>

@@ -45,11 +45,10 @@ const Services = () => {
         
         <div className="services-grid">
           {services.map((service, index) => (
-            <div key={index} className={`service-card glass-panel delay-${(index % 3 + 1) * 100}`}>
+            <div key={index} className={`service-card delay-${(index % 3 + 1) * 100}`}>
               <div className="service-icon">{service.icon}</div>
               <h3>{service.title}</h3>
               <p>{service.description}</p>
-              <div className="service-glow"></div>
             </div>
           ))}
         </div>
