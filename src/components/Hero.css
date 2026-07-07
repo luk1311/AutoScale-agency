@@ -186,9 +186,9 @@
   .hero-bg-overlay {
     background: linear-gradient(
       180deg,
-      rgba(251, 251, 253, 0.96) 0%,
-      rgba(251, 251, 253, 0.90) 55%,
-      rgba(251, 251, 253, 0.3) 100%
+      rgba(251, 251, 253, 0.98) 0%,
+      rgba(251, 251, 253, 0.85) 60%,
+      var(--bg-color) 100%
     );
   }
 }
@@ -239,6 +239,10 @@
 @media (max-width: 768px) {
   .hero-section {
     padding: 8.5rem 1.5rem 3rem; /* Extra padding to prevent header overlap */
+  }
+
+  .hero-bg-img {
+    object-position: top center;
   }
 
   .hero-title {
