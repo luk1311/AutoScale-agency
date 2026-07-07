@@ -121,4 +121,7 @@
   .hero-section {
     padding: 7rem 1.5rem 3rem;
   }
+  .hero-visual {
+    height: 300px;
+  }
 }

@@ -55,7 +55,7 @@ const Portfolio = ({ openModal }) => {
               </div>
               <div className="portfolio-content">
                 <span className="portfolio-category">{project.category}</span>
-                <h3 className="portfolio-title" style={{ transition: 'color 0.3s' }} onMouseOver={(e) => e.target.style.color = 'var(--accent-primary)'} onMouseOut={(e) => e.target.style.color = '#fff'}>{project.title}</h3>
+                <h3 className="portfolio-title">{project.title}</h3>
                 <p className="portfolio-description">{project.description}</p>
                 <div className="portfolio-tags">
                   {(project.tags || []).map((tag, i) => (

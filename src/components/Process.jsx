@@ -1,6 +1,13 @@
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Process.css';
 
+gsap.registerPlugin(ScrollTrigger);
+
 const Process = () => {
+  const sectionRef = useRef(null);
+
   const steps = [
     {
       number: "1",
@@ -24,8 +31,24 @@ const Process = () => {
     }
   ];
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.process-step',
+        { x: -50, opacity: 0 },
+        {
+          x: 0, opacity: 1, duration: 0.8, stagger: 0.2, ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.process-timeline',
+            start: 'top 85%',
+          }
+        }
+      );
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="section process-section" id="proceso">
+    <section className="section process-section" id="proceso" ref={sectionRef}>
       <div className="container">
         <div className="section-title">
           <h2>Nuestro proceso en <span className="text-gradient">4 pasos</span></h2>
