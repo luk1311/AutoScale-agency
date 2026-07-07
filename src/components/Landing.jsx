@@ -5,9 +5,12 @@ import Solution from './Solution';
 import Pricing from './Pricing';
 import Portfolio from './Portfolio';
 import Process from './Process';
+import UseCases from './UseCases';
 import FAQ from './FAQ';
 import FooterCTA from './FooterCTA';
 import ContactModal from './ContactModal';
+import Stats from './Stats';
+import Services from './Services';
 import { trackViewContent } from '../lib/metaPixel';
 
 const Landing = () => {
@@ -23,12 +26,15 @@ const Landing = () => {
     <div className="app-container">
       <Header openModal={openModal} />
       <Hero openModal={openModal} />
+      <Stats />
+      <Services />
       <Solution />
       <Pricing openModal={openModal} />
       <Portfolio openModal={openModal} />
       <div id="proceso">
         <Process />
       </div>
+      <UseCases />
       <FAQ />
       <FooterCTA openModal={openModal} />
       {isModalOpen && <ContactModal onClose={closeModal} />}
