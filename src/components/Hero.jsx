@@ -30,25 +30,22 @@ const Hero = ({ openModal }) => {
         { y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.5 }
       );
       
-      // Video Scrubbing Logic
-      const video = document.getElementById('hero-video');
-      if (video) {
-        // Force render first frame for some browsers
-        video.currentTime = 0.1;
-        
-        // Wait for metadata to know the duration
-        video.addEventListener('loadedmetadata', () => {
-          gsap.to(video, {
-            currentTime: video.duration || 1,
+      // Image Parallax Logic
+      const heroBg = document.getElementById('hero-bg-img');
+      if (heroBg) {
+        gsap.fromTo(heroBg, 
+          { scale: 1.1 },
+          {
+            scale: 1,
             ease: "none",
             scrollTrigger: {
               trigger: contentRef.current,
               start: "top top",
               end: "bottom top",
-              scrub: 0.5, // 0.5 sec smoothing
+              scrub: true,
             }
-          });
-        });
+          }
+        );
       }
     }, contentRef);
 
@@ -58,16 +55,14 @@ const Hero = ({ openModal }) => {
   return (
     <section className="section hero-section" ref={contentRef}>
       
-      {/* Background Video Wrapper */}
+      {/* Background Image Wrapper */}
       <div className="hero-video-wrapper">
-        <video 
-          id="hero-video"
+        <img 
+          id="hero-bg-img"
           className="hero-video"
-          src="https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" 
-          muted 
-          playsInline 
-          preload="auto"
-        ></video>
+          src="/hero-3d.png" 
+          alt="AI Sales System"
+        />
         <div className="video-overlay"></div>
       </div>
 
