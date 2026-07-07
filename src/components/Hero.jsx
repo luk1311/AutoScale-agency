@@ -64,8 +64,6 @@ const Hero = ({ openModal }) => {
         {/* Content (Right Aligned 3D Visual) */}
         <div className="hero-visual">
           <div className="spline-wrapper animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            {/* NOTA: Este iframe contiene el diseño completo (texto + teléfono). 
-                Para que luzca perfecto, necesitas exportar desde Spline SOLO el teléfono con fondo transparente. */}
             <iframe 
               src="https://my.spline.design/mockupcopycopy-wBanv7IJIHTZgkQfvXtEIq9x-XyS/" 
               frameBorder="0" 
