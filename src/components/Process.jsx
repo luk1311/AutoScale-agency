@@ -48,8 +48,10 @@ const Process = () => {
   }, []);
 
   return (
-    <section className="section process-section" id="proceso" ref={sectionRef}>
-      <div className="container">
+    <section className="section process-section" id="proceso" ref={sectionRef} style={{ position: 'relative', overflow: 'hidden' }}>
+      <div className="bg-glow purple" style={{ top: '30%', left: '10%', width: '500px', height: '500px', opacity: 0.5 }}></div>
+      
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="section-title">
           <h2>Nuestro proceso en <span className="text-gradient">4 pasos</span></h2>
           <p>Implementación rápida, sin dolores de cabeza para ti ni tu equipo.</p>

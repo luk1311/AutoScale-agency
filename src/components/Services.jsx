@@ -36,6 +36,9 @@ const Services = () => {
 
   return (
     <section id="servicios" className="section services-section">
+      <div className="bg-glow blue" style={{ top: '20%', left: '-20%', width: '700px', height: '700px' }}></div>
+      <div className="bg-glow purple" style={{ bottom: '10%', right: '-10%', width: '600px', height: '600px' }}></div>
+      
       <div className="container">
         <div className="section-title">
           <h2>Nuestro <span className="text-gradient">Arsenal Técnico</span></h2>
