@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
-import Spline from '@splinetool/react-spline';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Hero.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Hero = ({ openModal }) => {
   const contentRef = useRef(null);
@@ -28,10 +30,23 @@ const Hero = ({ openModal }) => {
         { y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.5 }
       );
       
-      gsap.fromTo('.hero-visual',
-        { scale: 0.9, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1.5, ease: 'power3.out', delay: 0.3 }
-      );
+      // Video Scrubbing Logic
+      const video = document.getElementById('hero-video');
+      if (video) {
+        // Wait for metadata to know the duration
+        video.onloadedmetadata = () => {
+          gsap.to(video, {
+            currentTime: video.duration || 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: contentRef.current,
+              start: "top top",
+              end: "bottom top",
+              scrub: 0.5, // 0.5 sec smoothing
+            }
+          });
+        };
+      }
     }, contentRef);
 
     return () => ctx.revert(); // cleanup
@@ -39,14 +54,28 @@ const Hero = ({ openModal }) => {
 
   return (
     <section className="section hero-section" ref={contentRef}>
-      {/* Aurora Background Glows */}
+      
+      {/* Background Video Wrapper */}
+      <div className="hero-video-wrapper">
+        <video 
+          id="hero-video"
+          className="hero-video"
+          src="https://cdn.pixabay.com/video/2020/07/28/45885-446755498_large.mp4" 
+          muted 
+          playsInline 
+          preload="auto"
+        ></video>
+        <div className="video-overlay"></div>
+      </div>
+
+      {/* Aurora Background Glows (Optional, placed over video for extra effect) */}
       <div className="bg-glow blue" style={{ top: '-10%', left: '-10%' }}></div>
       <div className="bg-glow purple" style={{ top: '20%', right: '-10%', width: '800px', height: '800px' }}></div>
       
       <div className="container hero-container">
         
-        {/* Left Content */}
-        <div className="hero-content">
+        {/* Content (Centered for full screen) */}
+        <div className="hero-content centered">
           <div className="hero-badge">
             Sistemas de Ventas con IA
           </div>
@@ -65,13 +94,6 @@ const Hero = ({ openModal }) => {
               Iniciar Proyecto
             </button>
             <p className="cta-note">Auditamos tu proceso actual de forma gratuita.</p>
-          </div>
-        </div>
-
-        {/* Right 3D Visual */}
-        <div className="hero-visual">
-          <div className="spline-wrapper">
-            <Spline scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode" />
           </div>
         </div>
 
