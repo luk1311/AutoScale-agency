@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { Sparkles, ArrowUpRight, PlayCircle, ShieldCheck } from 'lucide-react';
+import { Sparkles, ArrowUpRight, PlayCircle } from 'lucide-react';
 import './Hero.css';
 
 const Hero = ({ openModal }) => {
@@ -29,21 +29,7 @@ const Hero = ({ openModal }) => {
   }, []);
 
   return (
-    <section className="section hero-section" ref={contentRef}>
-      
-      {/* Full Background 3D Visual */}
-      <div className="hero-spline-bg">
-        <iframe 
-          src="https://my.spline.design/mockupcopycopy-wBanv7IJIHTZgkQfvXtEIq9x-XyS/" 
-          frameBorder="0" 
-          width="100%" 
-          height="100%" 
-          style={{ border: 'none', background: 'transparent' }}
-          title="AutoScale 3D Hero"
-        ></iframe>
-      </div>
-      
-      
+    <section className="section hero-section dark-theme" ref={contentRef}>
       <div className="container hero-container">
         
         {/* Content (Left Aligned) */}
@@ -72,11 +58,22 @@ const Hero = ({ openModal }) => {
                 Ver cómo funciona <PlayCircle size={18} />
               </button>
             </div>
-            
-            <p className="cta-note">
-              <ShieldCheck size={16} className="note-icon" />
-              Auditamos tu proceso actual de forma gratuita.
-            </p>
+          </div>
+        </div>
+
+        {/* Content (Right Aligned 3D Visual) */}
+        <div className="hero-visual">
+          <div className="spline-wrapper animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            {/* NOTA: Este iframe contiene el diseño completo (texto + teléfono). 
+                Para que luzca perfecto, necesitas exportar desde Spline SOLO el teléfono con fondo transparente. */}
+            <iframe 
+              src="https://my.spline.design/mockupcopycopy-wBanv7IJIHTZgkQfvXtEIq9x-XyS/" 
+              frameBorder="0" 
+              width="100%" 
+              height="100%" 
+              style={{ border: 'none', background: 'transparent' }}
+              title="AutoScale 3D Hero"
+            ></iframe>
           </div>
         </div>
 
