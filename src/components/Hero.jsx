@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { Sparkles, ArrowUpRight, PlayCircle, ShieldCheck } from 'lucide-react';
+import Spline from '@splinetool/react-spline';
 import './Hero.css';
 
 const Hero = ({ openModal }) => {
@@ -31,17 +32,7 @@ const Hero = ({ openModal }) => {
   return (
     <section className="section hero-section" ref={contentRef}>
       
-      {/* Immersive Background */}
-      <div className="hero-bg-wrapper">
-        <img 
-          id="hero-bg-img"
-          className="hero-bg-img"
-          src="/hero.jpeg" 
-          alt="AutoScale Hero Background"
-        />
-        {/* Soft overlay to ensure text readability if needed */}
-        <div className="hero-bg-overlay"></div>
-      </div>
+      {/* Removed static immersive background */}
       
       <div className="container hero-container">
         
@@ -76,6 +67,14 @@ const Hero = ({ openModal }) => {
               <ShieldCheck size={16} className="note-icon" />
               Auditamos tu proceso actual de forma gratuita.
             </p>
+          </div>
+        </div>
+
+        {/* Content (Right Aligned 3D Visual) */}
+        <div className="hero-visual">
+          <div className="spline-wrapper animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            {/* PLACEHOLDER URL: Waiting for user to provide their .splinecode */}
+            <Spline scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode" />
           </div>
         </div>
 
