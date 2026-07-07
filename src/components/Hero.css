@@ -5,7 +5,7 @@
   align-items: center;
   padding: 8rem 0 4rem;
   overflow: hidden;
-  background-color: #000000; /* Pitch black like the mockup */
+  background-color: var(--ink); /* Azul pizarra muy oscuro de la marca */
 }
 
 .hero-container {
