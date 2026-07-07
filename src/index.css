@@ -36,6 +36,14 @@
   --aurora-blue: var(--aurora-1);
   --aurora-purple: var(--aurora-2);
   --font-sans: var(--font-body);
+
+  /* Escala Semántica Z-Index */
+  --z-dropdown: 10;
+  --z-sticky: 100;
+  --z-header: 200;
+  --z-modal-backdrop: 900;
+  --z-modal: 1000;
+  --z-toast: 1100;
 }
 
 * {
@@ -67,6 +75,7 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--ink);
   font-weight: 600;
   letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 h1 {
@@ -95,6 +104,7 @@ p {
   margin-bottom: 1.5rem;
   color: var(--text-muted);
   font-size: 1.125rem;
+  text-wrap: pretty;
 }
 
 /* Utilities */

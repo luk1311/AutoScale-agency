@@ -116,6 +116,12 @@
   box-shadow: 0 0 0 3px rgba(91, 75, 230, 0.15) !important;
 }
 
+.input-error {
+  border-color: #ef4444 !important;
+  background-color: rgba(239, 68, 68, 0.05) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
 .form-group select option {
   background-color: var(--bg-secondary);
   color: var(--text-main);

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { ExternalLink, ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import './Portfolio.css';
 
-const Portfolio = ({ openModal }) => {
+const Portfolio = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);

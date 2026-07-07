@@ -13,6 +13,7 @@ const INSERT_TIMEOUT_MS = 12000;
 const ContactModal = ({ onClose }) => {
   const [status, setStatus] = useState('idle');
   const [formError, setFormError] = useState('');
+  const [emptyFields, setEmptyFields] = useState([]);
   const [formData, setFormData] = useState({
     nombre: '',
     whatsapp: '',
@@ -39,10 +40,16 @@ const ContactModal = ({ onClose }) => {
     e.preventDefault();
     if (status === 'submitting') return; // Evita envíos dobles
 
-    if (!formData.nombre || !formData.whatsapp || !formData.correo || !formData.empresa || !formData.descripcion) {
-      setFormError('Por favor, completa todos los campos obligatorios (*)');
+    const requiredFields = ['nombre', 'whatsapp', 'correo', 'empresa', 'descripcion'];
+    const missing = requiredFields.filter(f => !formData[f] || formData[f].trim() === '');
+
+    if (missing.length > 0) {
+      setEmptyFields(missing);
+      setFormError('Por favor, completa todos los campos resaltados en rojo (*)');
       return;
     }
+    
+    setEmptyFields([]);
     setFormError('');
 
     setStatus('submitting');
@@ -159,25 +166,25 @@ const ContactModal = ({ onClose }) => {
               )}
               <div className="form-group">
                 <label htmlFor="nombre">Nombre completo *</label>
-                <input type="text" id="nombre" name="nombre" required value={formData.nombre} onChange={handleChange} placeholder="Ej. Juan Pérez" />
+                <input type="text" id="nombre" name="nombre" required value={formData.nombre} onChange={handleChange} placeholder="Ej. Juan Pérez" className={emptyFields.includes('nombre') ? 'input-error' : ''} />
               </div>
 
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="whatsapp">WhatsApp *</label>
-                  <input type="tel" id="whatsapp" name="whatsapp" required value={formData.whatsapp} onChange={handleChange} placeholder="+57 300 000 0000" />
+                  <input type="tel" id="whatsapp" name="whatsapp" required value={formData.whatsapp} onChange={handleChange} placeholder="+57 300 000 0000" className={emptyFields.includes('whatsapp') ? 'input-error' : ''} />
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="correo">Correo electrónico *</label>
-                  <input type="email" id="correo" name="correo" required value={formData.correo} onChange={handleChange} placeholder="juan@tuempresa.com" />
+                  <input type="email" id="correo" name="correo" required value={formData.correo} onChange={handleChange} placeholder="juan@tuempresa.com" className={emptyFields.includes('correo') ? 'input-error' : ''} />
                 </div>
               </div>
 
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="empresa">Empresa / Negocio *</label>
-                  <input type="text" id="empresa" name="empresa" required value={formData.empresa} onChange={handleChange} placeholder="Nombre de tu negocio" />
+                  <input type="text" id="empresa" name="empresa" required value={formData.empresa} onChange={handleChange} placeholder="Nombre de tu negocio" className={emptyFields.includes('empresa') ? 'input-error' : ''} />
                 </div>
 
                 <div className="form-group">
@@ -194,7 +201,7 @@ const ContactModal = ({ onClose }) => {
 
               <div className="form-group">
                 <label htmlFor="descripcion">Describe tu proyecto *</label>
-                <textarea id="descripcion" name="descripcion" required value={formData.descripcion} onChange={handleChange} rows="3" placeholder="Cuéntanos un poco sobre lo que te gustaría lograr..." />
+                <textarea id="descripcion" name="descripcion" required value={formData.descripcion} onChange={handleChange} rows="3" placeholder="Cuéntanos un poco sobre lo que te gustaría lograr..." className={emptyFields.includes('descripcion') ? 'input-error' : ''} />
               </div>
 
               <button type="submit" className="btn btn-primary btn-submit">

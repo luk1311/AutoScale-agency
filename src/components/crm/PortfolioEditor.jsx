@@ -24,7 +24,6 @@ const PortfolioEditor = () => {
   };
 
   const fetchProjects = async () => {
-    setLoading(true);
     const { data, error } = await supabase
       .from('portfolio_projects')
       .select('*')
@@ -42,6 +41,7 @@ const PortfolioEditor = () => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchProjects();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -99,7 +99,7 @@ const PortfolioEditor = () => {
       const fileExt = selectedFile.name.split('.').pop();
       const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
       
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('portfolio_images')
         .upload(fileName, selectedFile);
         
@@ -128,6 +128,7 @@ const PortfolioEditor = () => {
       return;
     }
 
+    // eslint-disable-next-line no-unused-vars
     const { id, _rawTags, ...projectData } = activeProject;
     projectData.image = finalImageUrl;
 

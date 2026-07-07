@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Lenis from '@studio-freight/lenis';
 import Landing from './components/Landing';
-import AdminCRM from './components/AdminCRM';
-import PortfolioPage from './components/PortfolioPage';
-import ProjectDetails from './components/ProjectDetails';
+
+// Lazy load heavy components
+const AdminCRM = lazy(() => import('./components/AdminCRM'));
+const PortfolioPage = lazy(() => import('./components/PortfolioPage'));
+const ProjectDetails = lazy(() => import('./components/ProjectDetails'));
 import './App.css';
 
 function App() {
@@ -34,12 +36,14 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/admin" element={<AdminCRM />} />
-        <Route path="/portafolio" element={<PortfolioPage />} />
-        <Route path="/portafolio/:id" element={<ProjectDetails />} />
-      </Routes>
+      <Suspense fallback={<div style={{height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-main)'}}>Cargando...</div>}>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/admin" element={<AdminCRM />} />
+          <Route path="/portafolio" element={<PortfolioPage />} />
+          <Route path="/portafolio/:id" element={<ProjectDetails />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }
