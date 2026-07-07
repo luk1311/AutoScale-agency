@@ -33,8 +33,11 @@ const Hero = ({ openModal }) => {
       // Video Scrubbing Logic
       const video = document.getElementById('hero-video');
       if (video) {
+        // Force render first frame for some browsers
+        video.currentTime = 0.1;
+        
         // Wait for metadata to know the duration
-        video.onloadedmetadata = () => {
+        video.addEventListener('loadedmetadata', () => {
           gsap.to(video, {
             currentTime: video.duration || 1,
             ease: "none",
@@ -45,7 +48,7 @@ const Hero = ({ openModal }) => {
               scrub: 0.5, // 0.5 sec smoothing
             }
           });
-        };
+        });
       }
     }, contentRef);
 
@@ -60,7 +63,7 @@ const Hero = ({ openModal }) => {
         <video 
           id="hero-video"
           className="hero-video"
-          src="https://cdn.pixabay.com/video/2020/07/28/45885-446755498_large.mp4" 
+          src="https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" 
           muted 
           playsInline 
           preload="auto"
