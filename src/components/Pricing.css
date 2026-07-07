@@ -54,9 +54,9 @@
 }
 
 .elite-card .pricing-name,
-.elite-card .amount,
-.elite-card .period,
-.elite-card .currency {
+.elite-card .pricing-price .amount,
+.elite-card .pricing-price .period,
+.elite-card .pricing-price .currency {
   color: #fff;
 }
 
