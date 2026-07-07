@@ -186,8 +186,9 @@
   .hero-bg-overlay {
     background: linear-gradient(
       180deg,
-      rgba(251, 251, 253, 0.85) 0%,
-      rgba(251, 251, 253, 0.4) 100%
+      rgba(251, 251, 253, 0.96) 0%,
+      rgba(251, 251, 253, 0.90) 55%,
+      rgba(251, 251, 253, 0.3) 100%
     );
   }
 }
@@ -237,8 +238,40 @@
 
 @media (max-width: 768px) {
   .hero-section {
-    padding: 7rem 1.5rem 3rem;
+    padding: 8.5rem 1.5rem 3rem; /* Extra padding to prevent header overlap */
   }
+
+  .hero-title {
+    font-size: 2.6rem;
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-main);
+    font-weight: 500;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.8rem;
+  }
+
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cta-note {
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    margin-top: 0.8rem;
+  }
+
   .hero-visual {
     height: 300px;
   }
