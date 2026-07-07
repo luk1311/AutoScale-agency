@@ -19,7 +19,7 @@
 
 .use-case-card h3 {
   font-size: 1.4rem;
-  color: #fff;
+  color: var(--ink);
 }
 
 .use-case-card p {
