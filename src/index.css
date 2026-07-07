@@ -13,6 +13,10 @@
   --border-color: rgba(0, 0, 0, 0.05);
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(0, 0, 0, 0.04);
+  
+  /* Apple Tech Aurora Gradients */
+  --aurora-blue: rgba(0, 122, 255, 0.15);
+  --aurora-purple: rgba(88, 86, 214, 0.15);
 
   /* Typography */
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -67,11 +71,25 @@ p {
 
 /* Utilities */
 .text-gradient {
-  background: linear-gradient(135deg, #1D1D1F, #424245);
+  background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* Aurora Glow Backgrounds */
+.bg-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.8;
+}
+.bg-glow.blue { background: var(--aurora-blue); }
+.bg-glow.purple { background: var(--aurora-purple); }
 
 .glass-panel {
   background: var(--glass-bg);
@@ -112,15 +130,21 @@ p {
 }
 
 .btn-primary {
-  background: var(--accent-primary);
+  background: linear-gradient(180deg, #1d1d1f 0%, #000000 100%);
   color: white;
   border-radius: 40px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 4px 14px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .btn-primary:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(0, 122, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .btn-secondary {

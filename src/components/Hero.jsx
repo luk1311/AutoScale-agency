@@ -39,6 +39,10 @@ const Hero = ({ openModal }) => {
 
   return (
     <section className="section hero-section" ref={contentRef}>
+      {/* Aurora Background Glows */}
+      <div className="bg-glow blue" style={{ top: '-10%', left: '-10%' }}></div>
+      <div className="bg-glow purple" style={{ top: '20%', right: '-10%', width: '800px', height: '800px' }}></div>
+      
       <div className="container hero-container">
         
         {/* Left Content */}
