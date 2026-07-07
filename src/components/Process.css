@@ -21,23 +21,25 @@
 .step-number {
   width: 60px;
   height: 60px;
-  background: var(--bg-color);
-  border: 2px solid var(--accent-primary);
-  color: var(--text-main);
+  background: var(--bg-elevated);
+  border: 2px solid var(--brand);
+  color: var(--brand-ink);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--font-display);
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 700;
   margin: 0 auto 1.5rem;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 16px rgba(91, 75, 230, 0.15);
+  transition: all 0.3s ease;
 }
 
 .process-step:hover .step-number {
-  background: var(--accent-primary);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
   color: #fff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 22px rgba(91, 75, 230, 0.35);
 }
 
 .process-step h3 {

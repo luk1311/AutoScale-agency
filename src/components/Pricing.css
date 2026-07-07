@@ -36,8 +36,8 @@
 }
 
 .pricing-card.elite {
-  background: linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%);
-  border: 1px solid rgba(0, 102, 204, 0.2);
+  background: linear-gradient(180deg, #ffffff 0%, var(--brand-soft) 100%);
+  border: 1px solid rgba(91, 75, 230, 0.25);
 }
 
 .popular-badge {
@@ -79,9 +79,11 @@
 }
 
 .pricing-price .amount {
+  font-family: var(--font-display);
   font-size: 3rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -1px;
+  color: var(--ink);
 }
 
 .pricing-price .period {

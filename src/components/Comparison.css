@@ -28,8 +28,8 @@
 }
 
 .header-after {
-  color: #2dd4bf; /* Teal */
-  background: rgba(45, 212, 191, 0.05);
+  color: var(--accent); /* Esmeralda */
+  background: rgba(16, 185, 129, 0.06);
 }
 
 .comparison-row {
@@ -53,7 +53,7 @@
 }
 
 .cell-after {
-  background: rgba(45, 212, 191, 0.02);
+  background: rgba(16, 185, 129, 0.04);
 }
 
 .cross, .check {
@@ -67,7 +67,7 @@
 }
 
 .check {
-  color: #2dd4bf;
+  color: var(--accent);
 }
 
 .cell-before p, .cell-after p {

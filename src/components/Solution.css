@@ -8,15 +8,15 @@
 .feature-icon {
   font-size: 3rem;
   margin-bottom: 1.5rem;
-  background: rgba(45, 212, 191, 0.1);
+  background: rgba(91, 75, 230, 0.10);
   width: 80px;
   height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  border: 1px solid rgba(45, 212, 191, 0.2);
-  color: var(--accent-tertiary);
+  border: 1px solid rgba(91, 75, 230, 0.20);
+  color: var(--brand);
 }
 
 .feature-card h3 {

@@ -24,12 +24,12 @@
 
 .cta-highlight {
   font-size: 1.5rem;
-  color: var(--accent-tertiary);
+  color: var(--brand-ink);
   margin-bottom: 3rem;
   padding: 1.5rem;
-  background: rgba(45, 212, 191, 0.05);
+  background: rgba(91, 75, 230, 0.06);
   border-radius: 12px;
-  border-left: 4px solid var(--accent-tertiary);
+  border-left: 4px solid var(--brand);
 }
 
 .final-action h3 {
