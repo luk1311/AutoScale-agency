@@ -37,6 +37,11 @@
   border-radius: 4px;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px; /* Offset for the floating navbar */
+}
+
 body {
   font-family: var(--font-sans);
   background-color: var(--bg-color);
