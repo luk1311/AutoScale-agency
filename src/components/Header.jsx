@@ -8,16 +8,6 @@ const Header = ({ openModal }) => {
 
   const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
-  const handleScroll = (e, id) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      const y = element.getBoundingClientRect().top + window.scrollY - 100;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
-    }
-  };
-
   return (
     <header className="main-header">
       <div className="container header-container">
@@ -27,11 +17,11 @@ const Header = ({ openModal }) => {
         
         {/* Desktop Nav */}
         <nav className="main-nav desktop-only">
-          <a href="#stats" className="nav-link" onClick={(e) => handleScroll(e, 'stats')}>Impacto</a>
-          <a href="#servicios" className="nav-link" onClick={(e) => handleScroll(e, 'servicios')}>Servicios</a>
-          <a href="#portafolio" className="nav-link" onClick={(e) => handleScroll(e, 'portafolio')}>Portafolio</a>
-          <a href="#proceso" className="nav-link" onClick={(e) => handleScroll(e, 'proceso')}>Proceso</a>
-          <a href="#casos" className="nav-link" onClick={(e) => handleScroll(e, 'casos')}>Casos</a>
+          <a href="#stats" className="nav-link">Impacto</a>
+          <a href="#servicios" className="nav-link">Servicios</a>
+          <a href="#portafolio" className="nav-link">Portafolio</a>
+          <a href="#proceso" className="nav-link">Proceso</a>
+          <a href="#casos" className="nav-link">Casos</a>
         </nav>
 
         <div className="header-actions">
@@ -50,11 +40,11 @@ const Header = ({ openModal }) => {
       {/* Mobile Nav */}
       <div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
         <nav className="mobile-nav">
-          <a href="#stats" className="mobile-nav-link" onClick={(e) => handleScroll(e, 'stats')}>Impacto</a>
-          <a href="#servicios" className="mobile-nav-link" onClick={(e) => handleScroll(e, 'servicios')}>Servicios</a>
-          <a href="#portafolio" className="mobile-nav-link" onClick={(e) => handleScroll(e, 'portafolio')}>Portafolio</a>
-          <a href="#proceso" className="mobile-nav-link" onClick={(e) => handleScroll(e, 'proceso')}>Proceso</a>
-          <a href="#casos" className="mobile-nav-link" onClick={(e) => handleScroll(e, 'casos')}>Casos</a>
+          <a href="#stats" className="mobile-nav-link" onClick={toggleMenu}>Impacto</a>
+          <a href="#servicios" className="mobile-nav-link" onClick={toggleMenu}>Servicios</a>
+          <a href="#portafolio" className="mobile-nav-link" onClick={toggleMenu}>Portafolio</a>
+          <a href="#proceso" className="mobile-nav-link" onClick={toggleMenu}>Proceso</a>
+          <a href="#casos" className="mobile-nav-link" onClick={toggleMenu}>Casos</a>
           <button 
             onClick={() => { toggleMenu(); openModal(); }} 
             className="btn btn-primary btn-mobile-cta"
