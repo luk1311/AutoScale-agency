@@ -1,7 +1,11 @@
-import { Workflow, ShoppingCart, BarChart, Layout, Mail, Server, ArrowRight } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { Workflow, Mail, Server, Layout } from 'lucide-react';
 import './Services.css';
 
 const Services = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const textRefs = useRef([]);
+
   const services = [
     {
       title: "Automatización Low-Code",
@@ -10,28 +14,13 @@ const Services = () => {
       visual: (
         <div className="bento-visual automation-canvas">
           <div className="node-grid">
-            <div className="canvas-node n-trigger">
-              <div className="node-icon"><Mail size={16}/></div>
-              <span>Nuevo Lead</span>
-            </div>
+            <div className="canvas-node n-trigger"><div className="node-icon"><Mail size={16}/></div><span>Nuevo Lead</span></div>
             <div className="canvas-path p1"></div>
-            
-            <div className="canvas-node n-ai">
-              <div className="node-icon"><Workflow size={16}/></div>
-              <span>AI Agent</span>
-            </div>
+            <div className="canvas-node n-ai"><div className="node-icon"><Workflow size={16}/></div><span>AI Agent</span></div>
             <div className="canvas-path p2"></div>
             <div className="canvas-path p3"></div>
-            
-            <div className="canvas-node n-crm">
-              <div className="node-icon"><Server size={16}/></div>
-              <span>HubSpot</span>
-            </div>
-            
-            <div className="canvas-node n-slack">
-              <div className="node-icon"><Layout size={16}/></div>
-              <span>Notificar</span>
-            </div>
+            <div className="canvas-node n-crm"><div className="node-icon"><Server size={16}/></div><span>HubSpot</span></div>
+            <div className="canvas-node n-slack"><div className="node-icon"><Layout size={16}/></div><span>Notificar</span></div>
           </div>
         </div>
       )
@@ -43,15 +32,10 @@ const Services = () => {
       visual: (
         <div className="bento-visual ecommerce-window">
           <div className="browser-mockup">
-            <div className="browser-header">
-              <span className="dot"></span><span className="dot"></span><span className="dot"></span>
-            </div>
+            <div className="browser-header"><span className="dot"></span><span className="dot"></span><span className="dot"></span></div>
             <div className="browser-body">
               <div className="product-skeleton"></div>
-              <div className="skeleton-lines">
-                <div className="s-line w-80"></div>
-                <div className="s-line w-40"></div>
-              </div>
+              <div className="skeleton-lines"><div className="s-line w-80"></div><div className="s-line w-40"></div></div>
               <div className="btn-skeleton"></div>
             </div>
           </div>
@@ -62,13 +46,31 @@ const Services = () => {
       title: "Paid Media & Growth",
       description: "Estrategias omnicanal en Meta y Google Ads. Escalamos tu facturación con creativos data-driven y media buying de precisión.",
       icon: "📈",
-      visual: null
+      visual: (
+        <div className="bento-visual abstract-gradient">
+           <div className="glow-orb orb-1"></div>
+           <div className="glow-orb orb-2"></div>
+           <div className="glass-chart">
+              <div className="c-bar h-1"></div><div className="c-bar h-2"></div><div className="c-bar h-3"></div><div className="c-bar h-4"></div>
+           </div>
+        </div>
+      )
     },
     {
       title: "CRO & UI/UX Premium",
       description: "Diseño que convierte. Interfaces inmersivas, branding coherente y auditorías de usabilidad que reducen el abandono del carrito.",
       icon: "✨",
-      visual: null
+      visual: (
+        <div className="bento-visual ui-mock">
+           <div className="ui-card">
+              <div className="ui-circle"></div>
+              <div className="ui-lines"><div className="ul"></div><div className="ul"></div></div>
+           </div>
+           <div className="ui-cursor">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 3.21V20.8C5.5 21.45 6.27 21.8 6.75 21.36L11.44 17.06H17.5C18.33 17.06 19 16.39 19 15.56V3.21C19 2.38 18.33 1.71 17.5 1.71H7C6.17 1.71 5.5 2.38 5.5 3.21Z" fill="#111113"/></svg>
+           </div>
+        </div>
+      )
     },
     {
       title: "CRM & Email Marketing",
@@ -76,14 +78,8 @@ const Services = () => {
       icon: "✉️",
       visual: (
         <div className="bento-visual email-campaign">
-          <div className="email-card c1">
-            <div className="e-header"><div className="e-avatar"></div><div className="e-line"></div></div>
-            <div className="e-body"><div className="e-box"></div></div>
-          </div>
-          <div className="email-card c2">
-            <div className="e-header"><div className="e-avatar"></div><div className="e-line"></div></div>
-            <div className="e-body"><div className="e-box"></div></div>
-          </div>
+          <div className="email-card c1"><div className="e-header"><div className="e-avatar"></div><div className="e-line"></div></div><div className="e-body"><div className="e-box"></div></div></div>
+          <div className="email-card c2"><div className="e-header"><div className="e-avatar"></div><div className="e-line"></div></div><div className="e-body"><div className="e-box"></div></div></div>
         </div>
       )
     },
@@ -101,26 +97,67 @@ const Services = () => {
     }
   ];
 
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-35% 0px -40% 0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const index = Number(entry.target.dataset.index);
+          setActiveIndex(index);
+        }
+      });
+    }, observerOptions);
+
+    textRefs.current.forEach(ref => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id="servicios" className="section services-section">
-      
+    <section id="servicios" className="section showcase-section">
       <div className="container">
-        <div className="section-title">
+        <div className="showcase-header">
           <h2>Nuestro <span className="text-gradient">Arsenal Técnico</span></h2>
           <p>No somos una agencia tradicional. Somos ingenieros de crecimiento construyendo la maquinaria de tu negocio.</p>
         </div>
         
-        <div className="services-grid">
-          {services.map((service, index) => (
-            <div key={index} className={`service-card delay-${(index % 3 + 1) * 100} ${service.visual ? 'has-visual' : ''}`}>
-              <div className="service-content">
-                <div className="service-icon">{service.icon}</div>
+        <div className="showcase-layout">
+          {/* Columna de Texto (Scrolleable) */}
+          <div className="showcase-text-col">
+            {services.map((service, index) => (
+              <div 
+                key={index}
+                data-index={index}
+                ref={el => textRefs.current[index] = el}
+                className={`showcase-text-item ${activeIndex === index ? 'active' : ''}`}
+              >
+                <div className="s-icon">{service.icon}</div>
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
               </div>
-              {service.visual && service.visual}
+            ))}
+          </div>
+
+          {/* Columna Visual (Sticky) */}
+          <div className="showcase-visual-col">
+            <div className="sticky-visual-container">
+              {services.map((service, index) => (
+                <div 
+                  key={index} 
+                  className={`visual-pane ${activeIndex === index ? 'active' : ''}`}
+                >
+                  {service.visual}
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>
