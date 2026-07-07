@@ -72,8 +72,6 @@ const Hero = ({ openModal }) => {
       </div>
 
       {/* Aurora Background Glows (Optional, placed over video for extra effect) */}
-      <div className="bg-glow blue" style={{ top: '-10%', left: '-10%' }}></div>
-      <div className="bg-glow purple" style={{ top: '20%', right: '-10%', width: '800px', height: '800px' }}></div>
       
       <div className="container hero-container">
         
