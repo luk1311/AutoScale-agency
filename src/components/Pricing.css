@@ -35,24 +35,50 @@
   transform: scale(1.05) translateY(-10px);
 }
 
-.pricing-card.elite {
-  background: linear-gradient(180deg, #ffffff 0%, var(--brand-soft) 100%);
-  border: 1px solid rgba(91, 75, 230, 0.25);
+.elite-card {
+  background: var(--ink);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.3s ease;
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
+}
+
+.elite-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+.elite-card .pricing-name,
+.elite-card .amount,
+.elite-card .period,
+.elite-card .currency {
+  color: #fff;
+}
+
+.elite-card .pricing-desc,
+.elite-card .pricing-features li {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .popular-badge {
   position: absolute;
-  top: -12px;
+  top: -14px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--accent-primary);
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
   color: white;
-  padding: 0.2rem 1rem;
+  padding: 0.3rem 1.2rem;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  box-shadow: 0 4px 15px rgba(91, 75, 230, 0.4);
 }
 
 .pricing-name {
@@ -69,7 +95,7 @@
 .pricing-price {
   display: flex;
   align-items: baseline;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.5rem;
 }
 
 .pricing-price .currency {
@@ -91,13 +117,37 @@
   margin-left: 0.5rem;
 }
 
-.pricing-monthly {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--accent-tertiary);
+.pricing-monthly-wrapper {
   margin-bottom: 2rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.elite-card .pricing-monthly-wrapper {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.monthly-badge {
+  display: inline-block;
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.monthly-badge.pro-badge {
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+  border: 1px solid rgba(91, 75, 230, 0.1);
+}
+
+.monthly-badge.elite-badge {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .pricing-features {
@@ -109,20 +159,68 @@
 .pricing-features li {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
   font-size: 0.95rem;
   line-height: 1.4;
+  text-align: left;
 }
 
-.pricing-features .check {
+.check-icon {
   color: var(--accent-tertiary);
-  margin-right: 0.8rem;
-  font-weight: bold;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.elite-card .check-icon {
+  color: var(--accent); /* Emerald pop in dark mode */
 }
 
 .btn-full {
   width: 100%;
   margin-top: auto;
+}
+
+.btn-elite {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  font-size: 1.125rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #ffffff;
+  color: var(--ink);
+  border-radius: 40px;
+  border: none;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.btn-elite:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+}
+
+/* Carrusel móvil — pista e indicadores (ocultos en desktop) */
+.pricing-hint { display: none; }
+.pricing-dots { display: none; }
+
+.pricing-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(91, 75, 230, 0.22);
+  cursor: pointer;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.pricing-dot.active {
+  width: 26px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
 }
 
 @media (max-width: 992px) {
@@ -138,5 +236,57 @@
   
   .pricing-card.popular:hover {
     transform: translateY(-10px);
+  }
+}
+
+/* ── Carrusel horizontal deslizable en móvil ── */
+@media (max-width: 768px) {
+  .pricing-grid {
+    display: flex;
+    grid-template-columns: none;
+    gap: 1rem;
+    max-width: none;
+    margin: 1.5rem 0 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;              /* Firefox */
+    padding: 1.5rem 0.25rem 0.5rem;     /* espacio arriba para el badge -12px */
+  }
+  .pricing-grid::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+  .pricing-card {
+    flex: 0 0 82%;                       /* la siguiente tarjeta "asoma" */
+    scroll-snap-align: center;
+  }
+
+  /* En el carrusel neutralizamos scale/hover para que no salte ni se corte */
+  .pricing-card,
+  .pricing-card.popular,
+  .pricing-card:hover,
+  .pricing-card.popular:hover,
+  .pricing-card.glass-panel:hover {
+    transform: none !important;
+  }
+
+  .pricing-hint {
+    display: block;
+    text-align: center;
+    margin-top: 2.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brand-ink);
+  }
+
+  .pricing-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
   }
 }

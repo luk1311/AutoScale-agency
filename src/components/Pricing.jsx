@@ -1,6 +1,33 @@
 import './Pricing.css';
+import { Check } from 'lucide-react';
+import { useRef, useState } from 'react';
 
 const Pricing = ({ openModal }) => {
+  const gridRef = useRef(null);
+  const [active, setActive] = useState(0);
+
+  // Detecta la tarjeta cuyo centro está más cerca del centro del carrusel.
+  const handleScroll = () => {
+    const el = gridRef.current;
+    if (!el) return;
+    const center = el.scrollLeft + el.clientWidth / 2;
+    let closest = 0;
+    let min = Infinity;
+    Array.from(el.children).forEach((card, i) => {
+      const d = Math.abs(card.offsetLeft + card.clientWidth / 2 - center);
+      if (d < min) { min = d; closest = i; }
+    });
+    setActive(closest);
+  };
+
+  const goTo = (i) => {
+    const el = gridRef.current;
+    const card = el && el.children[i];
+    if (card) {
+      el.scrollTo({ left: card.offsetLeft - (el.clientWidth - card.clientWidth) / 2, behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="section pricing-section" id="precios">
       <div className="container animate-fade-in">
@@ -9,7 +36,9 @@ const Pricing = ({ openModal }) => {
           <p>Planes diseñados para escalar, no cobramos por horas, construimos máquinas que venden por ti.</p>
         </div>
 
-        <div className="pricing-grid">
+        <p className="pricing-hint">Desliza para comparar los planes →</p>
+
+        <div className="pricing-grid" ref={gridRef} onScroll={handleScroll}>
           {/* Plan Esencial */}
           <div className="pricing-card glass-panel delay-100">
             <h3 className="pricing-name">Esencial</h3>
@@ -19,13 +48,15 @@ const Pricing = ({ openModal }) => {
               <span className="amount">990k</span>
               <span className="period">/ setup</span>
             </div>
-            <p className="pricing-monthly">+ $120.000 mensual</p>
+            <div className="pricing-monthly-wrapper">
+              <span className="monthly-badge">+ $120.000 mensual</span>
+            </div>
             
             <ul className="pricing-features">
-              <li><span className="check">✓</span> Landing page Premium (Optimizada móvil)</li>
-              <li><span className="check">✓</span> Hosting ultrarrápido y seguro</li>
-              <li><span className="check">✓</span> Formulario directo al correo</li>
-              <li><span className="check">✓</span> Botón flotante de WhatsApp</li>
+              <li><Check size={20} className="check-icon" /> <span>Landing page Premium (Optimizada móvil)</span></li>
+              <li><Check size={20} className="check-icon" /> <span>Hosting ultrarrápido y seguro</span></li>
+              <li><Check size={20} className="check-icon" /> <span>Formulario directo al correo</span></li>
+              <li><Check size={20} className="check-icon" /> <span>Botón flotante de WhatsApp</span></li>
             </ul>
             
             <button className="btn btn-secondary btn-full" onClick={openModal}>
@@ -43,14 +74,16 @@ const Pricing = ({ openModal }) => {
               <span className="amount">1.79M</span>
               <span className="period">/ setup</span>
             </div>
-            <p className="pricing-monthly">+ $350.000 mensual</p>
+            <div className="pricing-monthly-wrapper">
+              <span className="monthly-badge pro-badge">+ $350.000 mensual</span>
+            </div>
             
             <ul className="pricing-features">
-              <li><span className="check">✓</span> Todo lo del plan Esencial</li>
-              <li><span className="check">✓</span> <strong>Automatización n8n:</strong> Respuesta inmediata WhatsApp/Email</li>
-              <li><span className="check">✓</span> CRM personalizado (/admin)</li>
-              <li><span className="check">✓</span> Gestión de estado de Leads</li>
-              <li><span className="check">✓</span> Analíticas y exportación Excel</li>
+              <li><Check size={20} className="check-icon" /> <span>Todo lo del plan Esencial</span></li>
+              <li><Check size={20} className="check-icon" /> <span><strong>Automatización n8n:</strong> Respuesta inmediata WhatsApp/Email</span></li>
+              <li><Check size={20} className="check-icon" /> <span>CRM personalizado (/admin)</span></li>
+              <li><Check size={20} className="check-icon" /> <span>Gestión de estado de Leads</span></li>
+              <li><Check size={20} className="check-icon" /> <span>Analíticas y exportación Excel</span></li>
             </ul>
             
             <button className="btn btn-primary btn-full" onClick={openModal}>
@@ -59,7 +92,7 @@ const Pricing = ({ openModal }) => {
           </div>
 
           {/* Plan Elite */}
-          <div className="pricing-card glass-panel elite delay-300">
+          <div className="pricing-card elite-card delay-300">
             <h3 className="pricing-name text-gradient">Elite</h3>
             <p className="pricing-desc">El Sistema Definitivo con Inteligencia Artificial.</p>
             <div className="pricing-price">
@@ -67,20 +100,34 @@ const Pricing = ({ openModal }) => {
               <span className="amount">2.9M</span>
               <span className="period">/ setup</span>
             </div>
-            <p className="pricing-monthly">+ $490.000 mensual</p>
+            <div className="pricing-monthly-wrapper">
+              <span className="monthly-badge elite-badge">+ $490.000 mensual</span>
+            </div>
             
             <ul className="pricing-features">
-              <li><span className="check">✓</span> Todo lo del plan Pro</li>
-              <li><span className="check">✓</span> <strong>Agente IA WhatsApp 24/7</strong> (Responde dudas y agenda citas)</li>
-              <li><span className="check">✓</span> Recordatorios 24h automáticos</li>
-              <li><span className="check">✓</span> Reactivación de clientes inactivos</li>
-              <li><span className="check">✓</span> Sincronización con ERP/Calendario</li>
+              <li><Check size={20} className="check-icon" /> <span>Todo lo del plan Pro</span></li>
+              <li><Check size={20} className="check-icon" /> <span><strong>Agente IA WhatsApp 24/7</strong> (Responde dudas y agenda citas)</span></li>
+              <li><Check size={20} className="check-icon" /> <span>Recordatorios 24h automáticos</span></li>
+              <li><Check size={20} className="check-icon" /> <span>Reactivación de clientes inactivos</span></li>
+              <li><Check size={20} className="check-icon" /> <span>Sincronización con ERP/Calendario</span></li>
             </ul>
             
-            <button className="btn btn-primary btn-full" onClick={openModal}>
+            <button className="btn btn-elite btn-full" onClick={openModal}>
               Solicitar Cotización Elite
             </button>
           </div>
+        </div>
+
+        <div className="pricing-dots" role="tablist" aria-label="Planes">
+          {[0, 1, 2].map((i) => (
+            <button
+              key={i}
+              className={`pricing-dot ${active === i ? 'active' : ''}`}
+              onClick={() => goTo(i)}
+              aria-label={`Ver plan ${i + 1} de 3`}
+              aria-selected={active === i}
+            />
+          ))}
         </div>
       </div>
     </section>
