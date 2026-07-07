@@ -61,17 +61,42 @@ const Hero = ({ openModal }) => {
           </div>
         </div>
 
-        {/* Content (Right Aligned 3D Visual) */}
+        {/* Content (Right Aligned Glassmorphism Mockup) */}
         <div className="hero-visual">
-          <div className="spline-wrapper animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            <iframe 
-              src="https://my.spline.design/mockupcopycopy-wBanv7IJIHTZgkQfvXtEIq9x-XyS/" 
-              frameBorder="0" 
-              width="100%" 
-              height="100%" 
-              style={{ border: 'none', background: 'transparent' }}
-              title="AutoScale 3D Hero"
-            ></iframe>
+          <div className="glass-mockup animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            <div className="mockup-glow mockup-glow-1"></div>
+            <div className="mockup-glow mockup-glow-2"></div>
+            
+            <div className="glass-card">
+              <div className="glass-header">
+                <div className="glass-header-left">
+                  <div className="status-dot pulsing"></div>
+                  <span className="ai-status">Agente IA Activo</span>
+                </div>
+                <span className="ai-time">Ahora</span>
+              </div>
+              
+              <div className="glass-body">
+                <div className="chat-bubble ai-bubble">
+                  <Sparkles size={14} className="bubble-icon" />
+                  <p>¡Hola! He agendado 3 nuevas reuniones mientras dormías. 🚀</p>
+                </div>
+                <div className="chat-bubble user-bubble">
+                  <p>Increíble. Pásame el reporte de ventas.</p>
+                </div>
+                <div className="chat-bubble ai-bubble typing">
+                  Generando reporte en tiempo real
+                  <span className="dot-anim">...</span>
+                </div>
+              </div>
+              
+              <div className="glass-footer">
+                <div className="glass-input-fake">Escribe un mensaje...</div>
+                <div className="glass-send-btn">
+                  <ArrowUpRight size={16} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
