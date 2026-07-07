@@ -1,27 +1,41 @@
 :root {
-  /* Color Palette - Apple Light Mode */
-  --bg-color: #FBFBFD;
-  --bg-secondary: #FFFFFF;
-  --text-main: #1D1D1F;
-  --text-muted: #86868B;
-  
-  --accent-primary: #000000; /* Black/Dark gray for buttons */
-  --accent-glow: rgba(0, 0, 0, 0.05);
-  --accent-secondary: #424245; /* Subtle gray */
-  --accent-tertiary: #0066CC; /* Apple blue */
+  /* ── AutoScale · Identidad índigo→violeta, acento esmeralda "en vivo" ── */
+  --bg: #F6F7FB;            /* blanco frío premium (no blanco puro) */
+  --bg-elevated: #FFFFFF;
+  --ink: #0B1020;           /* casi negro pizarra, para títulos */
+  --text-main: #1E2233;
+  --text-muted: #64748B;
 
-  --border-color: rgba(0, 0, 0, 0.05);
-  --border-color: rgba(0, 0, 0, 0.05);
-  --glass-bg: rgba(255, 255, 255, 0.35);
-  --glass-border: rgba(255, 255, 255, 0.6);
-  
-  /* Apple Tech Aurora Gradients */
-  --aurora-blue: rgba(0, 122, 255, 0.15);
-  --aurora-purple: rgba(88, 86, 214, 0.15);
+  --brand: #5B4BE6;         /* índigo — identidad */
+  --brand-2: #7C3AED;       /* violeta — pareja del gradiente */
+  --brand-ink: #4C3BD6;     /* índigo oscuro para texto sobre claro */
+  --brand-soft: #EEEBFF;    /* fondo suave de badges/chips */
+  --accent: #10B981;        /* esmeralda — en vivo / confianza (uso mínimo) */
+  --accent-soft: #E3F7EF;
 
-  /* Typography */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --line: rgba(15, 23, 42, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.7);
+
+  --aurora-1: rgba(91, 75, 230, 0.16);
+  --aurora-2: rgba(124, 58, 237, 0.14);
+
+  /* Tipografía */
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ── Alias de compatibilidad (los componentes viejos leen estos) ── */
+  --bg-color: var(--bg);
+  --bg-secondary: var(--bg-elevated);
+  --accent-primary: var(--brand);
+  --accent-glow: rgba(91, 75, 230, 0.12);
+  --accent-secondary: var(--text-muted);
+  --accent-tertiary: var(--brand);
+  --border-color: var(--line);
+  --aurora-blue: var(--aurora-1);
+  --aurora-purple: var(--aurora-2);
+  --font-sans: var(--font-body);
 }
 
 * {
@@ -48,14 +62,27 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  line-height: 1.2;
+  line-height: 1.15;
   margin-bottom: 1rem;
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 h1 {
   font-size: clamp(2.5rem, 5vw, 4.5rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+/* Etiqueta monoespaciada (firma tipográfica de AutoScale) */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-ink);
 }
 
 h2 {
@@ -72,7 +99,7 @@ p {
 
 /* Utilities */
 .text-gradient {
-  background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -139,21 +166,20 @@ p {
 }
 
 .btn-primary {
-  background: linear-gradient(180deg, #1d1d1f 0%, #000000 100%);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
   color: white;
   border-radius: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 4px 14px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 6px 18px rgba(91, 75, 230, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.2),
-    0 4px 8px rgba(0, 122, 255, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 12px 30px rgba(91, 75, 230, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .btn-secondary {
