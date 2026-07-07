@@ -264,10 +264,11 @@
     margin: 1.5rem 0 0;
     overflow-x: auto;
     overflow-y: hidden;
-    scroll-snap-type: x proximity;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;              /* Firefox */
-    padding: 1.5rem 1rem 1.5rem;        /* Regresamos a un padding moderado */
+    padding: 1.5rem 1rem 2.2rem;        /* Un padding inferior intermedio para la sombra */
   }
   .pricing-grid::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
