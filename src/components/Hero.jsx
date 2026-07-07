@@ -63,8 +63,9 @@ const Hero = ({ openModal }) => {
 
         {/* Content (Right Aligned Glassmorphism Mockup) */}
         <div className="hero-visual">
-          <div className="glass-mockup animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            <div className="mockup-glow mockup-glow-1"></div>
+          <div className="animate-fade-in" style={{ animationDelay: '0.6s', width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <div className="glass-mockup">
+              <div className="mockup-glow mockup-glow-1"></div>
             <div className="mockup-glow mockup-glow-2"></div>
             
             <div className="glass-card">
@@ -98,6 +99,7 @@ const Hero = ({ openModal }) => {
               </div>
             </div>
           </div>
+        </div>
         </div>
 
       </div>
