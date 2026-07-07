@@ -6,7 +6,7 @@
   max-width: 1000px;
   transform: translateX(-50%);
   z-index: 100;
-  background: rgba(251, 251, 253, 0.85); /* Increased opacity to prevent dark bleed-through */
+  background: rgba(251, 251, 253, 0.98); /* Increased opacity to prevent dark bleed-through */
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
   border: 1px solid rgba(0, 0, 0, 0.05);
