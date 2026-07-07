@@ -32,8 +32,8 @@
   height: 100%;
   background: linear-gradient(
     180deg,
-    rgba(251, 251, 253, 0.4) 0%,
-    rgba(251, 251, 253, 0.9) 70%,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.3) 80%,
     var(--bg-color) 100%
   );
   z-index: -1;
@@ -54,31 +54,34 @@
   flex-direction: column;
   gap: 1.5rem;
   align-items: center;
+  color: #ffffff; /* Make text white to contrast with the video */
 }
 
 .hero-badge {
   display: inline-block;
-  background: rgba(0, 0, 0, 0.04);
-  color: var(--text-muted);
-  padding: 0.5rem 1.2rem;
+  padding: 0.5rem 1.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
   border-radius: 50px;
   font-weight: 600;
   font-size: 0.85rem;
   margin-bottom: 0;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   text-transform: uppercase;
   letter-spacing: 1.5px;
+  color: #ffffff;
 }
 
 .hero-title {
   margin-bottom: 0;
   font-size: clamp(3rem, 5vw, 4.5rem);
   line-height: 1.1;
+  color: #ffffff;
 }
 
 .hero-subtitle {
   font-size: 1.25rem;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.8);
   max-width: 500px;
   margin-bottom: 2.5rem;
   line-height: 1.5;
@@ -99,9 +102,8 @@
 }
 
 .cta-note {
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: var(--text-muted);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 
