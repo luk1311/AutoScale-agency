@@ -7,6 +7,9 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      workbox: {
+        maximumFileSizeToCacheInBytes: 5000000
+      },
       includeAssets: ['favicon.svg', 'pwa-icon.svg'],
       manifest: {
         name: 'AutoScale CRM',
