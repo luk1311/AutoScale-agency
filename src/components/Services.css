@@ -33,6 +33,10 @@
   border: 1px solid rgba(0, 0, 0, 0.02);
 }
 
+.service-card.has-visual {
+  padding-bottom: 0;
+}
+
 .service-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.03);
@@ -106,132 +110,204 @@
 
 /* Bento Visuals */
 .service-card {
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .service-content {
   position: relative;
   z-index: 2;
+  margin-bottom: 2rem;
 }
 
 .bento-visual {
   position: relative;
   z-index: 1;
-  margin-top: 2rem;
-  border-radius: 16px;
+  flex-grow: 1;
+  margin: 0 -2.5rem;
   background: #F8F9FB;
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-top: 1px solid rgba(0, 0, 0, 0.03);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* 1. Automation Flow (Card 1) */
-.service-card:nth-child(1) .bento-visual {
-  height: 220px;
-  background: linear-gradient(135deg, rgba(91, 75, 230, 0.03) 0%, rgba(91, 75, 230, 0.08) 100%);
+/* 1. Automation Canvas (Card 1) */
+.automation-canvas {
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: center center;
 }
 
-.automation-flow {
+.node-grid {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+}
+
+.canvas-node {
+  position: absolute;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 12px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.automation-flow .node {
-  width: 48px;
-  height: 48px;
-  background: #ffffff;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  color: var(--brand);
-  position: relative;
-  z-index: 2;
-}
-
-.automation-flow .line {
-  height: 2px;
-  width: 40px;
-  background: var(--brand);
-  opacity: 0.2;
-  position: relative;
-  z-index: 1;
-}
-
-.automation-flow .n1 { animation: float 3s ease-in-out infinite; }
-.automation-flow .n2 { animation: float 3s ease-in-out infinite 1s; }
-.automation-flow .n3 { animation: float 3s ease-in-out infinite 2s; }
-
-/* 2. E-commerce Chart (Card 2) */
-.service-card:nth-child(2) .bento-visual {
-  height: 120px;
-}
-.ecommerce-chart {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 12px;
-  padding: 20px;
-}
-.ecommerce-chart .bar {
-  width: 24px;
-  background: var(--brand);
-  border-radius: 4px 4px 0 0;
-  opacity: 0.8;
-}
-.ecommerce-chart .b1 { height: 40%; background: #e0e0e0; }
-.ecommerce-chart .b2 { height: 60%; background: #d0d0d0; }
-.ecommerce-chart .b3 { height: 80%; background: #b0b0b0; }
-.ecommerce-chart .b4 { height: 100%; }
-
-/* 5. Email Flow (Card 5) */
-.service-card:nth-child(5) .bento-visual {
-  height: 120px;
-  flex-direction: column;
-  gap: 10px;
-  padding: 20px;
-}
-.email-pill {
-  background: #ffffff;
-  padding: 8px 16px;
-  border-radius: 20px;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--ink);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  width: 80%;
-  text-align: center;
-}
-.email-pill:nth-child(2) {
-  width: 60%;
-  opacity: 0.7;
+  z-index: 2;
+  animation: floatNode 4s infinite ease-in-out;
 }
 
-/* 6. Code Block (Card 6) */
-.service-card:nth-child(6) .bento-visual {
-  height: 120px;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 20px;
-  gap: 12px;
-  background: #111;
+.node-icon {
+  background: rgba(91, 75, 230, 0.08);
+  color: var(--brand);
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
 }
-.code-line {
-  height: 6px;
-  border-radius: 4px;
-  background: rgba(255,255,255,0.2);
-}
-.code-line.w-75 { width: 75%; background: var(--brand); }
-.code-line.w-50 { width: 50%; }
-.code-line.w-100 { width: 90%; }
 
-@keyframes float {
+.n-trigger { top: 15%; left: 10%; animation-delay: 0s; }
+.n-ai { top: 45%; left: 40%; animation-delay: -1s; }
+.n-crm { top: 15%; left: 70%; animation-delay: -2s; }
+.n-slack { top: 70%; left: 70%; animation-delay: -3s; }
+
+.canvas-path {
+  position: absolute;
+  background: var(--brand);
+  opacity: 0.15;
+  z-index: 1;
+}
+
+.p1 { top: 22%; left: 25%; width: 17%; height: 2px; transform: rotate(35deg); transform-origin: left; }
+.p2 { top: 52%; left: 55%; width: 17%; height: 2px; transform: rotate(-35deg); transform-origin: left; }
+.p3 { top: 52%; left: 55%; width: 17%; height: 2px; transform: rotate(35deg); transform-origin: left; }
+
+@keyframes floatNode {
   0% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
+  50% { transform: translateY(-5px); }
   100% { transform: translateY(0px); }
+}
+
+/* 2. E-commerce Window (Card 2) */
+.ecommerce-window {
+  min-height: 180px;
+}
+
+.browser-mockup {
+  width: 70%;
+  height: 140px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: transform 0.4s ease;
+}
+
+.service-card:hover .browser-mockup {
+  transform: translateY(10px);
+}
+
+.browser-header {
+  background: #F5F5F7;
+  padding: 8px 12px;
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.browser-header .dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #e0e0e0;
+}
+.browser-header .dot:nth-child(1) { background: #ff5f56; }
+.browser-header .dot:nth-child(2) { background: #ffbd2e; }
+.browser-header .dot:nth-child(3) { background: #27c93f; }
+
+.browser-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-skeleton {
+  width: 100%; height: 60px; background: rgba(91, 75, 230, 0.05); border-radius: 8px;
+}
+
+.skeleton-lines { display: flex; flex-direction: column; gap: 6px; }
+.s-line { height: 6px; background: #f0f0f0; border-radius: 4px; }
+.s-line.w-80 { width: 80%; }
+.s-line.w-40 { width: 40%; }
+.btn-skeleton { width: 50%; height: 20px; background: var(--brand); opacity: 0.8; border-radius: 4px; margin-top: auto; }
+
+/* 5. Email Campaign (Card 5) */
+.email-campaign {
+  min-height: 180px;
+}
+
+.email-card {
+  width: 65%;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.03);
+  padding: 12px;
+  position: absolute;
+  transition: transform 0.4s ease;
+}
+
+.email-card.c1 { top: 20px; left: 10%; z-index: 2; transform: rotate(-3deg); }
+.email-card.c2 { top: 60px; left: 25%; z-index: 1; transform: rotate(5deg); opacity: 0.6; }
+
+.service-card:hover .email-card.c1 { transform: rotate(0deg) translateY(-5px); }
+.service-card:hover .email-card.c2 { transform: rotate(8deg) translateY(5px); }
+
+.e-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.e-avatar { width: 24px; height: 24px; border-radius: 50%; background: #f0f0f0; }
+.e-line { width: 40px; height: 6px; border-radius: 4px; background: #e0e0e0; }
+.e-body { width: 100%; height: 40px; border-radius: 8px; background: rgba(91, 75, 230, 0.05); }
+
+/* 6. Server Stack (Card 6) */
+.server-stack {
+  min-height: 180px;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.server-rack {
+  width: 60%;
+  height: 30px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  justify-content: space-between;
+}
+
+.server-rack .lights { display: flex; gap: 6px; }
+.server-rack .lights span { width: 6px; height: 6px; border-radius: 50%; }
+.l-on { background: #27c93f; box-shadow: 0 0 6px rgba(39,201,63,0.5); }
+.l-off { background: #e0e0e0; }
+.l-blink { background: #27c93f; animation: blink 1s infinite; }
+
+.server-rack .s-line { width: 30px; height: 4px; border-radius: 2px; background: #f0f0f0; }
+.server-rack.r-active { border-color: rgba(91, 75, 230, 0.3); background: rgba(91, 75, 230, 0.02); }
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
 }

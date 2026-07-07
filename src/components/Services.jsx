@@ -8,12 +8,31 @@ const Services = () => {
       description: "Conectamos tu ecosistema digital usando n8n, Make y Zapier. Eliminamos tareas repetitivas para que tu equipo se enfoque en el crecimiento.",
       icon: "⚡",
       visual: (
-        <div className="bento-visual automation-flow">
-          <div className="node n1"><Mail size={16}/></div>
-          <div className="line l1"></div>
-          <div className="node n2"><Workflow size={16}/></div>
-          <div className="line l2"></div>
-          <div className="node n3"><Server size={16}/></div>
+        <div className="bento-visual automation-canvas">
+          <div className="node-grid">
+            <div className="canvas-node n-trigger">
+              <div className="node-icon"><Mail size={16}/></div>
+              <span>Nuevo Lead</span>
+            </div>
+            <div className="canvas-path p1"></div>
+            
+            <div className="canvas-node n-ai">
+              <div className="node-icon"><Workflow size={16}/></div>
+              <span>AI Agent</span>
+            </div>
+            <div className="canvas-path p2"></div>
+            <div className="canvas-path p3"></div>
+            
+            <div className="canvas-node n-crm">
+              <div className="node-icon"><Server size={16}/></div>
+              <span>HubSpot</span>
+            </div>
+            
+            <div className="canvas-node n-slack">
+              <div className="node-icon"><Layout size={16}/></div>
+              <span>Notificar</span>
+            </div>
+          </div>
         </div>
       )
     },
@@ -22,11 +41,20 @@ const Services = () => {
       description: "Tiendas Shopify ultra-rápidas y optimizadas para conversión. Custom themes, integraciones complejas y headless commerce.",
       icon: "🛍️",
       visual: (
-        <div className="bento-visual ecommerce-chart">
-          <div className="bar b1"></div>
-          <div className="bar b2"></div>
-          <div className="bar b3"></div>
-          <div className="bar b4"></div>
+        <div className="bento-visual ecommerce-window">
+          <div className="browser-mockup">
+            <div className="browser-header">
+              <span className="dot"></span><span className="dot"></span><span className="dot"></span>
+            </div>
+            <div className="browser-body">
+              <div className="product-skeleton"></div>
+              <div className="skeleton-lines">
+                <div className="s-line w-80"></div>
+                <div className="s-line w-40"></div>
+              </div>
+              <div className="btn-skeleton"></div>
+            </div>
+          </div>
         </div>
       )
     },
@@ -47,9 +75,15 @@ const Services = () => {
       description: "Flujos de retención hiper-personalizados en Klaviyo y Hubspot. Convertimos clientes de una sola vez en compradores recurrentes.",
       icon: "✉️",
       visual: (
-        <div className="bento-visual email-flow">
-          <div className="email-pill">Welcome Series</div>
-          <div className="email-pill">Abandoned Cart</div>
+        <div className="bento-visual email-campaign">
+          <div className="email-card c1">
+            <div className="e-header"><div className="e-avatar"></div><div className="e-line"></div></div>
+            <div className="e-body"><div className="e-box"></div></div>
+          </div>
+          <div className="email-card c2">
+            <div className="e-header"><div className="e-avatar"></div><div className="e-line"></div></div>
+            <div className="e-body"><div className="e-box"></div></div>
+          </div>
         </div>
       )
     },
@@ -58,10 +92,10 @@ const Services = () => {
       description: "Sistemas backend robustos y APIs a medida. Escalabilidad asegurada con React, Node.js y bases de datos optimizadas.",
       icon: "⚙️",
       visual: (
-        <div className="bento-visual code-block">
-          <div className="code-line w-75"></div>
-          <div className="code-line w-50"></div>
-          <div className="code-line w-100"></div>
+        <div className="bento-visual server-stack">
+           <div className="server-rack"><div className="lights"><span className="l-on"></span><span className="l-on"></span></div><div className="s-line"></div></div>
+           <div className="server-rack"><div className="lights"><span className="l-on"></span><span className="l-off"></span></div><div className="s-line"></div></div>
+           <div className="server-rack r-active"><div className="lights"><span className="l-blink"></span><span className="l-on"></span></div><div className="s-line"></div></div>
         </div>
       )
     }
@@ -78,7 +112,7 @@ const Services = () => {
         
         <div className="services-grid">
           {services.map((service, index) => (
-            <div key={index} className={`service-card delay-${(index % 3 + 1) * 100}`}>
+            <div key={index} className={`service-card delay-${(index % 3 + 1) * 100} ${service.visual ? 'has-visual' : ''}`}>
               <div className="service-content">
                 <div className="service-icon">{service.icon}</div>
                 <h3>{service.title}</h3>
