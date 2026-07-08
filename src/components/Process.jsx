@@ -1,70 +1,58 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Process.css';
 
-gsap.registerPlugin(ScrollTrigger);
-
 const Process = () => {
-  const sectionRef = useRef(null);
-
   const steps = [
     {
-      number: "1",
-      title: "Estrategia Integral",
-      desc: "Analizamos tu negocio para diseñar la web, definir las campañas y mapear el flujo de automatización."
+      phase: "01",
+      title: "Auditoría de Infraestructura",
+      description: "Mapeamos cada proceso actual de tu agencia. Identificamos cuellos de botella y fugas de capital donde tu equipo pierde horas valiosas."
     },
     {
-      number: "2",
-      title: "Desarrollo y Diseño",
-      desc: "Creamos tu Landing Page premium y conectamos los asistentes de Inteligencia Artificial."
+      phase: "02",
+      title: "Diseño de Arquitectura",
+      description: "Diseñamos un pipeline de automatización personalizado. Definimos los webhooks, bases de datos y herramientas No-Code necesarias para escalar."
     },
     {
-      number: "3",
-      title: "Lanzamiento Meta Ads",
-      desc: "Activamos las campañas publicitarias para inyectar tráfico calificado a tu nuevo ecosistema."
+      phase: "03",
+      title: "Desarrollo y Despliegue",
+      description: "Construimos el sistema en un entorno aislado. Una vez superado el QA de estrés, lo conectamos a tu ecosistema en vivo sin fricción."
     },
     {
-      number: "4",
-      title: "Conversión en Piloto",
-      desc: "El tráfico llega a tu web, la IA atiende a los prospectos y tú te enfocas en cerrar las ventas."
+      phase: "04",
+      title: "Iteración y Escalamiento",
+      description: "Monitoreamos los flujos 24/7. Optimizamos tasas de conversión y añadimos nuevas ramas lógicas a medida que tu MRR aumenta."
     }
   ];
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.process-step',
-        { x: -50, opacity: 0 },
-        {
-          x: 0, opacity: 1, duration: 0.8, stagger: 0.2, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.process-timeline',
-            start: 'top 85%',
-          }
-        }
-      );
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section className="section process-section" id="proceso" ref={sectionRef} style={{ position: 'relative', overflow: 'hidden' }}>
-      
-      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="section-title">
-          <h2>Nuestro proceso en <span className="text-gradient">4 pasos</span></h2>
-          <p>Implementación rápida, sin dolores de cabeza para ti ni tu equipo.</p>
+    <section id="proceso" className="section v2-process">
+      <div className="container">
+        
+        <div className="showcase-header">
+          <h2>Metodología de <span className="text-gradient">Ingeniería</span></h2>
+          <p>No improvisamos. Aplicamos un framework de desarrollo estructurado para garantizar escalabilidad técnica.</p>
         </div>
 
-        <div className="process-timeline">
-          {steps.map((step, index) => (
-            <div className="process-step glass-panel" key={index}>
-              <div className="step-number">{step.number}</div>
-              <h3>{step.title}</h3>
-              <p>{step.desc}</p>
-            </div>
-          ))}
+        <div className="v2-pipeline">
+          <div className="v2-pipeline-line"></div>
+          
+          <div className="v2-steps-container">
+            {steps.map((step, index) => (
+              <div className="v2-process-step" key={index}>
+                <div className="v2-step-node">
+                  <span className="v2-node-glow"></span>
+                  <span className="v2-node-core"></span>
+                </div>
+                <div className="v2-step-content">
+                  <div className="v2-step-phase">{step.phase}</div>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+
       </div>
     </section>
   );

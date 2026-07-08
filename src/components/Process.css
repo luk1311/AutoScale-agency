@@ -1,96 +1,126 @@
-.process-section {
-  background-color: var(--bg-secondary);
+/* V2 Process Styles - Dark Minimalist */
+
+.v2-process {
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-light);
+  padding: 8rem 0;
 }
 
-.process-timeline {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+.v2-pipeline {
   position: relative;
+  max-width: 800px;
+  margin: 4rem auto 0;
+  padding-left: 2rem;
 }
 
+.v2-pipeline-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2rem;
+  width: 2px;
+  background: linear-gradient(to bottom, 
+      rgba(255,255,255,0.05) 0%, 
+      var(--border-strong) 50%, 
+      rgba(255,255,255,0.05) 100%);
+  transform: translateX(-50%);
+}
 
+.v2-steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+}
 
-.process-step {
+.v2-process-step {
   position: relative;
-  z-index: 1;
-  text-align: center;
-  padding: 2rem 1.5rem;
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
 }
 
-.step-number {
-  width: 60px;
-  height: 60px;
-  background: var(--bg-elevated);
-  border: 2px solid var(--brand);
-  color: var(--brand-ink);
-  border-radius: 50%;
+/* Node (The dot on the line) */
+.v2-step-node {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 auto 1.5rem;
-  box-shadow: 0 6px 16px rgba(91, 75, 230, 0.15);
+  width: 24px;
+  height: 24px;
+}
+
+.v2-node-core {
+  width: 10px;
+  height: 10px;
+  background: var(--bg-primary);
+  border: 2px solid var(--text-primary);
+  border-radius: 50%;
+  z-index: 2;
   transition: all 0.3s ease;
 }
 
-.process-step:hover .step-number {
-  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
-  color: #fff;
-  box-shadow: 0 8px 22px rgba(91, 75, 230, 0.35);
+.v2-node-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--text-primary);
+  border-radius: 50%;
+  opacity: 0;
+  filter: blur(8px);
+  transition: opacity 0.3s ease;
 }
 
-.process-step h3 {
-  font-size: 1.2rem;
+.v2-process-step:hover .v2-node-core {
+  background: var(--text-primary);
+}
+
+.v2-process-step:hover .v2-node-glow {
+  opacity: 0.5;
+}
+
+/* Content */
+.v2-step-content {
+  flex: 1;
+  padding: 2.5rem;
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  border: 1px solid var(--border-light);
+  transition: all 0.4s var(--ease-smooth);
+}
+
+.v2-process-step:hover .v2-step-content {
+  border-color: var(--border-strong);
+  transform: translateX(10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.v2-step-phase {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.v2-step-content h3 {
+  font-size: 1.5rem;
   margin-bottom: 1rem;
+  color: var(--text-primary);
 }
 
-.process-step p {
-  font-size: 0.95rem;
-  margin-bottom: 0;
+.v2-step-content p {
+  margin: 0;
+  font-size: 1.05rem;
 }
 
-@media (max-width: 992px) {
-  .process-timeline {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-  .process-timeline {
-    gap: 1rem;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .process-step {
-    padding: 1.5rem 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .step-number {
-    width: 45px;
-    height: 45px;
-    font-size: 1.2rem;
-    margin-bottom: 0.8rem;
-  }
-
-  .process-step h3 {
-    font-size: 1.1rem;
-    margin-bottom: 0;
-  }
-
-  .process-step p {
-    display: none;
-  }
-  
-  .process-step:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    width: calc(50% - 0.5rem);
-    justify-self: center;
-  }
+  .v2-pipeline { padding-left: 1rem; }
+  .v2-pipeline-line { left: 1rem; }
+  .v2-process-step { gap: 1.5rem; }
+  .v2-step-content { padding: 1.5rem; }
+  .v2-process-step:hover .v2-step-content { transform: none; }
 }
