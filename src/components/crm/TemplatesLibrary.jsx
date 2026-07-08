@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
-  CalendarClock, Calculator, UtensilsCrossed, Dumbbell,
-  Bot, MessageSquareQuote, ClipboardList, LifeBuoy,
+  CalendarClock, Calculator, UtensilsCrossed, Dumbbell, Wallet,
+  Bot, MessageSquareQuote, ClipboardList, LifeBuoy, PiggyBank,
   Copy, Check, ChevronLeft,
 } from 'lucide-react';
 import './TemplatesLibrary.css';
@@ -164,6 +164,58 @@ Vistas:
 4. MÉTRICAS: activos, churn del mes, MRR, en riesgo.
 
 Reglas automáticas de estado: sin asistir 10 días → en_riesgo; fecha vence pasada → vencido; pago tras vencido → recuperado. Todo en español.`,
+  },
+  {
+    id: 'finanzas',
+    icon: <Wallet size={22} />,
+    title: 'Panel de Finanzas',
+    niches: 'Cualquier negocio · Control de caja · Utilidad real',
+    resumen: 'El dueño no sabe cuánto gana de verdad: mezcla la plata del negocio con la personal y no ve sus gastos. Este panel responde UNA pregunta cada mes: ¿ganaste o perdiste, y cuánto? (Control de caja y utilidad — no reemplaza al contador ni la facturación DIAN.)',
+    pipeline: ['Por cobrar', 'Facturado', 'Pago parcial', 'Pagado', 'Vencido'],
+    estructura: [
+      'movimientos — id, tipo (ingreso/gasto), categoria_id, monto, metodo (efectivo/transferencia/tarjeta), fecha, nota, comprobante_url, anulado',
+      'categorias — id, nombre, tipo (ingreso/gasto), presupuesto_mes',
+      'cuentas_cobrar — id, cliente, concepto, monto, vence, estado',
+      'cuentas_pagar — id, proveedor, concepto, monto, vence, estado',
+      'cierres — mes, total_ingresos, total_gastos, utilidad, nota',
+    ],
+    metricas: [
+      'Utilidad real del mes (ingresos − gastos), en grande',
+      'Flujo de caja: saldo disponible por método (efectivo/banco)',
+      'Top 5 categorías de gasto del mes',
+      'Cuentas por cobrar vencidas ($ y días)',
+      'Comparativa vs. mes anterior',
+    ],
+    automatizaciones: [
+      'Registrar gastos/ingresos por WhatsApp ("gasté 50k en insumos" → la IA lo categoriza y guarda)',
+      'Cuenta por cobrar vencida → recordatorio de cobro automático al cliente',
+      'Cierre de mes automático → resumen con utilidad al dueño por WhatsApp',
+      'Categoría que supera su presupuesto → alerta inmediata',
+    ],
+    prompt: `Actúa como desarrollador full-stack senior. Construye un panel de finanzas y control de caja para [NOMBRE DEL NEGOCIO], un(a) [TIPO DE NEGOCIO] en [CIUDAD]. Moneda: COP (formato es-CO, sin decimales).
+
+Stack: React + Vite + Supabase (Postgres con RLS, Auth por email). Colores de marca: [COLORES].
+
+Tablas (Supabase):
+- categorias(id, nombre, tipo check: ingreso|gasto, presupuesto_mes numeric)
+- movimientos(id uuid, tipo check: ingreso|gasto, categoria_id fk, monto numeric, metodo check: efectivo|transferencia|tarjeta, fecha date, nota, comprobante_url, anulado bool default false, created_at)
+- cuentas_cobrar(id, cliente, concepto, monto, vence date, estado check: por_cobrar|facturado|pago_parcial|pagado|vencido)
+- cuentas_pagar(id, proveedor, concepto, monto, vence date, estado check: por_pagar|pagado|vencido)
+- cierres(id, mes date, total_ingresos, total_gastos, utilidad, nota)
+RLS: solo usuarios autenticados. Sembrar categorías típicas del nicho: [ej. insumos, arriendo, nómina, servicios, marketing, ventas].
+
+Vistas del panel:
+1. PANEL DEL MES (principal): UTILIDAD REAL en grande (ingresos − gastos), barras de ingresos vs gastos por semana, top 5 categorías de gasto, saldo por método de pago, y comparativa vs mes anterior.
+2. REGISTRO RÁPIDO: formulario de 10 segundos (tipo, monto, categoría, método, nota opcional) + lista de movimientos del día, editable.
+3. CUENTAS: dos columnas — por cobrar y por pagar — ordenadas por vencimiento; las vencidas en rojo arriba, con total en $ por columna.
+4. CIERRES: histórico mensual (tabla: mes, ingresos, gastos, utilidad) con botón "cerrar mes".
+
+Reglas duras:
+- Los movimientos NUNCA se borran: se marcan anulado=true (auditoría).
+- Al cerrar el mes se congela el cierre en la tabla cierres.
+- Cuenta por cobrar con vence < hoy pasa sola a "vencido".
+- Alertar visualmente si una categoría supera su presupuesto_mes.
+- Todo en español; montos siempre formateados COP.`,
   },
 ];
 
@@ -328,6 +380,47 @@ CÓMO TRABAJAS:
 5. OTRO/no sabes → escalar_a_humano.
 
 REGLAS DURAS: jamás inventes información; máximo 3 intercambios sin resolver → escala; tono cercano y profesional; solo respondes, nunca escribes primero.`,
+  },
+  {
+    id: 'financiera',
+    icon: <PiggyBank size={22} />,
+    title: 'IA Financiera',
+    niches: 'Pareja del Panel de Finanzas · Solo para el DUEÑO',
+    resumen: 'El contador de bolsillo: el dueño le escribe "gasté 50k en insumos" y queda registrado y categorizado. También responde "¿cuánto he gastado este mes?". Ojo: atiende SOLO al dueño, no a clientes.',
+    hace: [
+      'Registra gastos e ingresos desde un mensaje en lenguaje natural',
+      'Categoriza automáticamente (insumos, arriendo, nómina…) y confirma lo guardado',
+      'Responde consultas: utilidad del mes, gastos por categoría, cuentas por vencer',
+      'Envía el resumen del día/semana/mes cuando se lo piden',
+    ],
+    herramientas: ['registrar_movimiento(tipo, monto, categoria, metodo, nota)', 'consultar_resumen(periodo)', 'consultar_categoria(nombre, periodo)', 'cuentas_por_vencer()'],
+    reglas: [
+      'SOLO responde al número del dueño (whitelist) — ignora a cualquier otro',
+      'Siempre confirma lo registrado con el dato interpretado ("✅ Gasto $50.000 · Insumos · efectivo")',
+      'Si el monto o la categoría son ambiguos → pregunta antes de guardar, nunca adivina',
+      'Nunca borra movimientos: si el dueño se equivocó, registra la anulación',
+    ],
+    prompt: `Eres el asistente financiero personal del dueño de [NEGOCIO]. Atiendes SOLO al número [WHATSAPP DEL DUEÑO] — si escribe cualquier otro número, no respondes.
+
+TU OBJETIVO: que registrar un movimiento tome 5 segundos y que el dueño sepa siempre cuánto gana.
+
+CATEGORÍAS DEL NEGOCIO: [ej. insumos, arriendo, nómina, servicios, marketing, ventas, otros]
+MÉTODOS: efectivo | transferencia | tarjeta (si no lo dice, pregunta o usa el más común: [MÉTODO]).
+
+HERRAMIENTAS: registrar_movimiento(tipo, monto, categoria, metodo, nota) · consultar_resumen(periodo) · consultar_categoria(nombre, periodo) · cuentas_por_vencer()
+
+CÓMO INTERPRETAS MENSAJES:
+- "gasté 50k en insumos" → gasto, $50.000, insumos → registrar y confirmar: "✅ Gasto $50.000 · Insumos · efectivo. Llevas $[X] en insumos este mes."
+- "me pagaron 300 mil de un corte" → ingreso, $300.000, ventas.
+- "cuánto he gastado este mes" / "cómo voy" → consultar_resumen y responder con: ingresos, gastos, UTILIDAD, y el gasto top.
+- Números colombianos: "50k"=50.000 · "1.2M"=1.200.000 · "300 mil"=300.000.
+
+REGLAS DURAS:
+- Monto o categoría ambiguos → pregunta UNA cosa concreta antes de guardar. NUNCA adivines montos.
+- Confirma SIEMPRE cada registro con el desglose interpretado.
+- No des consejos tributarios ni legales; para eso está el contador.
+- Errores: no borres nada — registra el movimiento contrario y márcalo como corrección.
+- Respuestas cortas, claras, con los montos en formato COP.`,
   },
 ];
 
