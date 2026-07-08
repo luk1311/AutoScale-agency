@@ -121,6 +121,17 @@ const Services = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Permitir hacer scroll en el carrusel incluso si el ratón está sobre la columna derecha
+  const handleWheel = (e) => {
+    if (containerRef.current && !containerRef.current.contains(e.target)) {
+      e.preventDefault();
+      containerRef.current.scrollBy({
+        top: e.deltaY,
+        behavior: 'auto'
+      });
+    }
+  };
+
   return (
     <section id="servicios" className="section vg-showcase-section">
       <div className="container">
@@ -130,7 +141,7 @@ const Services = () => {
         </div>
         
         {/* El Menú Estilo Videojuego - Altura fija y dividida exactamente a la mitad */}
-        <div className="vg-menu-container">
+        <div className="vg-menu-container" onWheel={handleWheel}>
           
           {/* Columna Izquierda: El Carrusel Snap */}
           <div className="vg-text-carousel" ref={containerRef}>
