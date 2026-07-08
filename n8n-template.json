@@ -1,0 +1,73 @@
+{
+  "name": "AutoScale Leads Flow (disparado por Supabase Database Webhook)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "autoscale-leads",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "e7c653bc-0b2a-4f51-b8ab-f6558e0a35db",
+      "name": "Webhook (Supabase INSERT)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "autoscale-leads-id"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$json.body.record.correo}}",
+        "subject": "=¡Recibimos tu solicitud, {{$json.body.record.nombre}}!",
+        "message": "=Hola {{$json.body.record.nombre}},\n\nGracias por contactar a AutoScale. Hemos recibido tu solicitud sobre {{$json.body.record.servicio}}.\n\nEn breve nos comunicaremos contigo al WhatsApp {{$json.body.record.whatsapp}} para agendar el diagnóstico inicial gratuito.\n\nSaludos,\nEl equipo de AutoScale",
+        "options": {}
+      },
+      "id": "8b512683-1463-49dc-a2c6-3023e9a7e6b0",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v17.0/YOUR_PHONE_NUMBER_ID/messages",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{$json.body.record.whatsapp.replace(/[^0-9]/g, '')}}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"¡Hola {{$json.body.record.nombre}}! Soy el asistente de AutoScale 🤖. Hemos recibido tus datos de {{$json.body.record.empresa}}. ¿Te gustaría agendar tu diagnóstico gratuito ahora mismo?\"\n  }\n}",
+        "options": {}
+      },
+      "id": "2918b958-812d-4cc8-b570-5d6bc9f060d4",
+      "name": "WhatsApp API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [750, 300]
+    }
+  ],
+  "connections": {
+    "Webhook (Supabase INSERT)": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}
