@@ -1,43 +1,25 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { trackViewContent } from '../lib/metaPixel';
 import Header from './Header';
 import Hero from './Hero';
-import Solution from './Solution';
-import Pricing from './Pricing';
-import Portfolio from './Portfolio';
-import Process from './Process';
-import UseCases from './UseCases';
-import FAQ from './FAQ';
 import FooterCTA from './FooterCTA';
-import ContactModal from './ContactModal';
-import Stats from './Stats';
-import Services from './Services';
-import { trackViewContent } from '../lib/metaPixel';
 
 const Landing = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    trackViewContent({ content_name: 'Landing V2' });
+  }, []);
 
-  const openModal = () => {
-    setIsModalOpen(true);
-    trackViewContent({ content_name: 'Contacto' });
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div className="app-container">
+    <div className="app-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header openModal={openModal} />
+      
       <Hero openModal={openModal} />
-      <Stats />
-      <Services />
-      <Solution />
-      <Pricing openModal={openModal} />
-      <Portfolio openModal={openModal} />
-      <div id="proceso">
-        <Process />
-      </div>
-      <UseCases />
-      <FAQ />
+
       <FooterCTA openModal={openModal} />
-      {isModalOpen && <ContactModal onClose={closeModal} />}
     </div>
   );
 };
