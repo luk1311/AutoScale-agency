@@ -5,6 +5,7 @@ import './Services.css';
 const Services = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const textRefs = useRef([]);
+  const containerRef = useRef(null);
 
   const services = [
     {
@@ -99,9 +100,9 @@ const Services = () => {
 
   useEffect(() => {
     const observerOptions = {
-      root: null,
-      rootMargin: '-30% 0px -30% 0px',
-      threshold: 0.3
+      root: containerRef.current,
+      rootMargin: '0px',
+      threshold: 0.5 // Requiere que al menos el 50% esté visible para activar
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -121,43 +122,51 @@ const Services = () => {
   }, []);
 
   return (
-    <section id="servicios" className="section showcase-section">
+    <section id="servicios" className="section vg-showcase-section">
       <div className="container">
         <div className="showcase-header">
           <h2>Nuestro <span className="text-gradient">Arsenal Técnico</span></h2>
           <p>No somos una agencia tradicional. Somos ingenieros de crecimiento construyendo la maquinaria de tu negocio.</p>
         </div>
         
-        <div className="showcase-layout">
-          {/* Columna de Texto (Scrolleable) */}
-          <div className="showcase-text-col">
+        {/* El Menú Estilo Videojuego - Altura fija y dividida exactamente a la mitad */}
+        <div className="vg-menu-container">
+          
+          {/* Columna Izquierda: El Carrusel Snap */}
+          <div className="vg-text-carousel" ref={containerRef}>
+            <div className="vg-carousel-padding-top"></div>
             {services.map((service, index) => (
               <div 
                 key={index}
                 data-index={index}
                 ref={el => textRefs.current[index] = el}
-                className={`showcase-text-item ${activeIndex === index ? 'active' : ''}`}
+                className={`vg-menu-item ${activeIndex === index ? 'active' : ''}`}
+                onClick={() => {
+                  textRefs.current[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }}
               >
-                <div className="s-icon">{service.icon}</div>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
+                <div className="vg-item-icon">{service.icon}</div>
+                <div className="vg-item-content">
+                  <h3>{service.title}</h3>
+                  <p>{service.description}</p>
+                </div>
+              </div>
+            ))}
+            <div className="vg-carousel-padding-bottom"></div>
+          </div>
+
+          {/* Columna Derecha: El Visor Dinámico */}
+          <div className="vg-visual-viewport">
+            {services.map((service, index) => (
+              <div 
+                key={index} 
+                className={`vg-visual-pane ${activeIndex === index ? 'active' : ''}`}
+              >
+                {service.visual}
               </div>
             ))}
           </div>
 
-          {/* Columna Visual (Sticky) */}
-          <div className="showcase-visual-col">
-            <div className="sticky-visual-container">
-              {services.map((service, index) => (
-                <div 
-                  key={index} 
-                  className={`visual-pane ${activeIndex === index ? 'active' : ''}`}
-                >
-                  {service.visual}
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </section>
