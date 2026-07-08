@@ -829,13 +829,23 @@ Demo belleza: https://nail-studio-tau-five.vercel.app · Demo construcción: htt
 
   // Este documento vive en un iframe srcDoc: los enlaces "#ancla" se resuelven
   // contra la URL del padre (/admin) y recargarían la app entera dentro del
-  // iframe. Se interceptan y el scroll se hace manualmente.
+  // iframe. Se interceptan y el scroll se hace manualmente. Además, en iframes
+  // srcDoc el scroll animado (smooth) puede no ejecutarse: si en 350ms no se
+  // movió, se salta directo a la sección.
   document.addEventListener('click', function(e){
     var a = e.target.closest('a[href^="#"]');
     if(!a) return;
     e.preventDefault();
     var dest = document.querySelector(a.getAttribute('href'));
-    if(dest) dest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if(!dest) return;
+    var scroller = document.scrollingElement || document.documentElement;
+    var top = Math.max(0, dest.getBoundingClientRect().top + scroller.scrollTop - 16);
+    scroller.scrollTo({ top: top, behavior: 'smooth' });
+    setTimeout(function(){
+      if (Math.abs(scroller.scrollTop - top) > 400) {
+        scroller.scrollTop = top;
+      }
+    }, 350);
   });
 
   render();
