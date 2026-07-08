@@ -332,8 +332,8 @@ const AdminCRM = () => {
     return (
       <div className="crm-login-container">
         <div className="glass-panel crm-login-box">
-          <h2>🔐 Acceso Administrativo</h2>
-          <p>Ingresa tus credenciales para acceder al CRM.</p>
+          <h2>AutoScale <span className="text-gradient">CRM</span></h2>
+          <p>Ingresa tus credenciales para entrar a tu centro de mando.</p>
           <form onSubmit={handleLogin} className="crm-login-form">
             <input
               type="email"
