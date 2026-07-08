@@ -1,111 +1,114 @@
-/* AutoScale · Casos reales "Alto Impacto" */
+/* AutoScale · Casos reales "Tech Premium" */
 
-.cases { background: var(--paper); }
+.cases { background: var(--bg); }
 
-.cases-head { max-width: 760px; margin-bottom: 3.5rem; }
+.cases-head { max-width: 720px; margin-bottom: 3.2rem; }
 .cases-head .eyebrow { margin-bottom: 1rem; }
-.cases-head h2 { font-size: clamp(2.2rem, 5.5vw, 4rem); letter-spacing: -0.035em; }
+.cases-head h2 { font-size: clamp(2rem, 4.4vw, 3.1rem); }
 
 .cases-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .case-card {
   display: flex;
   flex-direction: column;
   text-align: left;
-  background: var(--paper);
-  border: 2px solid var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 6px 6px 0 rgba(10, 10, 10, 0.9);
-  transition: transform .2s var(--ease-smooth), box-shadow .2s var(--ease-smooth);
+  box-shadow: var(--shadow-sm);
+  transition: transform .2s var(--ease-smooth), box-shadow .2s var(--ease-smooth), border-color .2s ease;
   cursor: pointer;
   font: inherit;
   padding: 0;
 }
 
 .case-card:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: 9px 9px 0 rgba(10, 10, 10, 0.9);
+  transform: translateY(-3px);
+  border-color: var(--accent-line);
+  box-shadow: var(--shadow-md);
 }
 
-/* Visual: bloque de color con inicial gigante */
+/* Visual: bloque con inicial */
 .case-visual {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 190px;
-  border-bottom: 2px solid var(--ink);
+  height: 170px;
+  border-bottom: 1px solid var(--line);
 }
-.tone-rose { background: #FFD9CF; }
-.tone-amber { background: #FFE7B8; }
-.tone-ink { background: var(--ink); }
+.tone-rose { background: linear-gradient(135deg, #FDF0F4, #F6F5FB); }
+.tone-amber { background: linear-gradient(135deg, #FFF6E8, #F8F6F0); }
+.tone-ink { background: linear-gradient(135deg, #0E1220, #1B2338); }
 
 .case-initial {
   font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 4.5rem;
+  font-weight: 800;
+  font-size: 3.6rem;
   letter-spacing: -0.05em;
   color: var(--ink);
   line-height: 1;
+  opacity: .85;
 }
-.tone-ink .case-initial { color: var(--coral); }
+.tone-ink .case-initial { color: #7EA4F8; }
 
 .case-live {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .05em;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .06em;
   text-transform: uppercase;
-  background: var(--paper);
-  border: 2px solid var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: var(--radius-full);
-  padding: .3rem .7rem;
-  color: #14883F;
+  padding: .3rem .65rem;
+  color: var(--ok);
+  box-shadow: var(--shadow-sm);
 }
 
 .case-body {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 1.6rem;
+  padding: 1.4rem;
 }
 
 .case-category {
-  font-size: .78rem;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .08em;
-  color: var(--coral);
+  color: var(--accent);
   margin-bottom: .5rem;
 }
 
-.case-body h3 { font-size: 1.35rem; margin-bottom: .6rem; }
-.case-body p { font-size: .95rem; margin: 0 0 1.2rem; flex: 1; }
+.case-body h3 { font-size: 1.18rem; margin-bottom: .55rem; }
+.case-body p { font-size: .92rem; margin: 0 0 1.1rem; flex: 1; }
 
 .case-link {
   display: inline-flex;
   align-items: center;
-  gap: .35rem;
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--ink);
-  border-bottom: 2px solid var(--coral);
-  align-self: flex-start;
-  padding-bottom: 2px;
+  gap: .3rem;
+  font-weight: 600;
+  font-size: .92rem;
+  color: var(--accent);
 }
-.case-card:hover .case-link { color: var(--coral); }
+.case-card:hover .case-link { color: var(--accent-d); }
 
-/* Tarjeta CTA (fondo papel-2 sutil) */
-.case-cta { background: var(--paper-2); }
+.case-cta { background: var(--surface-2); }
 
 @media (max-width: 900px) {
   .cases-grid { grid-template-columns: 1fr; }
-  .case-visual { height: 150px; }
+  .case-visual { height: 140px; }
 }

@@ -1,25 +1,25 @@
-/* AutoScale · FAQ "Alto Impacto" */
+/* AutoScale · FAQ "Tech Premium" */
 
-.faq { background: var(--paper); }
+.faq { background: var(--bg); }
 
-.faq-container { max-width: 860px; }
-.faq-head { margin-bottom: 3rem; }
+.faq-container { max-width: 800px; }
+.faq-head { margin-bottom: 2.8rem; }
 .faq-head .eyebrow { margin-bottom: 1rem; }
-.faq-head h2 { font-size: clamp(2.2rem, 5.5vw, 3.6rem); letter-spacing: -0.035em; }
+.faq-head h2 { font-size: clamp(1.9rem, 4vw, 2.8rem); }
 
-.faq-list { display: flex; flex-direction: column; gap: .9rem; }
+.faq-list { display: flex; flex-direction: column; gap: .7rem; }
 
 .faq-item {
-  background: var(--paper);
-  border: 2px solid var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
   overflow: hidden;
-  transition: box-shadow .2s var(--ease-smooth), transform .2s var(--ease-smooth);
+  transition: border-color .2s ease, box-shadow .2s ease;
 }
 
 .faq-item.open {
-  box-shadow: 6px 6px 0 rgba(10, 10, 10, 0.9);
-  transform: translate(-2px, -2px);
+  border-color: var(--accent-line);
+  box-shadow: var(--shadow-md);
 }
 
 .faq-q {
@@ -31,14 +31,14 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 1.3rem 1.5rem;
+  padding: 1.15rem 1.4rem;
   text-align: left;
   font: inherit;
 }
 
-.faq-q h3 { font-size: 1.08rem; font-weight: 700; }
+.faq-q h3 { font-size: 1.02rem; font-weight: 600; }
 
-.faq-chevron { color: var(--coral); flex-shrink: 0; transition: transform .25s var(--ease-smooth); }
+.faq-chevron { color: var(--accent); flex-shrink: 0; transition: transform .25s var(--ease-smooth); }
 .faq-item.open .faq-chevron { transform: rotate(180deg); }
 
 .faq-a {
@@ -47,4 +47,4 @@
   transition: max-height .3s var(--ease-smooth);
 }
 .faq-item.open .faq-a { max-height: 280px; }
-.faq-a p { padding: 0 1.5rem 1.4rem; margin: 0; font-size: .98rem; }
+.faq-a p { padding: 0 1.4rem 1.3rem; margin: 0; font-size: .95rem; }
