@@ -1,7 +1,10 @@
+/* V2 Services Styles - Dark Minimalist (Video Game Menu) */
+
 .vg-showcase-section {
-  padding: 6rem 0;
-  background: #ffffff;
+  padding: 8rem 0;
+  background: var(--bg-primary);
   position: relative;
+  border-top: 1px solid var(--border-light);
 }
 
 .showcase-header {
@@ -13,14 +16,14 @@
 .showcase-header h2 {
   font-size: 3.5rem;
   font-weight: 800;
-  color: var(--ink);
+  color: var(--text-primary);
   letter-spacing: -0.04em;
   margin-bottom: 1.5rem;
 }
 
 .showcase-header p {
   font-size: 1.25rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -30,11 +33,11 @@
   height: 75vh;
   max-height: 900px;
   min-height: 500px;
-  background: #F8F9FB;
-  border-radius: 40px;
+  background: var(--bg-secondary);
+  border-radius: 32px;
   overflow: hidden;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.04);
-  border: 1px solid rgba(0,0,0,0.03);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  border: 1px solid var(--border-light);
   position: relative;
 }
 
@@ -45,7 +48,8 @@
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
-  background: #ffffff;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border-light);
   /* Ocultar barra de scroll para UI inmaculada */
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -66,7 +70,7 @@
   display: flex;
   align-items: flex-start;
   gap: 1.5rem;
-  padding: 2rem 4rem;
+  padding: 2.5rem 4rem;
   opacity: 0.2;
   transform: scale(0.9) translateX(-20px);
   transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -86,14 +90,19 @@
 
 .vg-item-icon {
   width: 64px; height: 64px; min-width: 64px;
-  background: #F5F5F7; border-radius: 16px;
+  background: rgba(255,255,255,0.03); 
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
   display: flex; align-items: center; justify-content: center;
-  color: var(--brand); font-size: 1.5rem;
+  color: var(--text-secondary); font-size: 1.5rem;
   transition: all 0.5s ease;
 }
 
 .vg-menu-item.active .vg-item-icon {
-  background: var(--ink); color: #ffffff;
+  background: var(--text-primary); 
+  color: var(--bg-primary);
+  border-color: var(--text-primary);
+  box-shadow: 0 0 20px rgba(255,255,255,0.2);
 }
 
 .vg-item-content {
@@ -103,14 +112,15 @@
 .vg-item-content h3 { 
   font-size: 2rem; 
   font-weight: 700;
-  color: var(--ink); 
+  color: var(--text-primary); 
   margin-bottom: 0; 
   transition: color 0.3s; 
+  letter-spacing: -0.02em;
 }
 
 .vg-item-content p { 
-  font-size: 1rem; 
-  color: var(--text-muted); 
+  font-size: 1.05rem; 
+  color: var(--text-secondary); 
   line-height: 1.6; 
   opacity: 0; 
   transform: translateY(-10px); 
@@ -132,7 +142,7 @@
   flex: 1;
   height: 100%;
   position: relative;
-  background: #F8F9FB;
+  background: var(--bg-tertiary); /* Ligeramente más oscuro o diferente */
 }
 
 .vg-visual-pane {
@@ -160,78 +170,108 @@
   justify-content: center;
 }
 
-/* --- Dibujos CSS (Mantenidos y Ajustados) --- */
+/* --- Dibujos CSS (Dark Mode Refactored) --- */
 
 /* 1. Automation Canvas */
-.automation-canvas { background-image: linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px); background-size: 30px 30px; }
+.automation-canvas { 
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), 
+                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); 
+  background-size: 30px 30px; 
+}
 .node-grid { width: 100%; height: 100%; position: relative; }
-.canvas-node { position: absolute; background: white; border: 1px solid rgba(0,0,0,0.05); border-radius: 12px; padding: 10px 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); font-size: 0.85rem; font-weight: 600; color: var(--ink); z-index: 2; animation: floatNode 5s infinite ease-in-out; }
-.node-icon { background: rgba(91, 75, 230, 0.08); color: var(--brand); padding: 8px; border-radius: 8px; display: flex; }
+.canvas-node { 
+  position: absolute; background: var(--bg-primary); border: 1px solid var(--border-strong); 
+  border-radius: 12px; padding: 10px 16px; display: flex; align-items: center; gap: 10px; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 0.85rem; font-weight: 600; color: var(--text-primary); 
+  z-index: 2; animation: floatNode 5s infinite ease-in-out; 
+}
+.node-icon { background: rgba(255,255,255,0.1); color: var(--text-primary); padding: 8px; border-radius: 8px; display: flex; }
 .n-trigger { top: 20%; left: 10%; animation-delay: 0s; }
 .n-ai { top: 50%; left: 40%; animation-delay: -1s; }
 .n-crm { top: 20%; left: 70%; animation-delay: -2s; }
 .n-slack { top: 75%; left: 65%; animation-delay: -3s; }
-.canvas-path { position: absolute; background: var(--brand); opacity: 0.15; z-index: 1; }
+.canvas-path { position: absolute; background: var(--text-primary); opacity: 0.2; z-index: 1; }
 .p1 { top: 28%; left: 28%; width: 15%; height: 2px; transform: rotate(35deg); transform-origin: left; }
 .p2 { top: 58%; left: 55%; width: 18%; height: 2px; transform: rotate(-35deg); transform-origin: left; }
 .p3 { top: 58%; left: 55%; width: 15%; height: 2px; transform: rotate(40deg); transform-origin: left; }
 @keyframes floatNode { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
 
 /* 2. E-commerce Window */
-.ecommerce-window { background: linear-gradient(135deg, #F5F5F7 0%, #EAEAEA 100%); }
-.browser-mockup { width: 75%; height: 60%; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); display: flex; flex-direction: column; overflow: hidden; }
-.browser-header { background: #F5F5F7; padding: 12px 16px; display: flex; gap: 8px; border-bottom: 1px solid rgba(0,0,0,0.04); }
-.browser-header .dot { width: 10px; height: 10px; border-radius: 50%; background: #e0e0e0; }
+.ecommerce-window { background: linear-gradient(135deg, #111111 0%, #050505 100%); }
+.browser-mockup { 
+  width: 75%; height: 60%; background: var(--bg-primary); border-radius: 16px; border: 1px solid var(--border-light);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.8); display: flex; flex-direction: column; overflow: hidden; 
+}
+.browser-header { background: var(--bg-secondary); padding: 12px 16px; display: flex; gap: 8px; border-bottom: 1px solid var(--border-light); }
+.browser-header .dot { width: 10px; height: 10px; border-radius: 50%; background: #333; }
 .browser-header .dot:nth-child(1) { background: #ff5f56; } .browser-header .dot:nth-child(2) { background: #ffbd2e; } .browser-header .dot:nth-child(3) { background: #27c93f; }
 .browser-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; height: 100%; }
-.product-skeleton { width: 100%; height: 40%; background: rgba(91, 75, 230, 0.05); border-radius: 8px; }
+.product-skeleton { width: 100%; height: 40%; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid var(--border-light); }
 .skeleton-lines { display: flex; flex-direction: column; gap: 10px; }
-.s-line { height: 8px; background: #f0f0f0; border-radius: 4px; }
-.btn-skeleton { width: 40%; height: 30px; background: var(--brand); border-radius: 6px; margin-top: auto; }
+.s-line { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; }
+.btn-skeleton { width: 40%; height: 30px; background: var(--text-primary); border-radius: 6px; margin-top: auto; }
 
 /* 3. Paid Media Abstract Gradient */
-.abstract-gradient { background: #111; overflow: hidden; position: relative; }
-.glow-orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.6; }
-.orb-1 { width: 300px; height: 300px; background: var(--brand); top: -50px; left: -50px; animation: orbit 10s linear infinite; }
-.orb-2 { width: 250px; height: 250px; background: #ff3366; bottom: -50px; right: -50px; animation: orbit 15s linear infinite reverse; }
-.glass-chart { position: relative; z-index: 2; width: 60%; height: 50%; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; display: flex; align-items: flex-end; justify-content: space-evenly; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-.c-bar { width: 15%; background: rgba(255,255,255,0.8); border-radius: 4px 4px 0 0; }
-.c-bar.h-1 { height: 30%; } .c-bar.h-2 { height: 50%; } .c-bar.h-3 { height: 75%; } .c-bar.h-4 { height: 100%; background: var(--brand); box-shadow: 0 0 20px var(--brand); }
+.abstract-gradient { background: #000; overflow: hidden; position: relative; }
+.glow-orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.3; }
+.orb-1 { width: 300px; height: 300px; background: #3b82f6; top: -50px; left: -50px; animation: orbit 10s linear infinite; }
+.orb-2 { width: 250px; height: 250px; background: #8b5cf6; bottom: -50px; right: -50px; animation: orbit 15s linear infinite reverse; }
+.glass-chart { 
+  position: relative; z-index: 2; width: 60%; height: 50%; background: rgba(0,0,0,0.4); 
+  backdrop-filter: blur(20px); border: 1px solid var(--border-strong); border-radius: 20px; 
+  display: flex; align-items: flex-end; justify-content: space-evenly; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); 
+}
+.c-bar { width: 15%; background: rgba(255,255,255,0.1); border-radius: 4px 4px 0 0; }
+.c-bar.h-1 { height: 30%; } .c-bar.h-2 { height: 50%; } .c-bar.h-3 { height: 75%; } 
+.c-bar.h-4 { height: 100%; background: var(--text-primary); box-shadow: 0 0 20px rgba(255,255,255,0.2); }
 @keyframes orbit { 0% { transform: rotate(0deg) translateX(50px) rotate(0deg); } 100% { transform: rotate(360deg) translateX(50px) rotate(-360deg); } }
 
 /* 4. CRO UI Mock */
-.ui-mock { background: #E8E8ED; }
-.ui-card { width: 60%; height: 50%; background: #ffffff; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); padding: 30px; display: flex; align-items: center; gap: 20px; position: relative; }
-.ui-circle { width: 60px; height: 60px; border-radius: 50%; background: rgba(91, 75, 230, 0.1); }
+.ui-mock { background: var(--bg-primary); }
+.ui-card { 
+  width: 60%; height: 50%; background: var(--bg-secondary); border-radius: 24px; border: 1px solid var(--border-light);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4); padding: 30px; display: flex; align-items: center; gap: 20px; position: relative; 
+}
+.ui-circle { width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.05); }
 .ui-lines { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-.ul { height: 10px; background: #f0f0f0; border-radius: 5px; width: 100%; } .ul:nth-child(2) { width: 60%; }
-.ui-cursor { position: absolute; top: 60%; left: 70%; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); animation: moveCursor 3s infinite ease-in-out; }
+.ul { height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; width: 100%; } .ul:nth-child(2) { width: 60%; }
+.ui-cursor { position: absolute; top: 60%; left: 70%; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); animation: moveCursor 3s infinite ease-in-out; }
+.ui-cursor svg path { fill: var(--text-primary); }
 @keyframes moveCursor { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-40px, -40px) scale(0.9); } }
 
 /* 5. Email Campaign */
-.email-campaign { background: #F0F4F8; position: relative; }
-.email-card { width: 60%; background: #ffffff; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); padding: 20px; position: absolute; transition: all 0.5s; }
+.email-campaign { background: #050505; position: relative; }
+.email-card { 
+  width: 60%; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 16px; 
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5); padding: 20px; position: absolute; transition: all 0.5s; 
+}
 .email-card.c1 { top: 20%; left: 15%; z-index: 2; transform: rotate(-4deg); }
 .email-card.c2 { top: 40%; left: 30%; z-index: 1; transform: rotate(6deg); opacity: 0.7; }
 .visual-pane.active .email-card.c1 { transform: rotate(0deg) translateY(-10px); }
 .visual-pane.active .email-card.c2 { transform: rotate(10deg) translateY(10px); }
 .e-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-.e-avatar { width: 32px; height: 32px; border-radius: 50%; background: #e0e0e0; }
-.e-line { width: 80px; height: 8px; border-radius: 4px; background: #f0f0f0; }
-.e-body .e-box { width: 100%; height: 60px; border-radius: 8px; background: rgba(91, 75, 230, 0.04); }
+.e-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.1); }
+.e-line { width: 80px; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.05); }
+.e-body .e-box { width: 100%; height: 60px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px dashed var(--border-strong); }
 
 /* 6. Server Stack */
-.server-stack { background: #0A0A0B; flex-direction: column; gap: 16px; }
-.server-rack { width: 50%; height: 40px; background: #1A1A1D; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; padding: 0 20px; justify-content: space-between; }
+.server-stack { background: #000; flex-direction: column; gap: 16px; }
+.server-rack { 
+  width: 50%; height: 40px; background: #111; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); 
+  display: flex; align-items: center; padding: 0 20px; justify-content: space-between; 
+}
 .server-rack .lights { display: flex; gap: 8px; }
-.server-rack .lights span { width: 8px; height: 8px; border-radius: 50%; }
+.server-rack .lights span { width: 8px; height: 8px; border-radius: 50%; background: #333; }
+.server-rack .lights span.l-on { background: #3b82f6; box-shadow: 0 0 10px #3b82f6; }
+.server-rack .lights span.l-blink { animation: blink 1s infinite; background: #3b82f6; }
 .server-rack .s-line { width: 40px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.1); }
-.r-active { border-color: rgba(91, 75, 230, 0.4); background: rgba(91, 75, 230, 0.05); }
+.r-active { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); }
+@keyframes blink { 0%, 100% { opacity: 1; box-shadow: 0 0 10px #3b82f6; } 50% { opacity: 0.3; box-shadow: none; } }
 
 /* Responsive */
 @media (max-width: 992px) {
   .vg-menu-container { flex-direction: column; height: auto; max-height: none; }
-  .vg-text-carousel { overflow: visible; padding: 2rem; }
+  .vg-text-carousel { overflow: visible; padding: 2rem; border-right: none; border-bottom: 1px solid var(--border-light); }
   .vg-carousel-padding-top, .vg-carousel-padding-bottom { display: none; }
   .vg-menu-item { opacity: 1; transform: none; padding: 1rem; }
   .vg-menu-item.active { transform: none; }

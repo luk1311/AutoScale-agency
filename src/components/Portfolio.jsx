@@ -1,77 +1,65 @@
-import { useState, useEffect } from 'react';
-import { ArrowRight, Loader2 } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { ArrowUpRight } from 'lucide-react';
 import './Portfolio.css';
 
 const Portfolio = () => {
-  const navigate = useNavigate();
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      if (!supabase) {
-        setLoading(false);
-        return;
-      }
-      // Fetch solo los activos, ordenados, max 3 para la landing
-      const { data, error } = await supabase
-        .from('portfolio_projects')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false })
-        .limit(3);
-
-      if (error) {
-        console.error('Error fetching portfolio:', error);
-      } else {
-        setProjects(data || []);
-      }
-      setLoading(false);
-    };
-
-    fetchProjects();
-  }, []);
+  const projects = [
+    {
+      title: "FinTech Scale",
+      category: "Automatización CRM",
+      metric: "+210%",
+      metricLabel: "Incremento en Lead Velocity",
+      image: "linear-gradient(to bottom right, #111111, #1a1a1a)"
+    },
+    {
+      title: "Aura Cosmetics",
+      category: "Headless E-commerce",
+      metric: "0.8s",
+      metricLabel: "Tiempo de Carga",
+      image: "linear-gradient(to bottom right, #0a0a0a, #111111)"
+    },
+    {
+      title: "B2B SaaS Growth",
+      category: "Paid Media Architecture",
+      metric: "4.2x",
+      metricLabel: "ROAS Mantenido",
+      image: "linear-gradient(to bottom right, #161616, #050505)"
+    }
+  ];
 
   return (
-    <section className="section portfolio-section" id="portafolio">
+    <section id="portafolio" className="section v2-portfolio">
       <div className="container">
-        <div className="section-title text-center">
-          <h2>Nuestro <span className="text-gradient">Portafolio</span></h2>
-          <p>Casos de éxito reales. Soluciones de alto impacto diseñadas para escalar ventas y automatizar operaciones.</p>
+        
+        <div className="showcase-header">
+          <h2>Casos de <span className="text-gradient">Estudio</span></h2>
+          <p>La infraestructura que construimos genera resultados medibles.</p>
         </div>
 
-        <div className="portfolio-grid">
-          {loading ? (
-            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-              <Loader2 className="animate-spin" size={32} style={{ margin: '0 auto 1rem' }} />
-              <p>Cargando proyectos destacados...</p>
-            </div>
-          ) : projects.map((project, index) => (
-            <Link to={`/portafolio/${project.id}`} className="portfolio-card glass-panel" key={index} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column' }}>
-              <div className="portfolio-image-wrapper">
-                <img src={project.image} alt={project.title} className="portfolio-image" />
-              </div>
-              <div className="portfolio-content">
-                <span className="portfolio-category">{project.category}</span>
-                <h3 className="portfolio-title">{project.title}</h3>
-                <p className="portfolio-description">{project.description}</p>
-                <div className="portfolio-tags">
-                  {(project.tags || []).map((tag, i) => (
-                    <span className="portfolio-tag" key={i}>{tag}</span>
-                  ))}
+        <div className="v2-portfolio-grid">
+          {projects.map((project, index) => (
+            <div className="v2-portfolio-card" key={index}>
+              <div className="v2-card-visual" style={{ background: project.image }}>
+                {/* Minimalist Tech Overlay */}
+                <div className="v2-card-overlay">
+                  <div className="v2-metric-pill">
+                    <strong>{project.metric}</strong>
+                    <span>{project.metricLabel}</span>
+                  </div>
                 </div>
               </div>
-            </Link>
+              <div className="v2-card-content">
+                <div>
+                  <span className="v2-category">{project.category}</span>
+                  <h3>{project.title}</h3>
+                </div>
+                <button className="v2-icon-btn">
+                  <ArrowUpRight size={24} />
+                </button>
+              </div>
+            </div>
           ))}
         </div>
-        
-        <div className="text-center" style={{ marginTop: '3rem' }}>
-          <button className="btn btn-outline" onClick={() => navigate('/portafolio')}>
-            Ver Más Proyectos <ArrowRight size={18} style={{ marginLeft: '8px' }} />
-          </button>
-        </div>
+
       </div>
     </section>
   );

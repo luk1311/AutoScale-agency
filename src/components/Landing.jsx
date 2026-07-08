@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { trackViewContent } from '../lib/metaPixel';
 import Header from './Header';
 import Hero from './Hero';
+import Services from './Services';
+import Portfolio from './Portfolio';
 import FooterCTA from './FooterCTA';
 
 const Landing = () => {
@@ -18,6 +20,8 @@ const Landing = () => {
       <Header openModal={openModal} />
       
       <Hero openModal={openModal} />
+      <Services />
+      <Portfolio />
 
       <FooterCTA openModal={openModal} />
     </div>
