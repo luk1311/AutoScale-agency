@@ -843,7 +843,9 @@ Demo belleza: https://nail-studio-tau-five.vercel.app · Demo construcción: htt
     scroller.scrollTo({ top: top, behavior: 'smooth' });
     setTimeout(function(){
       if (Math.abs(scroller.scrollTop - top) > 400) {
-        scroller.scrollTop = top;
+        // 'instant' explícito: anula el scroll-behavior:smooth del CSS,
+        // que en iframes srcDoc deja la animación congelada en 0.
+        scroller.scrollTo({ top: top, behavior: 'instant' });
       }
     }, 350);
   });
