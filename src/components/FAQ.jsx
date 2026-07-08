@@ -1,64 +1,60 @@
 import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import './FAQ.css';
 
 const FAQ = () => {
+  const [openIndex, setOpenIndex] = useState(0); // First one open by default
+
   const faqs = [
     {
-      q: "¿Necesito conocimientos técnicos?",
-      a: "No. Nosotros realizamos toda la implementación."
+      question: "¿Cuánto tiempo toma implementar la arquitectura?",
+      answer: "Depende de la complejidad técnica de tu agencia. Sin embargo, nuestro sprint promedio de 'Growth Architecture' toma entre 3 y 4 semanas desde la auditoría inicial hasta el despliegue en producción."
     },
     {
-      q: "¿Funciona para cualquier negocio?",
-      a: "Sí. Adaptamos el sistema a cada sector."
+      question: "¿Qué herramientas o stack tecnológico utilizan?",
+      answer: "Somos agnósticos en herramientas, pero nos inclinamos por la mejor infraestructura de su clase. Usamos Make/n8n para automatización, HubSpot/GoHighLevel para CRM, y stacks de código a medida (React, Node, Python) cuando el No-Code no es suficiente."
     },
     {
-      q: "¿Cuánto tarda la implementación?",
-      a: "Depende de la complejidad, pero normalmente entre pocos días y algunas semanas."
+      question: "¿Mi equipo necesitará capacitación técnica?",
+      answer: "No. Construimos sistemas 'Zero-Friction'. Tu equipo seguirá usando las interfaces que ya conocen (Slack, Email, CRM), mientras nuestra arquitectura hace todo el trabajo pesado en el backend."
     },
     {
-      q: "¿Puedo seguir usando mis herramientas actuales?",
-      a: "Sí. Integramos la mayoría de plataformas modernas."
-    },
-    {
-      q: "¿Qué pasa si necesito cambios?",
-      a: "Podemos ajustar y optimizar los flujos según tus necesidades."
-    },
-    {
-      q: "¿Ofrecen soporte?",
-      a: "Sí. Disponemos de planes de soporte y mantenimiento."
+      question: "¿Qué pasa si mis procesos cambian en el futuro?",
+      answer: "Nuestra infraestructura es modular. Si tu modelo de negocio pivota o añades nuevos servicios, adaptamos las ramas lógicas del sistema sin tener que reconstruir todo desde cero."
     }
   ];
 
-  const [activeIndex, setActiveIndex] = useState(null);
-
-  const toggleFaq = (index) => {
-    setActiveIndex(activeIndex === index ? null : index);
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? -1 : index);
   };
 
   return (
-    <section className="section faq-section" id="faq">
+    <section id="faq" className="section v2-faq">
       <div className="container">
-        <div className="section-title">
+        
+        <div className="showcase-header">
           <h2>Preguntas <span className="text-gradient">Frecuentes</span></h2>
+          <p>Claridad radical antes de nuestra llamada estratégica.</p>
         </div>
 
-        <div className="faq-container">
+        <div className="v2-faq-container">
           {faqs.map((faq, index) => (
             <div 
-              className={`faq-item glass-panel ${activeIndex === index ? 'active' : ''}`} 
-              key={index}
-              onClick={() => toggleFaq(index)}
+              key={index} 
+              className={`v2-faq-item ${openIndex === index ? 'open' : ''}`}
+              onClick={() => toggleFAQ(index)}
             >
-              <div className="faq-question">
-                <h3>{faq.q}</h3>
-                <span className="faq-icon">{activeIndex === index ? '−' : '+'}</span>
+              <div className="v2-faq-question">
+                <h3>{faq.question}</h3>
+                <ChevronDown className="v2-faq-icon" size={24} />
               </div>
-              <div className="faq-answer">
-                <p>{faq.a}</p>
+              <div className="v2-faq-answer">
+                <p>{faq.answer}</p>
               </div>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );

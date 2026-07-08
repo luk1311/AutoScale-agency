@@ -1,146 +1,67 @@
 import './Pricing.css';
-import { Check } from 'lucide-react';
-import { useRef, useState } from 'react';
 
 const Pricing = ({ openModal }) => {
-  const gridRef = useRef(null);
-  const [active, setActive] = useState(0);
-
-  // Detecta la tarjeta cuyo centro está más cerca del centro del carrusel.
-  const handleScroll = () => {
-    const el = gridRef.current;
-    if (!el) return;
-    const center = el.scrollLeft + el.clientWidth / 2;
-    let closest = 0;
-    let min = Infinity;
-    Array.from(el.children).forEach((card, i) => {
-      const d = Math.abs(card.offsetLeft + card.clientWidth / 2 - center);
-      if (d < min) { min = d; closest = i; }
-    });
-    setActive(closest);
-  };
-
-  const goTo = (i) => {
-    const el = gridRef.current;
-    const card = el && el.children[i];
-    if (card) {
-      el.scrollTo({ left: card.offsetLeft - (el.clientWidth - card.clientWidth) / 2, behavior: 'smooth' });
-    }
-  };
-
   return (
-    <section className="section pricing-section" id="precios">
-      <div className="container animate-fade-in">
-        <div className="section-title text-center">
-          <h2 className="text-gradient">Elige el sistema de ventas para tu agencia</h2>
-          <p>Planes diseñados para escalar, no cobramos por horas, construimos máquinas que venden por ti.</p>
+    <section id="pricing" className="section v2-pricing">
+      <div className="container">
+        
+        <div className="showcase-header">
+          <h2>Inversión <span className="text-gradient">Estratégica</span></h2>
+          <p>No somos un gasto. Somos la infraestructura que multiplica tu MRR.</p>
         </div>
 
-        <p className="pricing-hint">Desliza para comparar los planes →</p>
-
-        <div className="pricing-grid" ref={gridRef} onScroll={handleScroll}>
-          {/* Plan Esencial */}
-          <div className="pricing-card glass-panel delay-100">
-            <h3 className="pricing-name">Esencial</h3>
-            <p className="pricing-desc">Ideal para quien busca dejar de verse amateur.</p>
-            <div className="pricing-price">
-              <span className="currency">$</span>
-              <span className="amount">990k</span>
-              <span className="period">/ setup</span>
-            </div>
-            <div className="pricing-monthly-wrapper">
-              <span className="monthly-badge">+ $120.000 mensual</span>
+        <div className="v2-pricing-grid">
+          
+          {/* Growth Tier */}
+          <div className="v2-price-card">
+            <div className="v2-price-header">
+              <h3>Growth Architecture</h3>
+              <div className="v2-price-amount">
+                <span className="currency">$</span>2,500<span className="period">/mo</span>
+              </div>
+              <p>Para agencias facturando $10k - $30k/mo buscando escalar sin romper operaciones.</p>
             </div>
             
-            <ul className="pricing-features">
-              <li><Check size={20} className="check-icon" /> <span>Landing page Premium (Optimizada móvil)</span></li>
-              <li><Check size={20} className="check-icon" /> <span>Hosting ultrarrápido y seguro</span></li>
-              <li><Check size={20} className="check-icon" /> <span>Formulario directo al correo</span></li>
-              <li><Check size={20} className="check-icon" /> <span>Botón flotante de WhatsApp</span></li>
+            <ul className="v2-price-features">
+              <li>Auditoría de Sistemas (One-time)</li>
+              <li>Automatización de Onboarding</li>
+              <li>CRM Setup (HubSpot/GoHighLevel)</li>
+              <li>Soporte Slack Dedicado (L-V)</li>
+              <li>1 Iteración Estratégica Mensual</li>
             </ul>
             
-            <button className="btn btn-secondary btn-full" onClick={openModal}>
-              Agendar Demo
+            <button className="btn btn-outline v2-price-btn" onClick={openModal}>
+              Aplicar Ahora
             </button>
           </div>
 
-          {/* Plan Pro */}
-          <div className="pricing-card glass-panel popular delay-200">
-            <div className="popular-badge">⭐ Más Elegido</div>
-            <h3 className="pricing-name">Pro</h3>
-            <p className="pricing-desc">El Sistema Automático de Ventas.</p>
-            <div className="pricing-price">
-              <span className="currency">$</span>
-              <span className="amount">1.79M</span>
-              <span className="period">/ setup</span>
-            </div>
-            <div className="pricing-monthly-wrapper">
-              <span className="monthly-badge pro-badge">+ $350.000 mensual</span>
+          {/* Scale Tier (Popular) */}
+          <div className="v2-price-card popular">
+            <div className="popular-badge">Recomendado</div>
+            <div className="v2-price-header">
+              <h3>Scale Engineering</h3>
+              <div className="v2-price-amount">
+                Personalizado
+              </div>
+              <p>Para empresas +$50k/mo que requieren infraestructura técnica profunda y embudos complejos.</p>
             </div>
             
-            <ul className="pricing-features">
-              <li><Check size={20} className="check-icon" /> <span>Todo lo del plan Esencial</span></li>
-              <li>
-                <Check size={20} className="check-icon" /> 
-                <span className="feature-text">
-                  <strong className="feature-title">Automatización n8n:</strong>
-                  <span className="feature-subtext">Respuesta inmediata WhatsApp/Email</span>
-                </span>
-              </li>
-              <li><Check size={20} className="check-icon" /> <span>CRM personalizado (/admin)</span></li>
-              <li><Check size={20} className="check-icon" /> <span>Gestión de estado de Leads</span></li>
-              <li><Check size={20} className="check-icon" /> <span>Analíticas y exportación Excel</span></li>
+            <ul className="v2-price-features">
+              <li><strong>Todo lo de Growth, más:</strong></li>
+              <li>Desarrollo de Apps Internas (No-Code)</li>
+              <li>Arquitectura de Datos Avanzada</li>
+              <li>Embudos de Paid Media B2B</li>
+              <li>Ingeniería de Prompts y Agentes AI</li>
+              <li>Línea Directa 24/7 con el Director Técnico</li>
             </ul>
             
-            <button className="btn btn-primary btn-full" onClick={openModal}>
-              Empezar con Pro
+            <button className="btn btn-primary v2-price-btn" onClick={openModal}>
+              Agendar Llamada Estratégica
             </button>
           </div>
 
-          {/* Plan Elite */}
-          <div className="pricing-card elite-card delay-300">
-            <h3 className="pricing-name text-gradient">Elite</h3>
-            <p className="pricing-desc">El Sistema Definitivo con Inteligencia Artificial.</p>
-            <div className="pricing-price">
-              <span className="currency">desde $</span>
-              <span className="amount">2.9M</span>
-              <span className="period">/ setup</span>
-            </div>
-            <div className="pricing-monthly-wrapper">
-              <span className="monthly-badge elite-badge">+ $490.000 mensual</span>
-            </div>
-            
-            <ul className="pricing-features">
-              <li><Check size={20} className="check-icon" /> <span>Todo lo del plan Pro</span></li>
-              <li>
-                <Check size={20} className="check-icon" /> 
-                <span className="feature-text">
-                  <strong className="feature-title">Agente IA WhatsApp 24/7</strong>
-                  <span className="feature-subtext">(Responde dudas y agenda citas)</span>
-                </span>
-              </li>
-              <li><Check size={20} className="check-icon" /> <span>Recordatorios 24h automáticos</span></li>
-              <li><Check size={20} className="check-icon" /> <span>Reactivación de clientes inactivos</span></li>
-              <li><Check size={20} className="check-icon" /> <span>Sincronización con ERP/Calendario</span></li>
-            </ul>
-            
-            <button className="btn btn-elite btn-full" onClick={openModal}>
-              Solicitar Cotización Elite
-            </button>
-          </div>
         </div>
 
-        <div className="pricing-dots" role="tablist" aria-label="Planes">
-          {[0, 1, 2].map((i) => (
-            <button
-              key={i}
-              className={`pricing-dot ${active === i ? 'active' : ''}`}
-              onClick={() => goTo(i)}
-              aria-label={`Ver plan ${i + 1} de 3`}
-              aria-selected={active === i}
-            />
-          ))}
-        </div>
       </div>
     </section>
   );

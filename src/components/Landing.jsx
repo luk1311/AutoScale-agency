@@ -4,6 +4,10 @@ import Header from './Header';
 import Hero from './Hero';
 import Services from './Services';
 import Portfolio from './Portfolio';
+import Process from './Process';
+import UseCases from './UseCases';
+import Pricing from './Pricing';
+import FAQ from './FAQ';
 import FooterCTA from './FooterCTA';
 
 const Landing = () => {
@@ -22,6 +26,10 @@ const Landing = () => {
       <Hero openModal={openModal} />
       <Services />
       <Portfolio />
+      <Process />
+      <UseCases />
+      <Pricing openModal={openModal} />
+      <FAQ />
 
       <FooterCTA openModal={openModal} />
     </div>

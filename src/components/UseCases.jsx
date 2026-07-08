@@ -1,31 +1,85 @@
-import { Hospital, Building, GraduationCap, Briefcase, ShoppingBag } from 'lucide-react';
+import { useState } from 'react';
+import { ShoppingCart, LayoutTemplate, Briefcase } from 'lucide-react';
 import './UseCases.css';
 
 const UseCases = () => {
+  const [activeTab, setActiveTab] = useState(0);
+
   const cases = [
-    { title: "Clínicas", desc: "Web corporativa + Anuncios locales + Automatización de citas.", icon: <Hospital size={36} color="var(--accent-primary)" /> },
-    { title: "Inmobiliarias", desc: "Catálogo de propiedades + Meta Ads + Calificación automática.", icon: <Building size={36} color="var(--accent-primary)" /> },
-    { title: "Educación", desc: "Landing de cursos + Campañas de captación + Seguimiento de estudiantes.", icon: <GraduationCap size={36} color="var(--accent-primary)" /> },
-    { title: "Servicios Profesionales", desc: "Portafolio Web + Ads de alcance + Agenda automática 24/7.", icon: <Briefcase size={36} color="var(--accent-primary)" /> },
-    { title: "Ecommerce", desc: "Tienda online rápida + Retargeting + Atención por IA para ventas.", icon: <ShoppingBag size={36} color="var(--accent-primary)" /> }
+    {
+      id: "ecommerce",
+      icon: <ShoppingCart size={24} />,
+      title: "E-commerce",
+      headline: "Operaciones Headless para tiendas de alto volumen.",
+      description: "Sincronizamos inventarios multicanal, automatizamos recuperación de carritos abandonados mediante secuencias omnichannel y conectamos pasarelas de pago con ERPs sin intervención humana.",
+      tags: ["Shopify Plus", "ERP Sync", "Omnichannel"]
+    },
+    {
+      id: "infoproductos",
+      icon: <LayoutTemplate size={24} />,
+      title: "Info-productos",
+      headline: "Embudos de lanzamiento que escalan sin romperse.",
+      description: "Integramos plataformas de cursos, automatizamos la entrega de credenciales, y construimos sistemas de retención impulsados por AI para reducir el churn rate y aumentar el LTV.",
+      tags: ["Funnels", "LTV Boost", "Kajabi/Hotmart"]
+    },
+    {
+      id: "agencias",
+      icon: <Briefcase size={24} />,
+      title: "Agencias B2B",
+      headline: "Infraestructura para escalar a $100k/mo.",
+      description: "Automatizamos la generación y cualificación de leads, el onboarding de clientes y la gestión de proyectos. Libera a tu equipo del trabajo manual para que se enfoque en la estrategia.",
+      tags: ["Lead Gen", "Onboarding", "CRM Automation"]
+    }
   ];
 
   return (
-    <section className="section use-cases-section" id="casos">
+    <section id="use-cases" className="section v2-usecases">
       <div className="container">
-        <div className="section-title">
-          <h2>Casos de <span className="text-gradient">uso</span></h2>
+        
+        <div className="showcase-header">
+          <h2>Soluciones por <span className="text-gradient">Industria</span></h2>
+          <p>Sistemas diseñados a la medida de tu modelo de negocio.</p>
         </div>
 
-        <div className="cases-grid">
-          {cases.map((item, index) => (
-            <div className={`use-case-card glass-panel animate-fade-in delay-${(index % 3 + 1) * 100}`} key={index}>
-              <div className="case-icon" style={{ marginBottom: '1rem' }}>{item.icon}</div>
-              <h3>{item.title}</h3>
-              <p>{item.desc}</p>
-            </div>
-          ))}
+        <div className="v2-usecases-container">
+          
+          {/* Tabs Navigation */}
+          <div className="v2-tabs-nav">
+            {cases.map((useCase, index) => (
+              <button 
+                key={useCase.id}
+                className={`v2-tab-btn ${activeTab === index ? 'active' : ''}`}
+                onClick={() => setActiveTab(index)}
+              >
+                {useCase.icon}
+                <span>{useCase.title}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Tab Content */}
+          <div className="v2-tab-content-wrapper">
+            {cases.map((useCase, index) => (
+              <div 
+                key={useCase.id} 
+                className={`v2-tab-pane ${activeTab === index ? 'active' : ''}`}
+              >
+                <div className="v2-pane-inner">
+                  <h3>{useCase.headline}</h3>
+                  <p>{useCase.description}</p>
+                  
+                  <div className="v2-pane-tags">
+                    {useCase.tags.map(tag => (
+                      <span key={tag} className="v2-tag">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
         </div>
+
       </div>
     </section>
   );
