@@ -24,8 +24,8 @@ const Landing = () => {
       <Header openModal={openModal} />
       
       <Hero openModal={openModal} />
-      <Services />
-      <Portfolio />
+      <Services openModal={openModal} />
+      <Portfolio openModal={openModal} />
       <Process />
       <UseCases />
       <Pricing openModal={openModal} />

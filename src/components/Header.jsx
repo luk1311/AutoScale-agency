@@ -25,8 +25,8 @@ const Header = ({ openModal }) => {
         {/* Desktop Nav */}
         <nav className="v2-nav">
           <a href="#servicios" className="v2-nav-link">Servicios</a>
-          <a href="#portafolio" className="v2-nav-link">Portafolio</a>
-          <a href="#proceso" className="v2-nav-link">Metodología</a>
+          <a href="#casos" className="v2-nav-link">Casos reales</a>
+          <a href="#precios" className="v2-nav-link">Precios</a>
         </nav>
 
         {/* CTA */}

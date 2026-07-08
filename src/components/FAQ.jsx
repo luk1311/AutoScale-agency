@@ -2,59 +2,59 @@ import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import './FAQ.css';
 
+// Preguntas reales de prospectos (ver Documentos/Ventas/AutoScale_OBJECIONES.md).
+const faqs = [
+  {
+    q: '¿En cuánto tiempo queda funcionando?',
+    a: 'La web con automatización queda lista en días, no meses. La Recepcionista IA se entrena con la información de tu negocio (servicios, precios, horarios) y se conecta a tu WhatsApp en la misma semana.',
+  },
+  {
+    q: 'Ya tengo Instagram y me escriben por ahí. ¿Para qué necesito esto?',
+    a: 'Justo por eso. Hoy la gente te ve, te escribe… y se pierde entre mensajes. El sistema captura a cada interesado, le responde al instante y te lo deja ordenado en un panel. Tu Instagram no se reemplaza: se convierte en citas.',
+  },
+  {
+    q: '¿Necesito saber de tecnología?',
+    a: 'No. Nosotros montamos todo y tú solo usas WhatsApp y un panel muy simple. Si sabes usar Instagram, sabes usar esto.',
+  },
+  {
+    q: '¿La IA va a contestar cosas raras a mis clientes?',
+    a: 'No inventa nada: responde solo con la información de tu negocio (tus precios, tus horarios). Y si un cliente pide hablar con una persona, te pasa la conversación al instante.',
+  },
+  {
+    q: '¿Qué pasa con mi número de WhatsApp?',
+    a: 'Sigue siendo tuyo y sigues pudiendo escribir tú. La IA solo responde a quienes te escriben — nunca manda mensajes en frío ni a desconocidos.',
+  },
+  {
+    q: '¿Cuánto cuesta y hay permanencia?',
+    a: 'Los planes arrancan en $990.000 de montaje + mensualidad desde $220.000. Sin permanencia: si no te da resultados, lo cancelas. (Spoiler: con 2–3 clientes nuevos al mes ya se pagó solo.)',
+  },
+];
+
 const FAQ = () => {
-  const [openIndex, setOpenIndex] = useState(0); // First one open by default
-
-  const faqs = [
-    {
-      question: "¿Cuánto tiempo toma implementar la arquitectura?",
-      answer: "Depende de la complejidad técnica de tu agencia. Sin embargo, nuestro sprint promedio de 'Growth Architecture' toma entre 3 y 4 semanas desde la auditoría inicial hasta el despliegue en producción."
-    },
-    {
-      question: "¿Qué herramientas o stack tecnológico utilizan?",
-      answer: "Somos agnósticos en herramientas, pero nos inclinamos por la mejor infraestructura de su clase. Usamos Make/n8n para automatización, HubSpot/GoHighLevel para CRM, y stacks de código a medida (React, Node, Python) cuando el No-Code no es suficiente."
-    },
-    {
-      question: "¿Mi equipo necesitará capacitación técnica?",
-      answer: "No. Construimos sistemas 'Zero-Friction'. Tu equipo seguirá usando las interfaces que ya conocen (Slack, Email, CRM), mientras nuestra arquitectura hace todo el trabajo pesado en el backend."
-    },
-    {
-      question: "¿Qué pasa si mis procesos cambian en el futuro?",
-      answer: "Nuestra infraestructura es modular. Si tu modelo de negocio pivota o añades nuevos servicios, adaptamos las ramas lógicas del sistema sin tener que reconstruir todo desde cero."
-    }
-  ];
-
-  const toggleFAQ = (index) => {
-    setOpenIndex(openIndex === index ? -1 : index);
-  };
+  const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section id="faq" className="section v2-faq">
-      <div className="container">
-        
-        <div className="showcase-header">
-          <h2>Preguntas <span className="text-gradient">Frecuentes</span></h2>
-          <p>Claridad radical antes de nuestra llamada estratégica.</p>
+    <section id="faq" className="section faq">
+      <div className="container faq-container">
+        <div className="faq-head">
+          <span className="eyebrow">Preguntas frecuentes</span>
+          <h2>Lo que todos preguntan<br />antes de empezar.</h2>
         </div>
 
-        <div className="v2-faq-container">
-          {faqs.map((faq, index) => (
-            <div 
-              key={index} 
-              className={`v2-faq-item ${openIndex === index ? 'open' : ''}`}
-              onClick={() => toggleFAQ(index)}
+        <div className="faq-list">
+          {faqs.map((f, i) => (
+            <div
+              key={f.q}
+              className={`faq-item ${openIndex === i ? 'open' : ''}`}
             >
-              <div className="v2-faq-question">
-                <h3>{faq.question}</h3>
-                <ChevronDown className="v2-faq-icon" size={24} />
-              </div>
-              <div className="v2-faq-answer">
-                <p>{faq.answer}</p>
-              </div>
+              <button className="faq-q" onClick={() => setOpenIndex(openIndex === i ? -1 : i)}>
+                <h3>{f.q}</h3>
+                <ChevronDown className="faq-chevron" size={22} strokeWidth={2.6} />
+              </button>
+              <div className="faq-a"><p>{f.a}</p></div>
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

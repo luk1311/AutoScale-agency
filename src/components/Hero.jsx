@@ -2,55 +2,31 @@ import './Hero.css';
 
 const Hero = ({ openModal }) => {
   return (
-    <section className="v2-hero">
-      {/* Background Tech Grid */}
-      <div className="v2-hero-bg">
-        <div className="v2-grid-overlay"></div>
-        <div className="v2-glow-blob"></div>
-      </div>
+    <section className="hero">
+      <div className="container hero-inner">
+        <span className="eyebrow hero-eyebrow">Web · Automatización · IA en WhatsApp</span>
 
-      <div className="container v2-hero-container">
-        <div className="v2-hero-content">
-          
-          <div className="v2-badge">
-            <span className="v2-badge-dot"></span>
-            Scale Engineering Agency
-          </div>
-          
-          <h1 className="v2-hero-title">
-            Escalamos agencias <br/>
-            mediante <span className="text-gradient">código</span> y <span className="text-gradient">sistemas.</span>
-          </h1>
-          
-          <p className="v2-hero-subtitle">
-            Sustituimos el caos operativo por infraestructura tecnológica. Construimos automatizaciones B2B, embudos de alta conversión y ecosistemas digitales diseñados exclusivamente para multiplicar tu facturación.
-          </p>
-          
-          <div className="v2-hero-actions">
-            <button className="btn btn-primary v2-hero-btn" onClick={openModal}>
-              Agendar Auditoría Gratuita
-            </button>
-            <button className="btn btn-outline v2-hero-btn">
-              Ver Casos de Estudio
-            </button>
-          </div>
+        <h1 className="hero-title">
+          Tu negocio,<br />
+          <span className="hl">vendiendo&nbsp;solo.</span>
+        </h1>
 
-          {/* Social Proof / Mini Stats */}
-          <div className="v2-hero-proof">
-            <div className="proof-item">
-              <strong>+140%</strong>
-              <span>MRR Promedio</span>
-            </div>
-            <div className="proof-item">
-              <strong>Zero</strong>
-              <span>Caos Operativo</span>
-            </div>
-            <div className="proof-item">
-              <strong>24/7</strong>
-              <span>Sistemas Activos</span>
-            </div>
-          </div>
+        <p className="hero-sub">
+          Webs que convierten, CRM y una <strong>recepcionista con IA en tu WhatsApp</strong> que
+          atiende, agenda y recupera clientes — 24/7, sin que muevas un dedo.
+        </p>
 
+        <div className="hero-cta">
+          <button className="btn btn-primary" onClick={openModal}>Agenda una demo gratis</button>
+          <a className="btn btn-outline" href="#casos">Ver casos reales</a>
+        </div>
+
+        <div className="hero-proof">
+          <div className="proof"><b>24/7</b><span>atención sin descanso</span></div>
+          <div className="proof-div" />
+          <div className="proof"><b>1&nbsp;min</b><span>para agendar</span></div>
+          <div className="proof-div" />
+          <div className="proof"><b>0</b><span>clientes perdidos</span></div>
         </div>
       </div>
     </section>

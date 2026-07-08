@@ -1,122 +1,111 @@
-/* V2 Portfolio Styles - Dark Minimalist */
+/* AutoScale · Casos reales "Alto Impacto" */
 
-.v2-portfolio {
-  background-color: var(--bg-primary);
-  position: relative;
-  border-top: 1px solid var(--border-light);
-}
+.cases { background: var(--paper); }
 
-.v2-portfolio-grid {
+.cases-head { max-width: 760px; margin-bottom: 3.5rem; }
+.cases-head .eyebrow { margin-bottom: 1rem; }
+.cases-head h2 { font-size: clamp(2.2rem, 5.5vw, 4rem); letter-spacing: -0.035em; }
+
+.cases-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
-  margin-top: 4rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
 }
 
-.v2-portfolio-card {
+.case-card {
   display: flex;
   flex-direction: column;
-  background: var(--bg-secondary);
-  border-radius: 24px;
-  border: 1px solid var(--border-light);
+  text-align: left;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: all 0.4s var(--ease-smooth);
+  box-shadow: 6px 6px 0 rgba(10, 10, 10, 0.9);
+  transition: transform .2s var(--ease-smooth), box-shadow .2s var(--ease-smooth);
   cursor: pointer;
+  font: inherit;
+  padding: 0;
 }
 
-.v2-portfolio-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--border-strong);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+.case-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 rgba(10, 10, 10, 0.9);
 }
 
-.v2-card-visual {
-  height: 250px;
+/* Visual: bloque de color con inicial gigante */
+.case-visual {
   position: relative;
-  overflow: hidden;
-  border-bottom: 1px solid var(--border-light);
-}
-
-/* Minimalist Overlay */
-.v2-card-overlay {
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  padding: 1.5rem;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.v2-metric-pill {
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--border-strong);
-  border-radius: 100px;
-  padding: 8px 16px;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.v2-metric-pill strong {
-  color: var(--text-primary);
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.v2-metric-pill span {
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Content */
-.v2-card-content {
-  padding: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-
-.v2-category {
-  display: block;
-  font-size: 0.85rem;
-  color: var(--text-tertiary);
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-}
-
-.v2-card-content h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.v2-icon-btn {
-  background: transparent;
-  border: 1px solid var(--border-light);
-  color: var(--text-secondary);
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  cursor: pointer;
+  height: 190px;
+  border-bottom: 2px solid var(--ink);
+}
+.tone-rose { background: #FFD9CF; }
+.tone-amber { background: #FFE7B8; }
+.tone-ink { background: var(--ink); }
+
+.case-initial {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 4.5rem;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+  line-height: 1;
+}
+.tone-ink .case-initial { color: var(--coral); }
+
+.case-live {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-full);
+  padding: .3rem .7rem;
+  color: #14883F;
 }
 
-.v2-portfolio-card:hover .v2-icon-btn {
-  background: var(--text-primary);
-  color: var(--bg-primary);
-  border-color: var(--text-primary);
-  transform: rotate(45deg);
+.case-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.6rem;
+}
+
+.case-category {
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--coral);
+  margin-bottom: .5rem;
+}
+
+.case-body h3 { font-size: 1.35rem; margin-bottom: .6rem; }
+.case-body p { font-size: .95rem; margin: 0 0 1.2rem; flex: 1; }
+
+.case-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--ink);
+  border-bottom: 2px solid var(--coral);
+  align-self: flex-start;
+  padding-bottom: 2px;
+}
+.case-card:hover .case-link { color: var(--coral); }
+
+/* Tarjeta CTA (fondo papel-2 sutil) */
+.case-cta { background: var(--paper-2); }
+
+@media (max-width: 900px) {
+  .cases-grid { grid-template-columns: 1fr; }
+  .case-visual { height: 150px; }
 }

@@ -1,165 +1,128 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
+/* ==========================================================================
+   AUTOSCALE · SISTEMA "ALTO IMPACTO"
+   Blanco + tinta negra + coral energético (#FF5A3C) + ámbar
+   Tipografía masiva (Archivo 900) + Inter · bordes marcados + sombra dura
+   ========================================================================== */
 :root {
-  /* =========================================
-     AUTO-SCALE V2 DESIGN SYSTEM (DARK MINIMAL)
-     ========================================= */
-  
-  /* Core Colors */
-  --bg-primary: #000000;
-  --bg-secondary: #0A0A0A;
-  --bg-tertiary: #111111;
-  
-  /* Text */
-  --text-primary: #FFFFFF;
-  --text-secondary: #888888;
-  --text-tertiary: #444444;
-  
-  /* Borders & Surfaces */
-  --border-light: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.15);
-  --glass-bg: rgba(10, 10, 10, 0.6);
-  
-  /* Brand Accents (Minimalist approach) */
-  --brand-primary: #FFFFFF;
-  --brand-muted: rgba(255, 255, 255, 0.4);
-  --accent: #3b82f6; /* Electric blue for absolute necessary highlights */
-  
-  /* Typography */
-  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  
-  /* Spacing */
-  --space-xs: 0.5rem;
-  --space-sm: 1rem;
-  --space-md: 2rem;
-  --space-lg: 4rem;
-  --space-xl: 8rem;
-  
-  /* Radii */
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-full: 9999px;
-  
-  /* Transitions */
-  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --ease-smooth: cubic-bezier(0.165, 0.84, 0.44, 1);
+  /* Superficies */
+  --paper: #FFFFFF;
+  --paper-2: #F4F2ED;          /* off-white cálido para secciones alternas */
+  --paper-3: #ECEAE3;
+  --ink: #0A0A0A;
+  --ink-2: #1C1C1C;
+  --muted: #6B6B6B;
+
+  /* Acentos */
+  --coral: #FF5A3C;
+  --coral-d: #E23C1E;
+  --amber: #F59E0B;
+
+  /* Líneas */
+  --line: rgba(10, 10, 10, 0.10);
+  --line-2: rgba(10, 10, 10, 0.18);
+
+  /* Tipografía */
+  --font-display: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Espaciado / radios / easing */
+  --space-xs: .5rem; --space-sm: 1rem; --space-md: 2rem; --space-lg: 4rem; --space-xl: 7rem;
+  --radius-sm: 10px; --radius-md: 16px; --radius-lg: 24px; --radius-full: 9999px;
+  --ease-spring: cubic-bezier(.175, .885, .32, 1.275);
+  --ease-smooth: cubic-bezier(.165, .84, .44, 1);
+
+  /* ── Alias de compatibilidad (componentes que aún leen nombres V2) ── */
+  --bg-primary: var(--paper);
+  --bg-secondary: var(--paper-2);
+  --bg-tertiary: var(--paper-3);
+  --text-primary: var(--ink);
+  --text-secondary: var(--muted);
+  --text-tertiary: #9A9A9A;
+  --border-light: var(--line);
+  --border-strong: var(--line-2);
+  --brand-primary: var(--ink);
+  --accent: var(--coral);
+  --font-main: var(--font-body);
+  --glass-bg: rgba(255, 255, 255, 0.7);
 }
 
-/* =========================================
-   RESET & BASE
-   ========================================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth; /* Will be enhanced by Lenis later */
-}
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body {
-  font-family: var(--font-main);
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Typography Base */
+/* Tipografía masiva */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.04em;
-  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  text-wrap: balance;
 }
+h1 { font-weight: 900; }
+p { color: var(--muted); font-size: 1.075rem; line-height: 1.65; }
+a { color: inherit; text-decoration: none; transition: color .25s var(--ease-smooth); }
+ul { list-style: none; }
+::selection { background: var(--coral); color: #fff; }
+*:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
 
-p {
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-  letter-spacing: -0.01em;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.3s var(--ease-smooth);
-}
-
-ul {
-  list-style: none;
-}
-
-/* =========================================
-   UTILITY CLASSES (Elite Minimalism)
-   ========================================= */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.section {
-  padding: var(--space-xl) 0;
-  position: relative;
-}
-
-/* Text Utilities */
-.text-gradient {
-  background: linear-gradient(180deg, #FFFFFF 0%, #888888 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
+/* Layout */
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+.section { padding: var(--space-xl) 0; position: relative; }
+.section-alt { background: var(--paper-2); }
 .text-center { text-align: center; }
-.text-muted { color: var(--text-secondary); }
+.text-muted { color: var(--muted); }
 
-/* Buttons */
+/* Eyebrow (etiqueta) */
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .8rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--coral);
+}
+
+/* Palabra destacada (anula cualquier gradiente previo) */
+.text-gradient, .hl {
+  color: var(--coral);
+  -webkit-text-fill-color: currentColor;
+  background: none;
+}
+
+/* Botones — borde marcado + sombra dura (firma Alto Impacto) */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 1rem 2rem;
-  border-radius: var(--radius-full);
-  font-weight: 500;
+  display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: 1rem;
-  letter-spacing: -0.01em;
-  transition: all 0.3s var(--ease-smooth);
+  padding: 1rem 1.8rem;
+  border-radius: var(--radius-full);
   cursor: pointer;
-  border: none;
+  border: 2px solid var(--ink);
+  transition: transform .18s var(--ease-smooth), box-shadow .18s var(--ease-smooth), background .2s ease;
 }
+.btn-primary { background: var(--coral); color: #fff; box-shadow: 4px 4px 0 var(--ink); }
+.btn-primary:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+.btn-primary:active { transform: translate(0, 0); box-shadow: 2px 2px 0 var(--ink); }
+.btn-outline { background: transparent; color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.btn-outline:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); background: var(--paper-2); }
+.btn-secondary { background: var(--paper-2); color: var(--ink); border-color: var(--line-2); box-shadow: none; }
+.btn-secondary:hover { background: var(--paper-3); }
 
-.btn-primary {
-  background: var(--text-primary);
-  color: var(--bg-primary);
-}
+/* Glass fallback */
+.glass { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line); }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(255,255,255,0.1);
-}
-
-.btn-outline {
-  background: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border-light);
-}
-
-.btn-outline:hover {
-  border-color: var(--text-primary);
-  background: rgba(255,255,255,0.05);
-}
-
-/* Glassmorphism */
-.glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--border-light);
+@media (max-width: 768px) {
+  .section { padding: 4.5rem 0; }
+  .container { padding: 0 1.25rem; }
 }

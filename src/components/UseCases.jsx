@@ -1,85 +1,59 @@
-import { useState } from 'react';
-import { ShoppingCart, LayoutTemplate, Briefcase } from 'lucide-react';
+import { Scissors, Sparkles, Home, HeartPulse } from 'lucide-react';
 import './UseCases.css';
 
+// Nichos reales a los que AutoScale vende hoy.
+const niches = [
+  {
+    icon: <Scissors size={22} />,
+    title: 'Barberías',
+    pain: 'Turnos que se pierden en el chat',
+    win: 'Reservas solas por WhatsApp mientras cortas.',
+  },
+  {
+    icon: <Sparkles size={22} />,
+    title: 'Uñas, belleza y spa',
+    pain: 'DM saturado y citas sin confirmar',
+    win: 'Agenda llena y recordatorios automáticos.',
+  },
+  {
+    icon: <Home size={22} />,
+    title: 'Constructoras e inmobiliario',
+    pain: 'Interesados que se enfrían sin seguimiento',
+    win: 'Cotizador + CRM que no deja escapar un lead.',
+  },
+  {
+    icon: <HeartPulse size={22} />,
+    title: 'Clínicas y consultorios',
+    pain: 'Inasistencias que cuestan plata',
+    win: 'Confirmación y reprogramación sin llamadas.',
+  },
+];
+
 const UseCases = () => {
-  const [activeTab, setActiveTab] = useState(0);
-
-  const cases = [
-    {
-      id: "ecommerce",
-      icon: <ShoppingCart size={24} />,
-      title: "E-commerce",
-      headline: "Operaciones Headless para tiendas de alto volumen.",
-      description: "Sincronizamos inventarios multicanal, automatizamos recuperación de carritos abandonados mediante secuencias omnichannel y conectamos pasarelas de pago con ERPs sin intervención humana.",
-      tags: ["Shopify Plus", "ERP Sync", "Omnichannel"]
-    },
-    {
-      id: "infoproductos",
-      icon: <LayoutTemplate size={24} />,
-      title: "Info-productos",
-      headline: "Embudos de lanzamiento que escalan sin romperse.",
-      description: "Integramos plataformas de cursos, automatizamos la entrega de credenciales, y construimos sistemas de retención impulsados por AI para reducir el churn rate y aumentar el LTV.",
-      tags: ["Funnels", "LTV Boost", "Kajabi/Hotmart"]
-    },
-    {
-      id: "agencias",
-      icon: <Briefcase size={24} />,
-      title: "Agencias B2B",
-      headline: "Infraestructura para escalar a $100k/mo.",
-      description: "Automatizamos la generación y cualificación de leads, el onboarding de clientes y la gestión de proyectos. Libera a tu equipo del trabajo manual para que se enfoque en la estrategia.",
-      tags: ["Lead Gen", "Onboarding", "CRM Automation"]
-    }
-  ];
-
   return (
-    <section id="use-cases" className="section v2-usecases">
+    <section id="para-quien" className="section usecases">
       <div className="container">
-        
-        <div className="showcase-header">
-          <h2>Soluciones por <span className="text-gradient">Industria</span></h2>
-          <p>Sistemas diseñados a la medida de tu modelo de negocio.</p>
+        <div className="usecases-head">
+          <span className="eyebrow">Para quién</span>
+          <h2>Hecho para negocios<br />que viven de sus citas.</h2>
         </div>
 
-        <div className="v2-usecases-container">
-          
-          {/* Tabs Navigation */}
-          <div className="v2-tabs-nav">
-            {cases.map((useCase, index) => (
-              <button 
-                key={useCase.id}
-                className={`v2-tab-btn ${activeTab === index ? 'active' : ''}`}
-                onClick={() => setActiveTab(index)}
-              >
-                {useCase.icon}
-                <span>{useCase.title}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Tab Content */}
-          <div className="v2-tab-content-wrapper">
-            {cases.map((useCase, index) => (
-              <div 
-                key={useCase.id} 
-                className={`v2-tab-pane ${activeTab === index ? 'active' : ''}`}
-              >
-                <div className="v2-pane-inner">
-                  <h3>{useCase.headline}</h3>
-                  <p>{useCase.description}</p>
-                  
-                  <div className="v2-pane-tags">
-                    {useCase.tags.map(tag => (
-                      <span key={tag} className="v2-tag">{tag}</span>
-                    ))}
-                  </div>
-                </div>
+        <div className="niche-grid">
+          {niches.map((n) => (
+            <article className="niche-card" key={n.title}>
+              <div className="niche-top">
+                <span className="niche-icon">{n.icon}</span>
+                <h3>{n.title}</h3>
               </div>
-            ))}
-          </div>
-
+              <p className="niche-pain">{n.pain}</p>
+              <p className="niche-win">→ {n.win}</p>
+            </article>
+          ))}
         </div>
 
+        <p className="niche-note">
+          ¿Otro tipo de negocio? Si tus clientes te escriben por WhatsApp, esto funciona para ti.
+        </p>
       </div>
     </section>
   );

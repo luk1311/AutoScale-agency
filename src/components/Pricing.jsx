@@ -1,67 +1,130 @@
+import { useRef, useState } from 'react';
+import { Check } from 'lucide-react';
 import './Pricing.css';
 
+// Precios oficiales — fuente: Documentos/Ventas/AutoScale_CATALOGO.md
+const plans = [
+  {
+    name: 'Esencial',
+    tag: 'Para empezar a captar',
+    setup: '$990k',
+    monthly: '$220.000/mes',
+    features: [
+      'Web optimizada para el celular',
+      'Captura de leads',
+      'WhatsApp + correo automático a cada lead',
+      'Hosting rápido y seguro',
+    ],
+    cta: 'Empezar con Esencial',
+    style: 'plain',
+  },
+  {
+    name: 'Pro',
+    tag: 'El sistema completo',
+    setup: '$1.79M',
+    monthly: '$350.000/mes',
+    features: [
+      'Todo lo del Esencial',
+      'CRM para gestionar tus clientes',
+      'Recordatorios y seguimiento automático',
+      'Reportes y exportación',
+    ],
+    cta: 'Quiero el Pro',
+    style: 'featured',
+    badge: 'Más elegido',
+  },
+  {
+    name: 'Recepcionista IA',
+    tag: 'Tu WhatsApp atendido 24/7',
+    setup: '$890k',
+    monthly: '$290.000/mes',
+    features: [
+      'IA que responde al instante, día y noche',
+      'Agenda citas sola',
+      'Entrenada con tu negocio',
+      'Panel de conversaciones + paso a humano',
+    ],
+    cta: 'Quiero la IA',
+    style: 'dark',
+  },
+];
+
 const Pricing = ({ openModal }) => {
+  const gridRef = useRef(null);
+  const [active, setActive] = useState(0);
+
+  // Detecta la tarjeta cuyo centro queda más cerca del centro del carrusel (móvil).
+  const handleScroll = () => {
+    const el = gridRef.current;
+    if (!el) return;
+    const center = el.scrollLeft + el.clientWidth / 2;
+    let closest = 0;
+    let min = Infinity;
+    Array.from(el.children).forEach((card, i) => {
+      const d = Math.abs(card.offsetLeft + card.clientWidth / 2 - center);
+      if (d < min) { min = d; closest = i; }
+    });
+    setActive(closest);
+  };
+
+  const goTo = (i) => {
+    const el = gridRef.current;
+    const card = el && el.children[i];
+    if (card) {
+      el.scrollTo({ left: card.offsetLeft - (el.clientWidth - card.clientWidth) / 2, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section id="pricing" className="section v2-pricing">
+    <section id="precios" className="section section-alt pricing">
       <div className="container">
-        
-        <div className="showcase-header">
-          <h2>Inversión <span className="text-gradient">Estratégica</span></h2>
-          <p>No somos un gasto. Somos la infraestructura que multiplica tu MRR.</p>
+        <div className="pricing-head">
+          <span className="eyebrow">Precios claros</span>
+          <h2>Elige tu sistema.<br />Sin letra pequeña.</h2>
         </div>
 
-        <div className="v2-pricing-grid">
-          
-          {/* Growth Tier */}
-          <div className="v2-price-card">
-            <div className="v2-price-header">
-              <h3>Growth Architecture</h3>
-              <div className="v2-price-amount">
-                <span className="currency">$</span>2,500<span className="period">/mo</span>
-              </div>
-              <p>Para agencias facturando $10k - $30k/mo buscando escalar sin romper operaciones.</p>
-            </div>
-            
-            <ul className="v2-price-features">
-              <li>Auditoría de Sistemas (One-time)</li>
-              <li>Automatización de Onboarding</li>
-              <li>CRM Setup (HubSpot/GoHighLevel)</li>
-              <li>Soporte Slack Dedicado (L-V)</li>
-              <li>1 Iteración Estratégica Mensual</li>
-            </ul>
-            
-            <button className="btn btn-outline v2-price-btn" onClick={openModal}>
-              Aplicar Ahora
-            </button>
-          </div>
+        <p className="pricing-hint">Desliza para comparar →</p>
 
-          {/* Scale Tier (Popular) */}
-          <div className="v2-price-card popular">
-            <div className="popular-badge">Recomendado</div>
-            <div className="v2-price-header">
-              <h3>Scale Engineering</h3>
-              <div className="v2-price-amount">
-                Personalizado
+        <div className="pricing-grid" ref={gridRef} onScroll={handleScroll}>
+          {plans.map((plan) => (
+            <article key={plan.name} className={`plan-card is-${plan.style}`}>
+              {plan.badge && <span className="plan-badge">{plan.badge}</span>}
+              <span className="plan-tag">{plan.tag}</span>
+              <h3>{plan.name}</h3>
+              <div className="plan-price">
+                <b>{plan.setup}</b>
+                <span>setup</span>
               </div>
-              <p>Para empresas +$50k/mo que requieren infraestructura técnica profunda y embudos complejos.</p>
-            </div>
-            
-            <ul className="v2-price-features">
-              <li><strong>Todo lo de Growth, más:</strong></li>
-              <li>Desarrollo de Apps Internas (No-Code)</li>
-              <li>Arquitectura de Datos Avanzada</li>
-              <li>Embudos de Paid Media B2B</li>
-              <li>Ingeniería de Prompts y Agentes AI</li>
-              <li>Línea Directa 24/7 con el Director Técnico</li>
-            </ul>
-            
-            <button className="btn btn-primary v2-price-btn" onClick={openModal}>
-              Agendar Llamada Estratégica
-            </button>
-          </div>
-
+              <div className="plan-monthly">+ {plan.monthly}</div>
+              <ul>
+                {plan.features.map((f) => (
+                  <li key={f}><Check size={17} strokeWidth={3} /> {f}</li>
+                ))}
+              </ul>
+              <button className="btn btn-primary plan-cta" onClick={openModal}>
+                {plan.cta}
+              </button>
+            </article>
+          ))}
         </div>
 
+        <div className="pricing-dots" role="tablist" aria-label="Planes">
+          {plans.map((p, i) => (
+            <button
+              key={p.name}
+              className={`pricing-dot ${active === i ? 'active' : ''}`}
+              onClick={() => goTo(i)}
+              aria-label={`Ver plan ${p.name}`}
+              aria-selected={active === i}
+            />
+          ))}
+        </div>
+
+        <p className="pricing-note">
+          ¿Necesitas flujos a la medida (agenda, inventario, integraciones)?
+          <b> Automatización a medida desde $2.9M.</b> Y los módulos extra
+          (anti-inasistencia, reseñas de Google, reactivación) se suman a cualquier plan.
+        </p>
       </div>
     </section>
   );

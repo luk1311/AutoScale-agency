@@ -1,132 +1,73 @@
-/* V2 UseCases Styles - Dark Minimalist */
+/* AutoScale · Para quién "Alto Impacto" */
 
-.v2-usecases {
-  background-color: var(--bg-primary);
-  border-top: 1px solid var(--border-light);
-  padding: 8rem 0;
+.usecases { background: var(--paper); }
+
+.usecases-head { max-width: 720px; margin-bottom: 3.5rem; }
+.usecases-head .eyebrow { margin-bottom: 1rem; }
+.usecases-head h2 { font-size: clamp(2.2rem, 5.5vw, 4rem); letter-spacing: -0.035em; }
+
+.niche-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
 }
 
-.v2-usecases-container {
-  max-width: 900px;
-  margin: 4rem auto 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+.niche-card {
+  background: var(--paper-2);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 1.6rem;
+  transition: transform .2s var(--ease-smooth), box-shadow .2s var(--ease-smooth), background .2s ease;
 }
 
-/* Tabs Nav */
-.v2-tabs-nav {
-  display: flex;
-  gap: 1rem;
-  background: var(--bg-secondary);
-  padding: 0.5rem;
-  border-radius: 16px;
-  border: 1px solid var(--border-light);
-  overflow-x: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.v2-tabs-nav::-webkit-scrollbar {
-  display: none;
+.niche-card:hover {
+  background: var(--paper);
+  transform: translate(-3px, -3px);
+  box-shadow: 6px 6px 0 rgba(10, 10, 10, 0.9);
 }
 
-.v2-tab-btn {
-  flex: 1;
+.niche-top {
   display: flex;
   align-items: center;
+  gap: .7rem;
+  margin-bottom: 1rem;
+}
+
+.niche-icon {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 1rem 1.5rem;
-  background: transparent;
-  border: none;
-  border-radius: 12px;
-  color: var(--text-secondary);
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  background: var(--ink);
+  color: var(--coral);
+  flex-shrink: 0;
+}
+
+.niche-card h3 { font-size: 1.05rem; line-height: 1.15; }
+
+.niche-pain {
+  font-size: .9rem;
+  margin: 0 0 .4rem;
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 90, 60, 0.55);
+  text-decoration-thickness: 2px;
+}
+
+.niche-win {
+  font-size: .95rem;
+  margin: 0;
+  color: var(--ink);
   font-weight: 600;
+}
+
+.niche-note {
+  margin-top: 2.2rem;
+  text-align: center;
   font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 200px;
 }
 
-.v2-tab-btn:hover {
-  color: var(--text-primary);
-  background: rgba(255,255,255,0.02);
-}
-
-.v2-tab-btn.active {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  border: 1px solid rgba(255,255,255,0.05);
-}
-
-.v2-tab-btn.active svg {
-  color: var(--text-primary);
-}
-
-/* Tab Content */
-.v2-tab-content-wrapper {
-  position: relative;
-  min-height: 250px;
-}
-
-.v2-tab-pane {
-  position: absolute;
-  top: 0; left: 0; width: 100%;
-  opacity: 0;
-  transform: translateY(20px);
-  pointer-events: none;
-  transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.v2-tab-pane.active {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-  position: relative;
-}
-
-.v2-pane-inner {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-light);
-  border-radius: 24px;
-  padding: 4rem;
-}
-
-.v2-pane-inner h3 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
-}
-
-.v2-pane-inner p {
-  font-size: 1.15rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  margin-bottom: 2.5rem;
-}
-
-.v2-pane-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.v2-tag {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.1);
-  padding: 6px 16px;
-  border-radius: 100px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-tertiary);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .v2-pane-inner { padding: 2rem; }
-  .v2-pane-inner h3 { font-size: 1.5rem; }
-  .v2-pane-inner p { font-size: 1rem; }
-}
+@media (max-width: 992px) { .niche-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .niche-grid { grid-template-columns: 1fr; } }

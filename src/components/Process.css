@@ -1,126 +1,43 @@
-/* V2 Process Styles - Dark Minimalist */
+/* AutoScale · Proceso "Alto Impacto" */
 
-.v2-process {
-  background-color: var(--bg-primary);
-  border-top: 1px solid var(--border-light);
-  padding: 8rem 0;
+.process-head { max-width: 720px; margin-bottom: 3.5rem; }
+.process-head .eyebrow { margin-bottom: 1rem; }
+.process-head h2 { font-size: clamp(2.2rem, 5.5vw, 4rem); letter-spacing: -0.035em; }
+
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  list-style: none;
+  counter-reset: none;
 }
 
-.v2-pipeline {
+.process-step {
   position: relative;
-  max-width: 800px;
-  margin: 4rem auto 0;
-  padding-left: 2rem;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.6rem 1.8rem;
+  box-shadow: 6px 6px 0 rgba(10, 10, 10, 0.9);
 }
 
-.v2-pipeline-line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 2rem;
-  width: 2px;
-  background: linear-gradient(to bottom, 
-      rgba(255,255,255,0.05) 0%, 
-      var(--border-strong) 50%, 
-      rgba(255,255,255,0.05) 100%);
-  transform: translateX(-50%);
-}
-
-.v2-steps-container {
-  display: flex;
-  flex-direction: column;
-  gap: 5rem;
-}
-
-.v2-process-step {
-  position: relative;
-  display: flex;
-  gap: 3rem;
-  align-items: flex-start;
-}
-
-/* Node (The dot on the line) */
-.v2-step-node {
-  position: absolute;
-  left: 0;
-  top: 10px;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-}
-
-.v2-node-core {
-  width: 10px;
-  height: 10px;
-  background: var(--bg-primary);
-  border: 2px solid var(--text-primary);
-  border-radius: 50%;
-  z-index: 2;
-  transition: all 0.3s ease;
-}
-
-.v2-node-glow {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: var(--text-primary);
-  border-radius: 50%;
-  opacity: 0;
-  filter: blur(8px);
-  transition: opacity 0.3s ease;
-}
-
-.v2-process-step:hover .v2-node-core {
-  background: var(--text-primary);
-}
-
-.v2-process-step:hover .v2-node-glow {
-  opacity: 0.5;
-}
-
-/* Content */
-.v2-step-content {
-  flex: 1;
-  padding: 2.5rem;
-  background: var(--bg-secondary);
-  border-radius: 20px;
-  border: 1px solid var(--border-light);
-  transition: all 0.4s var(--ease-smooth);
-}
-
-.v2-process-step:hover .v2-step-content {
-  border-color: var(--border-strong);
-  transform: translateX(10px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-}
-
-.v2-step-phase {
-  font-size: 0.85rem;
-  color: var(--text-tertiary);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  margin-bottom: 0.5rem;
-}
-
-.v2-step-content h3 {
-  font-size: 1.5rem;
+.step-num {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 3.2rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--coral);
   margin-bottom: 1rem;
-  color: var(--text-primary);
 }
 
-.v2-step-content p {
-  margin: 0;
-  font-size: 1.05rem;
-}
+.process-step h3 { font-size: 1.2rem; margin-bottom: .6rem; }
+.process-step p { font-size: .93rem; margin: 0; }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .v2-pipeline { padding-left: 1rem; }
-  .v2-pipeline-line { left: 1rem; }
-  .v2-process-step { gap: 1.5rem; }
-  .v2-step-content { padding: 1.5rem; }
-  .v2-process-step:hover .v2-step-content { transform: none; }
+@media (max-width: 992px) {
+  .process-steps { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .process-steps { grid-template-columns: 1fr; }
 }
