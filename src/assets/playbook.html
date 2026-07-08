@@ -131,6 +131,7 @@
       <div class="search-count" id="searchCount"></div>
     </div>
     <nav id="nav">
+      <a class="navlink" href="#sec-operacion"><span class="ico">⚙️</span> Operación semanal</a>
       <a class="navlink" href="#sec-metas"><span class="ico">🎯</span> Plan 90 días</a>
       <a class="navlink" href="#sec-oferta"><span class="ico">💼</span> Oferta y precios</a>
       <a class="navlink" href="#sec-catalogo"><span class="ico">📖</span> Catálogo completo</a>
@@ -156,6 +157,7 @@
       </div>
     </div>
     <div class="wrap">
+      <section class="doc-sec" id="sec-operacion"><div class="doc" data-md="md-operacion"></div></section>
       <section class="doc-sec" id="sec-metas"><div class="doc" data-md="md-metas"></div></section>
       <section class="doc-sec" id="sec-oferta"><div class="doc" data-md="md-oferta"></div></section>
       <section class="doc-sec" id="sec-catalogo"><div class="doc" data-md="md-catalogo"></div></section>
@@ -168,6 +170,70 @@
 </div>
 
 <!-- ===================== CONTENIDO (markdown) ===================== -->
+<script type="text/markdown" id="md-operacion">
+# ⚙️ Operación semanal — cómo funciona AutoScale
+
+> El sistema operativo del negocio. Si solo lees una sección del playbook, que sea esta.
+> Fuente completa: `Documentos/Operacion/AutoScale_OPERACION.md`.
+
+## El ritmo (innegociable)
+
+| Cuándo | Qué | Duración |
+|---|---|---|
+| **Lunes 9:00** | Revisión de mando: métricas + embudo del CRM → fijar la meta de la semana | 30 min |
+| **Mar–Vie** | Bloque de ventas (abajo) | 60–90 min |
+| **Todos los días** | Responder leads nuevos en **< 1 hora** | continuo |
+| **Viernes 16:00** | Cierre: ¿se cumplió? ¿qué frenó? + anotar 1 mejora | 15 min |
+
+## El bloque diario de ventas
+
+1. **(15 min)** Elegir 10–12 prospectos 🔴 Nuevos en el CRM y anotar el `[detalle]` de cada perfil.
+2. **(35 min)** Botón 📷 Contactar → enviar Mensaje 1 personalizado (sección Mensajes).
+3. **(10 min)** Responder a quienes contestaron → Mensaje 2 con la demo.
+4. **(10 min)** Seguimientos a 🟡 Contactados sin respuesta.
+5. **(5 min)** Actualizar estados y valores en el CRM. **Si no está en el CRM, no pasó.**
+
+## SLAs — tiempos máximos
+
+| Situación | Acción | Máximo |
+|---|---|---|
+| Lead nuevo | Primera respuesta | **< 1 h** (el CRM marca ⚠️ a las 24h) |
+| Contactado sin respuesta | 1er seguimiento | 48–72 h |
+| Sigue sin responder | 2º y último → archivar | día 4–5 |
+| Demo agendada | Confirmar | mismo día + 2 h antes |
+| Propuesta enviada | Seguimiento | 24 h y día 3 |
+| Cliente ganado | Kickoff de entrega | < 48 h |
+
+## Transiciones del pipeline
+
+- **🔴 → 🟡** Mensaje 1 enviado (el botón Contactar lo mueve solo).
+- **🟡 → 🔵** Hubo demo/llamada y se envió propuesta → poner **valor estimado**.
+- **🔵 → 🟢** Aceptó → **cobrar mínimo 50% del setup ANTES de construir** → kickoff.
+
+## Entrega (cliente ganado)
+
+1. **Kickoff (< 48 h):** 30 min — logo, servicios, precios, horarios, WhatsApp.
+2. **Montaje (días 1–7):** web → Supabase → n8n → CRM del cliente. Probar el flujo completo con un lead real.
+3. **Revisión:** demo en vivo, máx. 2 rondas de ajustes.
+4. **Encendido:** publicar y **verificar el número de WhatsApp** (siempre).
+5. **Día 30:** revisar resultados + pedir **testimonio en video**.
+
+## Métricas del lunes (solo 5)
+
+1. Leads nuevos · 2. Contactados · 3. Demos · 4. Propuestas + pipeline $ · 5. Ganados + $ cobrado
+
+> Pocos contactados → problema de disciplina. Contactos sin demos → problema de mensaje.
+> Demos sin cierres → problema de oferta/precio.
+
+## Reglas de oro
+
+1. El **CRM es la única fuente de verdad**.
+2. **Responder < 1 h** vale más que cualquier mejora en la web.
+3. El chat **agenda llamadas**; la llamada cierra.
+4. **Cobrar antes de construir.**
+5. Cada viernes, **1 mejora** al sistema.
+</script>
+
 <script type="text/markdown" id="md-metas">
 # AutoScale — Plan de 90 días (Meta: primeros clientes)
 
