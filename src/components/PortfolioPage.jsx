@@ -23,7 +23,7 @@ const PortfolioPage = () => {
       if (!supabase) { if (alive) setLoading(false); return; }
       const { data, error } = await supabase
         .from('portfolio_projects')
-        .select('id, title, category, description, image, website_url, tags')
+        .select('id, title, subtitle, category, description, image, website_url, tags')
         .eq('is_active', true)
         .order('created_at', { ascending: false });
       if (!alive) return;
@@ -98,7 +98,7 @@ const PortfolioPage = () => {
                       <span className="case-live">● En vivo</span>
                     </div>
                     <div className="case-body">
-                      <span className="case-category">{p.category}</span>
+                      <span className="case-category">{p.subtitle || p.category}</span>
                       <h3>{p.title}</h3>
                       <p>{p.description}</p>
                       <span className="case-link">Ver la demo <ArrowUpRight size={18} /></span>

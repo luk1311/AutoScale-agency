@@ -71,7 +71,7 @@ const ProjectDetails = () => {
           <Link to="/portafolio" className="pf-page-back"><ArrowLeft size={16} /> Volver al portafolio</Link>
 
           <div className="pd-hero">
-            <span className="eyebrow">{project.category}</span>
+            <span className="eyebrow">{project.subtitle || project.category}</span>
             <h1 className="pd-title">{project.title}</h1>
           </div>
 
