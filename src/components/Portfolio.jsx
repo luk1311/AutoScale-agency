@@ -27,7 +27,6 @@ const TONES = ['rose', 'amber'];
 const Portfolio = ({ openModal }) => {
   // null = cargando; luego siempre un array (real o de respaldo).
   const [projects, setProjects] = useState(null);
-  const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -38,21 +37,20 @@ const Portfolio = ({ openModal }) => {
         return;
       }
 
-      // Traemos 3 para saber si hay más de 2 (mostramos 2 + link "ver todos").
+      // En el home mostramos los 2 casos más recientes; el resto vive en /portafolio.
       const { data, error } = await supabase
         .from('portfolio_projects')
         .select('id, title, category, description, image, website_url, tags')
         .eq('is_active', true)
         .order('created_at', { ascending: false })
-        .limit(3);
+        .limit(2);
 
       if (!alive) return;
 
       if (error || !data || data.length === 0) {
         setProjects(FALLBACK_PROJECTS);
       } else {
-        setHasMore(data.length > 2);
-        setProjects(data.slice(0, 2));
+        setProjects(data);
       }
     };
 
@@ -120,13 +118,11 @@ const Portfolio = ({ openModal }) => {
           </button>
         </div>
 
-        {hasMore && (
-          <div className="cases-more">
-            <Link to="/portafolio" className="cases-more-link">
-              Ver todos los casos <ArrowUpRight size={16} />
-            </Link>
-          </div>
-        )}
+        <div className="cases-more">
+          <Link to="/portafolio" className="btn btn-outline cases-more-btn">
+            Ver todos los proyectos <ArrowUpRight size={16} />
+          </Link>
+        </div>
       </div>
     </section>
   );

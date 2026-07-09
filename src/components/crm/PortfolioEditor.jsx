@@ -448,16 +448,6 @@ const PortfolioEditor = () => {
               </div>
 
               <div className="pf-field">
-                <label>Historia del proyecto (desafío y solución)</label>
-                <textarea
-                  value={activeProject.full_content || ''}
-                  onChange={(e) => updateField('full_content', e.target.value)}
-                  placeholder="El cliente llegaba con… construimos… y el resultado fue…"
-                  rows="5"
-                />
-              </div>
-
-              <div className="pf-field">
                 <div className="pf-metrics-head">
                   <label>Métricas destacadas</label>
                   <button className="btn btn-secondary pf-btn" onClick={addMetric} type="button">
