@@ -241,46 +241,6 @@
   white-space: nowrap;
 }
 
-/* Métricas */
-.pf-metrics-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-.pf-hint { font-size: .84rem; color: var(--muted); margin: .2rem 0 0; }
-
-.pf-metric-row {
-  display: grid;
-  grid-template-columns: 130px 1fr auto;
-  gap: .6rem;
-  align-items: center;
-  margin-top: .6rem;
-}
-.pf-metric-row input {
-  padding: .55rem .8rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--line-2);
-  background: var(--surface);
-  color: var(--ink);
-  font-size: .9rem;
-  font-family: var(--font-body);
-}
-.pf-metric-row input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-.pf-metric-value { font-family: var(--font-mono) !important; font-weight: 600; }
-
-.pf-metric-del {
-  border: 1px solid var(--line-2);
-  background: var(--surface);
-  color: #B91C1C;
-  border-radius: var(--radius-md);
-  padding: .5rem .6rem;
-  cursor: pointer;
-  transition: all .15s ease;
-  display: inline-flex;
-}
-.pf-metric-del:hover { background: #FEF2F2; border-color: #FECACA; }
-
 /* ── Vista previa (columna derecha, pegajosa) ── */
 .pf-preview { position: sticky; top: 90px; align-self: start; }
 
@@ -355,16 +315,13 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.pf-card-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
-.pf-card-tags span {
-  font-family: var(--font-mono);
-  font-size: .64rem;
+.pf-card-demo {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
   font-weight: 600;
-  color: var(--ink-2);
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-full);
-  padding: .2rem .55rem;
+  font-size: .84rem;
+  color: var(--accent);
 }
 
 /* ── Responsive ── */

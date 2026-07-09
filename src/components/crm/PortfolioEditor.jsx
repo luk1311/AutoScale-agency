@@ -77,7 +77,6 @@ const PortfolioEditor = () => {
       tags: [],
       website_url: '',
       full_content: '',
-      metrics: [],
       is_active: false,
     });
     resetFileState();
@@ -252,22 +251,6 @@ const PortfolioEditor = () => {
       setActiveProject(prev => ({ ...prev, tags: newTags, _rawTags: newTags.join(', ') }));
       setDirty(true);
     }
-  };
-
-  const addMetric = () => {
-    updateField('metrics', [...(activeProject.metrics || []), { value: '', label: '' }]);
-  };
-
-  const updateMetric = (index, field, value) => {
-    const newMetrics = [...(activeProject.metrics || [])];
-    newMetrics[index][field] = value;
-    updateField('metrics', newMetrics);
-  };
-
-  const removeMetric = (index) => {
-    const newMetrics = [...(activeProject.metrics || [])];
-    newMetrics.splice(index, 1);
-    updateField('metrics', newMetrics);
   };
 
   // Si el proyecto trae una categoría vieja que ya no ofrecemos, se conserva en la lista.
@@ -446,38 +429,6 @@ const PortfolioEditor = () => {
                   placeholder="https://cliente.vercel.app"
                 />
               </div>
-
-              <div className="pf-field">
-                <div className="pf-metrics-head">
-                  <label>Métricas destacadas</label>
-                  <button className="btn btn-secondary pf-btn" onClick={addMetric} type="button">
-                    <Plus size={14} /> Añadir
-                  </button>
-                </div>
-                {(!activeProject.metrics || activeProject.metrics.length === 0) && (
-                  <p className="pf-hint">Ej. “+40 citas/mes” o “respuesta en 1 min”. Los números venden.</p>
-                )}
-                {(activeProject.metrics || []).map((metric, index) => (
-                  <div key={index} className="pf-metric-row">
-                    <input
-                      type="text"
-                      className="pf-metric-value"
-                      value={metric.value}
-                      onChange={(e) => updateMetric(index, 'value', e.target.value)}
-                      placeholder="+40"
-                    />
-                    <input
-                      type="text"
-                      value={metric.label}
-                      onChange={(e) => updateMetric(index, 'label', e.target.value)}
-                      placeholder="citas al mes"
-                    />
-                    <button className="pf-metric-del" onClick={() => removeMetric(index)} title="Quitar" type="button">
-                      <Trash2 size={15} />
-                    </button>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Vista previa en vivo (misma tarjeta que la web) */}
@@ -496,11 +447,7 @@ const PortfolioEditor = () => {
                   <span className="pf-card-cat">{activeProject.category || 'Categoría'}</span>
                   <h4>{activeProject.title || 'Título del proyecto'}</h4>
                   <p>{activeProject.description || 'La descripción corta aparecerá aquí.'}</p>
-                  <div className="pf-card-tags">
-                    {(activeProject.tags || []).slice(0, 3).map((tag, i) => (
-                      <span key={i}>{tag}</span>
-                    ))}
-                  </div>
+                  <span className="pf-card-demo">Ver la demo ↗</span>
                 </div>
               </div>
             </aside>
