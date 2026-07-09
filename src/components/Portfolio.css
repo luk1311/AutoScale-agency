@@ -57,6 +57,13 @@
 }
 .tone-ink .case-initial { color: #7EA4F8; }
 
+.case-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .case-live {
   position: absolute;
   top: 12px;
@@ -107,6 +114,21 @@
 .case-card:hover .case-link { color: var(--accent-d); }
 
 .case-cta { background: var(--surface-2); }
+
+.cases-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.2rem;
+}
+.cases-more-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-weight: 600;
+  font-size: .95rem;
+  color: var(--accent);
+}
+.cases-more-link:hover { color: var(--accent-d); }
 
 @media (max-width: 900px) {
   .cases-grid { grid-template-columns: 1fr; }
