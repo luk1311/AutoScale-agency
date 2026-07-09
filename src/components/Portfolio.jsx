@@ -9,14 +9,14 @@ const FALLBACK_PROJECTS = [
   {
     id: 'fallback-nail',
     title: 'Nail Studio',
-    category: 'Salón de uñas · Barranquilla',
+    subtitle: 'Salón de uñas · Barranquilla',
     description: 'Las clientas agendan solas por WhatsApp: formulario, confirmación automática y panel de citas.',
     website_url: 'https://nail-studio-tau-five.vercel.app',
   },
   {
     id: 'fallback-multicasas',
     title: 'MultiCasas Prefabricadas',
-    category: 'Constructora · Colombia',
+    subtitle: 'Constructora · Colombia',
     description: 'Cotizador interactivo que captura al interesado y dispara WhatsApp + correo al equipo de ventas.',
     website_url: 'https://multicasas-web.vercel.app/',
   },

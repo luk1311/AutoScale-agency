@@ -71,6 +71,7 @@ const PortfolioEditor = () => {
     setActiveProject({
       id: 'new',
       title: 'Nuevo Proyecto',
+      subtitle: '',
       category: 'Desarrollo Web',
       description: '',
       image: '',
@@ -346,17 +347,17 @@ const PortfolioEditor = () => {
                     type="text"
                     value={activeProject.title}
                     onChange={(e) => updateField('title', e.target.value)}
-                    placeholder="Ej. Nail Studio — agenda por WhatsApp"
+                    placeholder="Ej. Nail Studio"
                   />
                 </div>
                 <div className="pf-field">
-                  <label>Categoría</label>
-                  <select
-                    value={activeProject.category}
-                    onChange={(e) => updateField('category', e.target.value)}
-                  >
-                    {categoryOptions.map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
+                  <label>Subtítulo (aparece en la tarjeta)</label>
+                  <input
+                    type="text"
+                    value={activeProject.subtitle || ''}
+                    onChange={(e) => updateField('subtitle', e.target.value)}
+                    placeholder="Ej. Salón de uñas · Barranquilla"
+                  />
                 </div>
               </div>
 
@@ -404,6 +405,21 @@ const PortfolioEditor = () => {
                 </div>
               </div>
 
+              <div className="pf-divider">
+                <span>Organización interna (no se ve en público)</span>
+              </div>
+
+              <div className="pf-field">
+                <label>Categoría</label>
+                <select
+                  value={activeProject.category}
+                  onChange={(e) => updateField('category', e.target.value)}
+                >
+                  {categoryOptions.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+                <span className="pf-field-hint">Solo para organizar y filtrar tus proyectos — no aparece en la tarjeta.</span>
+              </div>
+
               <label className="pf-toggle">
                 <input
                   type="checkbox"
@@ -444,7 +460,7 @@ const PortfolioEditor = () => {
                   {activeProject.is_active && <span className="pf-card-live">● En vivo</span>}
                 </div>
                 <div className="pf-card-body">
-                  <span className="pf-card-cat">{activeProject.category || 'Categoría'}</span>
+                  <span className="pf-card-cat">{activeProject.subtitle || 'Subtítulo del proyecto'}</span>
                   <h4>{activeProject.title || 'Título del proyecto'}</h4>
                   <p>{activeProject.description || 'La descripción corta aparecerá aquí.'}</p>
                   <span className="pf-card-demo">Ver la demo ↗</span>

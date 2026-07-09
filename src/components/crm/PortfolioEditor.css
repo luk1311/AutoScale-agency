@@ -137,6 +137,11 @@
   color: var(--muted);
 }
 
+.pf-field-hint {
+  font-size: .8rem;
+  color: var(--muted);
+}
+
 .pf-field input[type="text"],
 .pf-field select,
 .pf-field textarea {
