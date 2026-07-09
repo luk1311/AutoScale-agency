@@ -118,17 +118,68 @@
 .cases-more {
   display: flex;
   justify-content: center;
-  margin-top: 2.2rem;
+  margin-top: 2.5rem;
 }
-.cases-more-link {
+.cases-more-btn { padding: .85rem 1.7rem; }
+
+/* ── Página /portafolio (ver todos los proyectos) ── */
+.pf-page {
+  background: var(--bg);
+  min-height: 100vh;
+  padding: 7.5rem 0 5rem;
+}
+
+.pf-page-back {
   display: inline-flex;
   align-items: center;
   gap: .4rem;
+  font-size: .9rem;
   font-weight: 600;
-  font-size: .95rem;
-  color: var(--accent);
+  color: var(--muted);
+  margin-bottom: 2rem;
 }
-.cases-more-link:hover { color: var(--accent-d); }
+.pf-page-back:hover { color: var(--accent-d); }
+
+.pf-page-head { max-width: 720px; margin-bottom: 2.2rem; }
+.pf-page-head .eyebrow { margin-bottom: 1rem; }
+.pf-page-head h2 { font-size: clamp(2rem, 4.4vw, 3.1rem); }
+
+.pf-page-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-bottom: 2.5rem;
+}
+.pf-page-filter {
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-family: var(--font-body);
+  font-size: .88rem;
+  font-weight: 600;
+  padding: .5rem 1.1rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all .18s ease;
+}
+.pf-page-filter:hover { border-color: var(--accent-line); color: var(--accent-d); }
+.pf-page-filter.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.pf-page-state {
+  text-align: center;
+  padding: 5rem 1rem;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 900px) {
   .cases-grid { grid-template-columns: 1fr; }

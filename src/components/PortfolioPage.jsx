@@ -1,122 +1,128 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import Header from './Header';
 import FooterCTA from './FooterCTA';
 import ContactModal from './ContactModal';
 import './Portfolio.css';
 
+const TONES = ['rose', 'amber'];
+
 const PortfolioPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filter, setFilter] = useState('Todos');
-  const [allProjects, setAllProjects] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
-    const fetchProjects = async () => {
-      if (!supabase) {
-        setLoading(false);
-        return;
-      }
-      
+    let alive = true;
+
+    const load = async () => {
+      if (!supabase) { if (alive) setLoading(false); return; }
       const { data, error } = await supabase
         .from('portfolio_projects')
-        .select('*')
+        .select('id, title, category, description, image, website_url, tags')
         .eq('is_active', true)
         .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching portfolio:', error);
-      } else {
-        setAllProjects(data || []);
-      }
+      if (!alive) return;
+      if (!error && data) setProjects(data);
       setLoading(false);
     };
 
-    fetchProjects();
+    load();
+    return () => { alive = false; };
   }, []);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const categories = ['Todos', 'Desarrollo Web', 'E-commerce', 'IA & Automatización', 'Meta Ads', 'UI/UX', 'Otros'];
+  // Categorías reales, derivadas de los proyectos publicados.
+  const categories = useMemo(() => {
+    const set = new Set(projects.map((p) => p.category).filter(Boolean));
+    return ['Todos', ...Array.from(set)];
+  }, [projects]);
 
-  const filteredProjects = filter === 'Todos' 
-    ? allProjects 
-    : allProjects.filter(p => p.category.includes(filter));
+  const filtered = filter === 'Todos' ? projects : projects.filter((p) => p.category === filter);
 
   return (
     <div className="app-container">
       <Header openModal={openModal} />
-      
-      <main className="portfolio-page" style={{ paddingTop: '100px', minHeight: '100vh' }}>
+
+      <main className="pf-page">
         <div className="container">
-          
-          <div className="portfolio-header" style={{ marginBottom: '3rem', textAlign: 'center' }}>
-            <Link to="/" className="back-link" style={{ display: 'inline-flex', alignItems: 'center', color: 'var(--text-muted)', textDecoration: 'none', marginBottom: '2rem', transition: 'color 0.3s' }} onMouseOver={(e) => e.target.style.color = 'var(--accent-primary)'} onMouseOut={(e) => e.target.style.color = 'var(--text-muted)'}>
-              <ArrowLeft size={18} style={{ marginRight: '8px' }} /> Volver al Inicio
-            </Link>
-            <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Proyectos <span className="text-gradient">Destacados</span></h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
-              Explora en detalle cómo hemos ayudado a empresas a escalar con tecnología y diseño de primer nivel.
-            </p>
+          <Link to="/" className="pf-page-back"><ArrowLeft size={16} /> Volver al inicio</Link>
+
+          <div className="cases-head pf-page-head">
+            <span className="eyebrow">Portafolio</span>
+            <h2>Sistemas que ya están<br />trabajando por un negocio.</h2>
           </div>
 
-          <div className="portfolio-filters" style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '4rem' }}>
-            {categories.map(cat => (
-              <button 
-                key={cat}
-                onClick={() => setFilter(cat)}
-                style={{
-                  background: filter === cat ? 'var(--ink)' : '#ffffff',
-                  border: `1px solid ${filter === cat ? 'var(--ink)' : 'rgba(0,0,0,0.08)'}`,
-                  color: filter === cat ? '#ffffff' : 'var(--ink)',
-                  padding: '0.6rem 1.5rem',
-                  borderRadius: '50px',
-                  cursor: 'pointer',
-                  fontWeight: '600',
-                  boxShadow: filter === cat ? '0 4px 12px rgba(0,0,0,0.1)' : '0 2px 8px rgba(0,0,0,0.02)',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+          {categories.length > 2 && (
+            <div className="pf-page-filters">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  className={`pf-page-filter ${filter === cat ? 'active' : ''}`}
+                  onClick={() => setFilter(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
 
-          <div className="portfolio-grid">
-            {loading ? (
-              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '5rem 0', color: 'var(--text-muted)' }}>
-                <Loader2 className="animate-spin" size={48} style={{ margin: '0 auto 1rem' }} />
-                <p style={{ fontSize: '1.2rem' }}>Cargando portafolio...</p>
-              </div>
-            ) : filteredProjects.length === 0 ? (
-              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '5rem 0', color: 'var(--text-muted)' }}>
-                <p style={{ fontSize: '1.2rem' }}>No se encontraron proyectos en esta categoría.</p>
-              </div>
-            ) : (
-              filteredProjects.map((project, index) => (
-              <Link to={`/portafolio/${project.id}`} className="portfolio-card" key={index} style={{ textDecoration: 'none' }}>
-                <div className="portfolio-image-wrapper">
-                  <img src={project.image} alt={project.title} className="portfolio-image" />
-                </div>
-                <div className="portfolio-content">
-                  <span className="portfolio-category">{project.category}</span>
-                  <h3 className="portfolio-title">{project.title}</h3>
-                  <div className="portfolio-tags">
-                    {(project.tags || []).map((tag, i) => (
-                      <span className="portfolio-tag" key={i}>{tag}</span>
-                    ))}
-                  </div>
-                </div>
-              </Link>
-              ))
-            )}
-          </div>
-
+          {loading ? (
+            <div className="pf-page-state">
+              <Loader2 size={38} style={{ animation: 'spin 1s linear infinite' }} />
+              <p>Cargando proyectos…</p>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="pf-page-state">
+              <p>Aún no hay proyectos publicados aquí.</p>
+            </div>
+          ) : (
+            <div className="cases-grid">
+              {filtered.map((p, i) => {
+                const initial = `${(p.title || '?').trim().charAt(0).toUpperCase()}.`;
+                const href = p.website_url;
+                const inner = (
+                  <>
+                    <div className={`case-visual tone-${TONES[i % TONES.length]}`}>
+                      {p.image ? (
+                        <img className="case-image" src={p.image} alt={p.title} />
+                      ) : (
+                        <span className="case-initial">{initial}</span>
+                      )}
+                      <span className="case-live">● En vivo</span>
+                    </div>
+                    <div className="case-body">
+                      <span className="case-category">{p.category}</span>
+                      <h3>{p.title}</h3>
+                      <p>{p.description}</p>
+                      <span className="case-link">Ver la demo <ArrowUpRight size={18} /></span>
+                    </div>
+                  </>
+                );
+                return href ? (
+                  <a
+                    key={p.id}
+                    className="case-card"
+                    href={href.startsWith('http') ? href : `https://${href}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {inner}
+                  </a>
+                ) : (
+                  <Link key={p.id} className="case-card" to={`/portafolio/${p.id}`}>
+                    {inner}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </main>
 

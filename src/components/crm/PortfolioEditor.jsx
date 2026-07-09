@@ -434,7 +434,7 @@ const PortfolioEditor = () => {
               </label>
 
               <div className="pf-divider">
-                <span>Página del proyecto (detalles extendidos)</span>
+                <span>Detalles adicionales</span>
               </div>
 
               <div className="pf-field">
