@@ -1,9 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Plus, Save, Trash2, Image as ImageIcon, CheckCircle2, Loader2, Upload } from 'lucide-react';
+import {
+  Plus, Save, Trash2, Image as ImageIcon, CheckCircle2, Loader2,
+  Upload, ExternalLink, Eye, EyeOff,
+} from 'lucide-react';
 import './PortfolioEditor.css';
 
-const SUGGESTED_TAGS = ['Shopify', 'React', 'Klaviyo', 'Web Design', 'SEO', 'Meta Ads', 'Make.com', 'Next.js', 'UI/UX'];
+// Etiquetas del stack real de AutoScale (lo que de verdad vendemos).
+const SUGGESTED_TAGS = ['React', 'Supabase', 'n8n', 'WhatsApp', 'IA', 'CRM', 'Landing', 'Automatización', 'SEO'];
+
+const CATEGORIES = ['Desarrollo Web', 'IA & Automatización', 'CRM', 'E-commerce', 'Otros'];
+
+const MAX_IMAGE_MB = 4;
 
 const PortfolioEditor = () => {
   const [projects, setProjects] = useState([]);
@@ -12,9 +20,9 @@ const PortfolioEditor = () => {
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
+  const [dirty, setDirty] = useState(false);
   const fileInputRef = useRef(null);
-  
-  // Selected project for editing
+
   const [activeProject, setActiveProject] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
 
@@ -46,7 +54,20 @@ const PortfolioEditor = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Cambiar de proyecto con cambios sin guardar pide confirmación.
+  const guardDirty = () => {
+    if (!dirty) return true;
+    return window.confirm('Tienes cambios sin guardar. ¿Descartarlos?');
+  };
+
+  const resetFileState = () => {
+    setSelectedFile(null);
+    setPreviewUrl('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
   const handleCreateNew = () => {
+    if (!guardDirty()) return;
     setActiveProject({
       id: 'new',
       title: 'Nuevo Proyecto',
@@ -57,21 +78,20 @@ const PortfolioEditor = () => {
       website_url: '',
       full_content: '',
       metrics: [],
-      is_active: false
+      is_active: false,
     });
-    setSelectedFile(null);
-    setPreviewUrl('');
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    resetFileState();
+    setDirty(true);
   };
 
   const handleProjectSelect = (project) => {
+    if (activeProject?.id === project.id) return;
+    if (!guardDirty()) return;
     setActiveProject(project);
-    setSelectedFile(null);
-    setPreviewUrl('');
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    resetFileState();
+    setDirty(false);
   };
 
-  // Helper function to extract file path from public URL
   const getStoragePathFromUrl = (url) => {
     if (!url || !url.includes('supabase.co/storage/v1/object/public/portfolio_images/')) return null;
     return url.split('portfolio_images/')[1];
@@ -84,48 +104,59 @@ const PortfolioEditor = () => {
     }
   };
 
-  const handleSave = async () => {
-    if (!activeProject.title) {
-      alert("El título es obligatorio");
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > MAX_IMAGE_MB * 1024 * 1024) {
+      showToast(`La imagen supera ${MAX_IMAGE_MB}MB — usa una más liviana`);
+      if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
-    
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setDirty(true);
+  };
+
+  const handleSave = async () => {
+    if (!activeProject.title || !activeProject.title.trim()) {
+      showToast('El título es obligatorio');
+      return;
+    }
+    if (!activeProject.image && !selectedFile) {
+      showToast('El proyecto necesita una imagen');
+      return;
+    }
+
     setSaving(true);
     let finalImageUrl = activeProject.image;
 
-    // Subir la imagen si hay una nueva seleccionada
     if (selectedFile) {
       setUploading(true);
       const fileExt = selectedFile.name.split('.').pop();
       const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-      
+
       const { error: uploadError } = await supabase.storage
         .from('portfolio_images')
         .upload(fileName, selectedFile);
-        
+
       if (uploadError) {
         console.error('Error subiendo imagen:', uploadError);
-        alert('Error al subir la imagen. Revisa los permisos del Storage en Supabase.');
+        showToast('Error al subir la imagen (revisa el Storage de Supabase)');
         setSaving(false);
         setUploading(false);
         return;
       }
-      
+
       const { data: { publicUrl } } = supabase.storage
         .from('portfolio_images')
         .getPublicUrl(fileName);
-        
+
       finalImageUrl = publicUrl;
-      
-      // Borrar imagen anterior si existía en storage
+
       if (activeProject.image) {
         await deleteStorageImage(activeProject.image);
       }
       setUploading(false);
-    } else if (!activeProject.image && !selectedFile) {
-      alert("Debes seleccionar una imagen para el proyecto.");
-      setSaving(false);
-      return;
     }
 
     // eslint-disable-next-line no-unused-vars
@@ -133,7 +164,6 @@ const PortfolioEditor = () => {
     projectData.image = finalImageUrl;
 
     if (id === 'new') {
-      // Insert
       const { data, error } = await supabase
         .from('portfolio_projects')
         .insert([projectData])
@@ -141,14 +171,14 @@ const PortfolioEditor = () => {
 
       if (error) {
         console.error('Error insertando:', error);
-        alert("Error al guardar el proyecto");
+        showToast('Error al guardar el proyecto');
       } else {
-        showToast('Proyecto creado exitosamente');
+        showToast('Proyecto creado ✓');
         setProjects([data[0], ...projects]);
         setActiveProject(data[0]);
+        setDirty(false);
       }
     } else {
-      // Update
       const { error } = await supabase
         .from('portfolio_projects')
         .update(projectData)
@@ -156,32 +186,31 @@ const PortfolioEditor = () => {
 
       if (error) {
         console.error('Error actualizando:', error);
-        alert("Error al actualizar el proyecto");
+        showToast('Error al actualizar el proyecto');
       } else {
-        showToast('Proyecto actualizado');
+        showToast('Cambios guardados ✓');
         setProjects(projects.map(p => p.id === id ? { ...activeProject, image: finalImageUrl } : p));
+        setActiveProject(prev => ({ ...prev, image: finalImageUrl }));
+        setDirty(false);
       }
     }
-    
-    setSelectedFile(null);
-    setPreviewUrl('');
-    if (fileInputRef.current) fileInputRef.current.value = '';
+
+    resetFileState();
     setSaving(false);
   };
 
   const handleDelete = async (id) => {
     if (id === 'new') {
       setActiveProject(projects[0] || null);
-      setSelectedFile(null);
-      setPreviewUrl('');
+      resetFileState();
+      setDirty(false);
       return;
     }
 
-    if (!window.confirm('¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.')) {
+    if (!window.confirm('¿Eliminar este proyecto? Esta acción no se puede deshacer.')) {
       return;
     }
-    
-    // Encontrar el proyecto para borrar su imagen
+
     const projectToDelete = projects.find(p => p.id === id);
 
     const { error } = await supabase
@@ -191,43 +220,42 @@ const PortfolioEditor = () => {
 
     if (error) {
       console.error('Error eliminando:', error);
-      alert("Error al eliminar");
+      showToast('Error al eliminar');
     } else {
-      // Borrar la imagen de storage
       if (projectToDelete && projectToDelete.image) {
         await deleteStorageImage(projectToDelete.image);
       }
-      
       showToast('Proyecto eliminado');
       const filtered = projects.filter(p => p.id !== id);
       setProjects(filtered);
       setActiveProject(filtered.length > 0 ? filtered[0] : null);
+      setDirty(false);
     }
   };
 
   const updateField = (field, value) => {
     setActiveProject(prev => ({ ...prev, [field]: value }));
+    setDirty(true);
   };
 
-  // Helper para manejar el input de tags (separado por comas a array)
   const handleTagsChange = (e) => {
     const value = e.target.value;
     const tagsArray = value.split(',').map(t => t.trim()).filter(t => t !== '');
     setActiveProject(prev => ({ ...prev, tags: tagsArray, _rawTags: value }));
+    setDirty(true);
   };
 
   const handleAddSuggestedTag = (tag) => {
     const currentTags = activeProject.tags || [];
     if (!currentTags.includes(tag)) {
       const newTags = [...currentTags, tag];
-      const newRawTags = newTags.join(', ');
-      setActiveProject(prev => ({ ...prev, tags: newTags, _rawTags: newRawTags }));
+      setActiveProject(prev => ({ ...prev, tags: newTags, _rawTags: newTags.join(', ') }));
+      setDirty(true);
     }
   };
 
   const addMetric = () => {
-    const currentMetrics = activeProject.metrics || [];
-    updateField('metrics', [...currentMetrics, { value: '', label: '' }]);
+    updateField('metrics', [...(activeProject.metrics || []), { value: '', label: '' }]);
   };
 
   const updateMetric = (index, field, value) => {
@@ -242,307 +270,268 @@ const PortfolioEditor = () => {
     updateField('metrics', newMetrics);
   };
 
+  // Si el proyecto trae una categoría vieja que ya no ofrecemos, se conserva en la lista.
+  const categoryOptions = activeProject && activeProject.category && !CATEGORIES.includes(activeProject.category)
+    ? [activeProject.category, ...CATEGORIES]
+    : CATEGORIES;
+
   if (loading) {
     return (
-      <div className="portfolio-editor-loading">
-        <Loader2 className="animate-spin" size={48} color="var(--accent-primary)" />
-        <p>Cargando portafolio...</p>
+      <div className="pf-loading glass-panel">
+        <Loader2 className="animate-spin" size={40} style={{ animation: 'spin 1s linear infinite' }} />
+        <p>Cargando portafolio…</p>
       </div>
     );
   }
 
   return (
-    <div className="portfolio-editor-container">
-      {/* Sidebar: Lista de proyectos */}
-      <div className="portfolio-sidebar glass-panel">
-        <div className="portfolio-sidebar-header">
-          <h3>Tus Proyectos</h3>
-          <button className="btn btn-primary btn-sm" onClick={handleCreateNew}>
-            <Plus size={16} /> Nuevo
-          </button>
+    <>
+      {/* Barra de proyectos — mismo lenguaje que la toolbar del CRM */}
+      <div className="pf-bar glass-panel">
+        <div className="pf-bar-info">
+          <h2>Portafolio</h2>
+          <span>Los proyectos publicados aparecen en tu web</span>
         </div>
-        
-        <div className="portfolio-list">
-          {projects.length === 0 && activeProject?.id !== 'new' && (
-            <p className="portfolio-empty text-muted">No tienes proyectos aún.</p>
-          )}
-          
+        <div className="pf-chips">
           {activeProject?.id === 'new' && (
-            <div className={`portfolio-list-item active`}>
-              <span className="status-dot draft"></span>
-              <div className="portfolio-list-info">
-                <strong>Nuevo Proyecto</strong>
-                <span>Sin guardar</span>
-              </div>
-            </div>
+            <button className="pf-chip active" type="button">
+              <span className="pf-dot draft" />
+              Nuevo proyecto
+            </button>
           )}
-
           {projects.map(project => (
-            <div 
-              key={project.id} 
-              className={`portfolio-list-item ${activeProject?.id === project.id ? 'active' : ''}`}
+            <button
+              key={project.id}
+              type="button"
+              className={`pf-chip ${activeProject?.id === project.id ? 'active' : ''}`}
               onClick={() => handleProjectSelect(project)}
             >
-              <span className={`status-dot ${project.is_active ? 'active' : 'draft'}`}></span>
-              <div className="portfolio-list-info">
-                <strong>{project.title}</strong>
-                <span>{project.category}</span>
-              </div>
-            </div>
+              <span className={`pf-dot ${project.is_active ? 'live' : 'draft'}`} />
+              {project.title}
+            </button>
           ))}
         </div>
+        <button className="btn btn-primary pf-new" onClick={handleCreateNew}>
+          <Plus size={16} /> Nuevo
+        </button>
       </div>
 
-      {/* Editor principal (Formulario) */}
-      <div className="portfolio-main glass-panel">
-        {activeProject ? (
-          <>
-            <div className="portfolio-main-header">
-              <h2>{activeProject.id === 'new' ? 'Crear Proyecto' : 'Editar Proyecto'}</h2>
-              <div className="portfolio-actions">
-                <button 
-                  className="btn btn-secondary btn-sm" 
-                  onClick={() => handleDelete(activeProject.id)}
-                  style={{ color: '#ff4d4d', borderColor: 'rgba(255, 77, 77, 0.3)' }}
-                >
-                  <Trash2 size={16} /> Eliminar
-                </button>
-                <button 
-                  className="btn btn-primary btn-sm" 
-                  onClick={handleSave}
-                  disabled={saving || uploading}
-                >
-                  {(saving || uploading) ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />} 
-                  {uploading ? 'Subiendo imagen...' : saving ? 'Guardando...' : 'Guardar'}
-                </button>
+      {activeProject ? (
+        <div className="pf-editor glass-panel">
+          {/* Cabecera del editor — como la de la tabla de leads */}
+          <div className="pf-editor-head">
+            <div className="pf-editor-title">
+              <h3>{activeProject.id === 'new' ? 'Crear proyecto' : activeProject.title}</h3>
+              <div className="pf-badges">
+                <span className={`pf-state ${activeProject.is_active ? 'live' : 'draft'}`}>
+                  {activeProject.is_active ? <Eye size={13} /> : <EyeOff size={13} />}
+                  {activeProject.is_active ? 'Publicado' : 'Borrador'}
+                </span>
+                {dirty && <span className="pf-state dirty">● Cambios sin guardar</span>}
               </div>
             </div>
+            <div className="pf-actions">
+              {activeProject.website_url && (
+                <a
+                  className="btn btn-secondary pf-btn"
+                  href={activeProject.website_url.startsWith('http') ? activeProject.website_url : `https://${activeProject.website_url}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink size={15} /> Ver en la web
+                </a>
+              )}
+              <button className="btn btn-secondary pf-btn pf-danger" onClick={() => handleDelete(activeProject.id)}>
+                <Trash2 size={15} /> Eliminar
+              </button>
+              <button className="btn btn-primary pf-btn" onClick={handleSave} disabled={saving || uploading}>
+                {(saving || uploading)
+                  ? <Loader2 size={15} style={{ animation: 'spin 1s linear infinite' }} />
+                  : <Save size={15} />}
+                {uploading ? 'Subiendo imagen…' : saving ? 'Guardando…' : 'Guardar'}
+              </button>
+            </div>
+          </div>
 
-            <div className="portfolio-form">
-              <div className="form-row two-cols">
-                <div className="form-group">
-                  <label>Título del Proyecto *</label>
-                  <input 
-                    type="text" 
-                    value={activeProject.title} 
+          {/* Cuerpo: formulario + vista previa en el MISMO panel */}
+          <div className="pf-body">
+            <div className="pf-form">
+              <div className="pf-row">
+                <div className="pf-field">
+                  <label>Título del proyecto *</label>
+                  <input
+                    type="text"
+                    value={activeProject.title}
                     onChange={(e) => updateField('title', e.target.value)}
-                    placeholder="Ej. E-commerce Escalable"
+                    placeholder="Ej. Nail Studio — agenda por WhatsApp"
                   />
                 </div>
-                <div className="form-group">
+                <div className="pf-field">
                   <label>Categoría</label>
-                  <select 
-                    value={activeProject.category} 
+                  <select
+                    value={activeProject.category}
                     onChange={(e) => updateField('category', e.target.value)}
                   >
-                    <option value="Desarrollo Web">Desarrollo Web</option>
-                    <option value="E-commerce">E-commerce</option>
-                    <option value="IA & Automatización">IA & Automatización</option>
-                    <option value="Meta Ads">Meta Ads</option>
-                    <option value="UI/UX">UI/UX</option>
-                    <option value="Otros">Otros</option>
+                    {categoryOptions.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
               </div>
 
-              <div className="form-group">
+              <div className="pf-field">
                 <label>Descripción corta</label>
-                <textarea 
-                  value={activeProject.description} 
+                <textarea
+                  value={activeProject.description}
                   onChange={(e) => updateField('description', e.target.value)}
-                  placeholder="Describe brevemente los logros o la solución aportada..."
+                  placeholder="Qué problema resolviste y qué logró el cliente…"
                   rows="3"
-                ></textarea>
+                />
               </div>
 
-              <div className="form-row two-cols">
-                <div className="form-group">
-                  <label>Imagen del Proyecto (Recomendado: 800x600px) *</label>
-                  <div className="file-upload-wrapper">
-                    <input 
-                      type="file" 
-                      accept="image/*"
-                      ref={fileInputRef}
-                      onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                          setSelectedFile(file);
-                          setPreviewUrl(URL.createObjectURL(file));
-                        }
-                      }}
-                      className="file-input-hidden"
-                      id="file-upload"
-                    />
-                    <label htmlFor="file-upload" className="file-upload-button">
-                      <Upload size={18} /> Seleccionar Imagen Local
-                    </label>
-                    <span className="file-upload-name">
-                      {selectedFile ? selectedFile.name : activeProject.image ? "Imagen actual cargada" : "Ningún archivo seleccionado"}
-                    </span>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label>Etiquetas (separadas por coma)</label>
-                  <input 
-                    type="text" 
-                    value={activeProject._rawTags !== undefined ? activeProject._rawTags : (activeProject.tags || []).join(', ')} 
-                    onChange={handleTagsChange}
-                    placeholder="Shopify, React, Klaviyo..."
+              <div className="pf-row">
+                <div className="pf-field">
+                  <label>Imagen (recomendado 800×600) *</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    className="pf-file-hidden"
+                    id="pf-file-upload"
                   />
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.8rem' }}>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}>Sugerencias:</span>
-                    {SUGGESTED_TAGS.map(tag => (
-                      <span 
-                        key={tag} 
-                        onClick={() => handleAddSuggestedTag(tag)}
-                        style={{
-                          fontSize: '0.8rem',
-                          padding: '0.2rem 0.6rem',
-                          background: 'rgba(255,255,255,0.05)',
-                          border: '1px solid var(--glass-border)',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          color: 'var(--text-main)',
-                          transition: 'all 0.2s'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.background = 'var(--accent-primary)';
-                          e.target.style.borderColor = 'var(--accent-primary)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.background = 'rgba(255,255,255,0.05)';
-                          e.target.style.borderColor = 'var(--glass-border)';
-                        }}
-                      >
-                        + {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-group toggle-group">
-                <label className="toggle-label">
-                  <input 
-                    type="checkbox" 
-                    checked={activeProject.is_active} 
-                    onChange={(e) => updateField('is_active', e.target.checked)}
-                  />
-                  <span className="toggle-text">
-                    <strong>Visible al público</strong>
-                    <span className="text-muted text-small">Si está desactivado, no aparecerá en tu landing page ni portafolio.</span>
-                  </span>
-                </label>
-              </div>
-
-              <div className="form-group" style={{ marginTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '2rem' }}>
-                <h3 style={{ marginBottom: '1rem', color: 'var(--accent-primary)' }}>Detalles Extendidos (Página del Proyecto)</h3>
-                
-                <div className="form-group">
-                  <label>Enlace del sitio web (Opcional)</label>
-                  <input 
-                    type="text" 
-                    value={activeProject.website_url || ''} 
-                    onChange={(e) => updateField('website_url', e.target.value)}
-                    placeholder="https://www.ejemplo.com"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Historia del Proyecto (Desafío y Solución)</label>
-                  <textarea 
-                    value={activeProject.full_content || ''} 
-                    onChange={(e) => updateField('full_content', e.target.value)}
-                    placeholder="Describe en detalle cómo ayudaste a este cliente..."
-                    rows="6"
-                  ></textarea>
-                </div>
-
-                <div className="form-group">
-                  <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    Métricas Destacadas
-                    <button className="btn btn-secondary btn-sm" onClick={addMetric} type="button">
-                      <Plus size={14} /> Añadir Métrica
-                    </button>
+                  <label htmlFor="pf-file-upload" className="pf-upload">
+                    <Upload size={16} />
+                    {selectedFile ? selectedFile.name : activeProject.image ? 'Cambiar imagen' : 'Seleccionar imagen'}
                   </label>
-                  
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-                    {(!activeProject.metrics || activeProject.metrics.length === 0) && (
-                      <p className="text-muted text-small">No has añadido métricas. Añade algunas para mostrar los resultados obtenidos.</p>
-                    )}
-                    {(activeProject.metrics || []).map((metric, index) => (
-                      <div key={index} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '8px' }}>
-                        <div style={{ flex: 1 }}>
-                          <input 
-                            type="text" 
-                            value={metric.value} 
-                            onChange={(e) => updateMetric(index, 'value', e.target.value)}
-                            placeholder="Ej. +300% o $50K"
-                            style={{ marginBottom: '0.5rem', fontSize: '1.2rem', fontWeight: 'bold' }}
-                          />
-                          <input 
-                            type="text" 
-                            value={metric.label} 
-                            onChange={(e) => updateMetric(index, 'label', e.target.value)}
-                            placeholder="Ej. Aumento en Ventas"
-                          />
-                        </div>
-                        <button 
-                          className="btn btn-secondary btn-sm" 
-                          onClick={() => removeMetric(index)} 
-                          style={{ color: '#ff4d4d', borderColor: 'rgba(255, 77, 77, 0.3)', padding: '0.5rem' }}
-                          title="Eliminar métrica"
-                          type="button"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
+                </div>
+                <div className="pf-field">
+                  <label>Etiquetas (separadas por coma)</label>
+                  <input
+                    type="text"
+                    value={activeProject._rawTags !== undefined ? activeProject._rawTags : (activeProject.tags || []).join(', ')}
+                    onChange={handleTagsChange}
+                    placeholder="React, Supabase, WhatsApp…"
+                  />
+                  <div className="pf-suggestions">
+                    {SUGGESTED_TAGS.map(tag => (
+                      <button key={tag} type="button" className="pf-tag-suggest" onClick={() => handleAddSuggestedTag(tag)}>
+                        + {tag}
+                      </button>
                     ))}
                   </div>
                 </div>
               </div>
 
-              {/* Preview de la tarjeta */}
-              <div className="portfolio-preview-box">
-                <p className="preview-label">Vista Previa de Tarjeta:</p>
-                <div className="portfolio-card-mini">
-                  <div className="portfolio-image-wrapper-mini">
-                    {(previewUrl || activeProject.image) ? (
-                      <img src={previewUrl || activeProject.image} alt="Preview" />
-                    ) : (
-                      <div className="placeholder-image">Sin Imagen</div>
-                    )}
+              <label className="pf-toggle">
+                <input
+                  type="checkbox"
+                  checked={activeProject.is_active}
+                  onChange={(e) => updateField('is_active', e.target.checked)}
+                />
+                <span>
+                  <strong>Visible al público</strong>
+                  <em>Si está desactivado, no aparece en tu web ni en el portafolio.</em>
+                </span>
+              </label>
+
+              <div className="pf-divider">
+                <span>Página del proyecto (detalles extendidos)</span>
+              </div>
+
+              <div className="pf-field">
+                <label>Enlace del sitio en vivo (opcional)</label>
+                <input
+                  type="text"
+                  value={activeProject.website_url || ''}
+                  onChange={(e) => updateField('website_url', e.target.value)}
+                  placeholder="https://cliente.vercel.app"
+                />
+              </div>
+
+              <div className="pf-field">
+                <label>Historia del proyecto (desafío y solución)</label>
+                <textarea
+                  value={activeProject.full_content || ''}
+                  onChange={(e) => updateField('full_content', e.target.value)}
+                  placeholder="El cliente llegaba con… construimos… y el resultado fue…"
+                  rows="5"
+                />
+              </div>
+
+              <div className="pf-field">
+                <div className="pf-metrics-head">
+                  <label>Métricas destacadas</label>
+                  <button className="btn btn-secondary pf-btn" onClick={addMetric} type="button">
+                    <Plus size={14} /> Añadir
+                  </button>
+                </div>
+                {(!activeProject.metrics || activeProject.metrics.length === 0) && (
+                  <p className="pf-hint">Ej. “+40 citas/mes” o “respuesta en 1 min”. Los números venden.</p>
+                )}
+                {(activeProject.metrics || []).map((metric, index) => (
+                  <div key={index} className="pf-metric-row">
+                    <input
+                      type="text"
+                      className="pf-metric-value"
+                      value={metric.value}
+                      onChange={(e) => updateMetric(index, 'value', e.target.value)}
+                      placeholder="+40"
+                    />
+                    <input
+                      type="text"
+                      value={metric.label}
+                      onChange={(e) => updateMetric(index, 'label', e.target.value)}
+                      placeholder="citas al mes"
+                    />
+                    <button className="pf-metric-del" onClick={() => removeMetric(index)} title="Quitar" type="button">
+                      <Trash2 size={15} />
+                    </button>
                   </div>
-                  <div className="portfolio-content-mini">
-                    <span className="portfolio-category-mini">{activeProject.category || 'Categoría'}</span>
-                    <h3 className="portfolio-title-mini">{activeProject.title || 'Título del Proyecto'}</h3>
-                    <div className="portfolio-tags-mini">
-                      {(activeProject.tags || []).slice(0, 3).map((tag, i) => (
-                        <span className="portfolio-tag-mini" key={i}>{tag}</span>
-                      ))}
-                    </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Vista previa en vivo (misma tarjeta que la web) */}
+            <aside className="pf-preview">
+              <span className="pf-preview-label">Así se ve en tu web</span>
+              <div className="pf-card">
+                <div className="pf-card-img">
+                  {(previewUrl || activeProject.image) ? (
+                    <img src={previewUrl || activeProject.image} alt="Vista previa" />
+                  ) : (
+                    <div className="pf-card-placeholder"><ImageIcon size={28} /> Sin imagen</div>
+                  )}
+                  {activeProject.is_active && <span className="pf-card-live">● En vivo</span>}
+                </div>
+                <div className="pf-card-body">
+                  <span className="pf-card-cat">{activeProject.category || 'Categoría'}</span>
+                  <h4>{activeProject.title || 'Título del proyecto'}</h4>
+                  <p>{activeProject.description || 'La descripción corta aparecerá aquí.'}</p>
+                  <div className="pf-card-tags">
+                    {(activeProject.tags || []).slice(0, 3).map((tag, i) => (
+                      <span key={i}>{tag}</span>
+                    ))}
                   </div>
                 </div>
               </div>
-
-            </div>
-          </>
-        ) : (
-          <div className="portfolio-empty-state">
-            <ImageIcon size={48} color="var(--text-muted)" style={{ marginBottom: '1rem', opacity: 0.5 }} />
-            <h3>Selecciona o crea un proyecto</h3>
-            <p className="text-muted">Gestiona el contenido de tu portafolio desde aquí.</p>
+            </aside>
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="pf-editor glass-panel pf-empty">
+          <ImageIcon size={42} />
+          <h3>Crea tu primer proyecto</h3>
+          <p>Los casos que publiques aquí aparecen automáticamente en tu web.</p>
+          <button className="btn btn-primary" onClick={handleCreateNew}><Plus size={16} /> Nuevo proyecto</button>
+        </div>
+      )}
 
       {toastMessage && (
         <div className="crm-toast">
-          <CheckCircle2 color="var(--accent-tertiary)" size={20} />
+          <CheckCircle2 size={20} />
           {toastMessage}
         </div>
       )}
-    </div>
+    </>
   );
 };
 
