@@ -132,6 +132,26 @@
 
 .tpl-resumen { font-size: .96rem; margin: .4rem 0 1.4rem; }
 
+/* Métrica héroe del panel de impacto */
+.tpl-impacto {
+  background: linear-gradient(135deg, var(--accent-soft), var(--surface));
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius-md);
+  padding: .9rem 1.1rem;
+  margin: 0 0 1.2rem;
+}
+.tpl-impacto-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: .66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--accent-d);
+  margin-bottom: .3rem;
+}
+.tpl-impacto p { margin: 0; font-size: .92rem; color: var(--ink-2); line-height: 1.5; }
+
 .tpl-detail h4 {
   font-family: var(--font-mono);
   font-size: .7rem;

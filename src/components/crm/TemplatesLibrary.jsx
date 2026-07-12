@@ -11,7 +11,30 @@ import './TemplatesLibrary.css';
    Para cada cliente nuevo: elegir el tipo según su nicho, copiar el prompt
    maestro y generar su CRM / recepcionista IA. Acelera el paso "Montaje"
    del proceso de entrega (Documentos/Operacion/AutoScale_OPERACION.md §5).
+
+   Cada prompt maestro antepone DEMO_STANDARD: el estándar que convierte un CRM
+   en una demo que se vende sola (stack moderno + factor WOW). Así TODOS los CRM
+   que generemos salen espectaculares por defecto. Referencia viva de este
+   estándar: Proyectos/Odontologia (landing + CRM en Next.js).
    ========================================================================== */
+
+/* Estándar de entrega AutoScale — se antepone a cada prompt maestro. */
+const DEMO_STANDARD = `— ESTÁNDAR DE ENTREGA AUTOSCALE (obligatorio, aplícalo completo) —
+
+STACK: Next.js (App Router) + TypeScript + Tailwind CSS + Framer Motion (animaciones) + Recharts (gráficas) + Zustand (estado) + lucide-react (iconos).
+- Para la DEMO de ventas: PROTOTIPO VISUAL con datos mock en /lib/mock-data.ts y un store Zustand con persist (localStorage). SIN backend: la demo debe verse y sentirse 100% real y poder cerrarse en una llamada.
+- Para producción: reemplazar el store por Supabase (Postgres con RLS + Auth) manteniendo el MISMO modelo de datos. No reescribir la UI.
+
+SISTEMA VISUAL (marca "Tech Premium" AutoScale): tipografías Inter (cuerpo) + JetBrains Mono (datos, etiquetas, montos). Fondo blanco técnico, tinta azulada #0E1220, acento de la marca del cliente [COLORES]. Glassmorphism, grid de puntos sutil, sombras suaves, radios 12–16px. La CÁSCARA del CRM va en dark premium con sello "Powered by AutoScale". Nada plano ni genérico: dirección de arte fuerte. En la landing/hero usa una imagen hero generada con IA.
+
+FACTOR WOW (no negociable, esto es lo que vende):
+1) PANEL DE IMPACTO como vista principal del CRM: una MÉTRICA HÉROE en grande con CONTADOR ANIMADO (count-up) que traduce el CRM a DINERO (ver "Métrica héroe" de esta plantilla). Debajo: desglose de dónde sale ese dinero y una barra comparativa "antes vs. ahora".
+2) PUENTE EN VIVO web→CRM: una acción en el sitio público del cliente (agendar / cotizar / pedir / inscribirse) cae RESALTADA y en tiempo real en el panel, marcada como "Nueva". Es el momento WOW de la llamada de ventas.
+3) RECEPCIONISTA IA SIMULADA: panel estilo WhatsApp que REPRODUCE una conversación real (con indicador "escribiendo…") y termina convirtiendo el chat en la acción de valor (cita/pedido/lead). Usa el system prompt de la plantilla de IA hermana.
+4) TIMELINE DE AUTOMATIZACIONES animado: los pasos de WhatsApp/n8n disparándose en secuencia (confirmación → recordatorios → reactivación → reseña).
+5) DETALLE: micro-interacciones con Framer Motion (fade-up al hacer scroll, tarjetas que "caen"), navegación por secciones con sidebar dark, KPIs en tarjetas, 100% responsive (en mobile el sidebar se vuelve pestañas horizontales). Todo en español; montos en COP con formato es-CO.
+
+Entrega: estructura tipo Proyectos/Odontologia (app/, components/{landing,crm}/, lib/{mock-data,store,types,utils}) + README con el guion de demo.`;
 
 const CRM_TEMPLATES = [
   {
@@ -20,6 +43,12 @@ const CRM_TEMPLATES = [
     title: 'CRM de Citas',
     niches: 'Barberías · Salones · Uñas · Spa · Clínicas · Consultorios',
     resumen: 'El negocio vive de su agenda. El CRM gira alrededor de citas, no-shows y clientes que vuelven.',
+    impacto: 'Dinero recuperado este mes — ingresos rescatados de no-shows evitados (recordatorios) + pacientes reactivados. Contador animado, con la tasa de inasistencia antes vs. ahora.',
+    wow: [
+      'Una cita agendada en la web cae en vivo y resaltada en la agenda del día',
+      'Recepcionista IA que convierte un chat de WhatsApp en cita confirmada',
+      'Agenda del día con ⚠️ de riesgo de no-show y botón de WhatsApp por cita',
+    ],
     pipeline: ['Nuevo', 'Contactado', 'Agendado', 'Atendido', 'Recurrente'],
     estructura: [
       'clientes — id, nombre, whatsapp, correo, ultima_visita, total_visitas, notas',
@@ -34,7 +63,9 @@ const CRM_TEMPLATES = [
       'Cliente sin visita hace 45+ días → oferta de reactivación',
       'Post-cita → pedir reseña de Google',
     ],
-    prompt: `Actúa como desarrollador full-stack senior. Construye un CRM de citas para [NOMBRE DEL NEGOCIO], un(a) [barbería/salón de uñas/spa/clínica] en [CIUDAD].
+    prompt: `${DEMO_STANDARD}
+
+Actúa como desarrollador full-stack senior. Construye un CRM de citas para [NOMBRE DEL NEGOCIO], un(a) [barbería/salón de uñas/spa/clínica] en [CIUDAD].
 
 Stack: React + Vite + Supabase (Postgres con RLS, Auth por email). Diseño limpio con los colores de la marca: [COLORES].
 
@@ -59,6 +90,12 @@ Reglas: marcar ⚠️ los "agendada" sin confirmar a menos de 24h; al completar 
     title: 'CRM de Cotizaciones',
     niches: 'Constructoras · Inmobiliarias · Servicios de alto ticket',
     resumen: 'Venta larga y de alto valor. El CRM gira alrededor de cualificar, cotizar y no dejar enfriar el trato.',
+    impacto: 'Pipeline rescatado este mes — $ en tratos que iban a enfriarse y se cerraron por el seguimiento automático. Contador animado, con la tasa de cierre antes vs. ahora.',
+    wow: [
+      'Un lead nuevo de la web/ads cae en vivo en la columna "Lead" del pipeline',
+      'Cotizador que arma el total y marca la cotización "enviada" al instante',
+      'Alertas de cotizaciones por vencer y de leads que se están enfriando',
+    ],
     pipeline: ['Lead', 'Cualificado', 'Visita/Reunión', 'Cotización enviada', 'Negociación', 'Ganado', 'Perdido'],
     estructura: [
       'leads — id, nombre, whatsapp, correo, ciudad, presupuesto, detalle (ej. tiene_lote), origen/utm',
@@ -73,7 +110,9 @@ Reglas: marcar ⚠️ los "agendada" sin confirmar a menos de 24h; al completar 
       'Cotización por vencer → alerta al vendedor',
       'Lead frío 14 días → secuencia de reactivación',
     ],
-    prompt: `Actúa como desarrollador full-stack senior. Construye un CRM de cotizaciones para [NOMBRE], una [constructora/inmobiliaria] en [CIUDAD] con ticket promedio de [VALOR].
+    prompt: `${DEMO_STANDARD}
+
+Actúa como desarrollador full-stack senior. Construye un CRM de cotizaciones para [NOMBRE], una [constructora/inmobiliaria] en [CIUDAD] con ticket promedio de [VALOR].
 
 Stack: React + Vite + Supabase (RLS + Auth). Colores de marca: [COLORES].
 
@@ -97,6 +136,12 @@ Reglas: ningún lead puede quedar sin "próximo paso" definido; alertar cotizaci
     title: 'CRM de Pedidos',
     niches: 'Restaurantes · Comida · Tiendas · Domicilios',
     resumen: 'Volumen y velocidad. El CRM gira alrededor del flujo del pedido y la recompra.',
+    impacto: 'Ventas recuperadas este mes — recompra de clientes dormidos reactivados + pedidos que no se cayeron. Contador animado, con ticket promedio y % de recompra.',
+    wow: [
+      'Los pedidos caen en vivo al tablero de cocina (con sonido) y drag & drop',
+      'IA tomadora de pedidos que arma el pedido y calcula el total sola',
+      'Cliente sin pedir hace 30 días → cupón automático de regreso',
+    ],
     pipeline: ['Recibido', 'Confirmado', 'Preparando', 'En camino', 'Entregado'],
     estructura: [
       'clientes — id, nombre, whatsapp, direcciones jsonb, total_pedidos, ultimo_pedido',
@@ -110,7 +155,9 @@ Reglas: ningún lead puede quedar sin "próximo paso" definido; alertar cotizaci
       'Cliente sin pedir hace 30 días → cupón de regreso',
       'Cierre del día → resumen de ventas al dueño por WhatsApp',
     ],
-    prompt: `Actúa como desarrollador full-stack senior. Construye un CRM de pedidos para [NOMBRE], un [restaurante/tienda] en [CIUDAD] que recibe pedidos por WhatsApp.
+    prompt: `${DEMO_STANDARD}
+
+Actúa como desarrollador full-stack senior. Construye un CRM de pedidos para [NOMBRE], un [restaurante/tienda] en [CIUDAD] que recibe pedidos por WhatsApp.
 
 Stack: React + Vite + Supabase (RLS + Auth). Colores: [COLORES].
 
@@ -133,6 +180,12 @@ Reglas: pedido > 20 min en "Recibido" se marca en rojo; al entregar, actualizar 
     title: 'CRM de Membresías',
     niches: 'Gimnasios · Academias · Estudios · Suscripciones',
     resumen: 'Ingreso recurrente. El CRM gira alrededor de la retención: detectar el riesgo de fuga ANTES de que pase.',
+    impacto: 'MRR rescatado este mes — ingreso recurrente salvado al recuperar miembros en riesgo antes de que se fueran. Contador animado, con el churn evitado.',
+    wow: [
+      'Panel de retención con los miembros "en riesgo" arriba y botón de WhatsApp',
+      'Check-in en 1 clic que actualiza el estado del miembro al instante',
+      'Membresía por vencer → recordatorio de pago automático',
+    ],
     pipeline: ['Prueba', 'Activo', 'En riesgo', 'Vencido', 'Recuperado'],
     estructura: [
       'miembros — id, nombre, whatsapp, plan_id, inicio, vence, ultima_asistencia, estado',
@@ -147,7 +200,9 @@ Reglas: pedido > 20 min en "Recibido" se marca en rojo; al entregar, actualizar 
       'Fin de la prueba → oferta de conversión',
       'Pago recibido → factura/recibo automático',
     ],
-    prompt: `Actúa como desarrollador full-stack senior. Construye un CRM de membresías para [NOMBRE], un [gimnasio/academia/estudio] en [CIUDAD].
+    prompt: `${DEMO_STANDARD}
+
+Actúa como desarrollador full-stack senior. Construye un CRM de membresías para [NOMBRE], un [gimnasio/academia/estudio] en [CIUDAD].
 
 Stack: React + Vite + Supabase (RLS + Auth). Colores: [COLORES].
 
@@ -171,6 +226,12 @@ Reglas automáticas de estado: sin asistir 10 días → en_riesgo; fecha vence p
     title: 'Panel de Finanzas',
     niches: 'Cualquier negocio · Control de caja · Utilidad real',
     resumen: 'El dueño no sabe cuánto gana de verdad: mezcla la plata del negocio con la personal y no ve sus gastos. Este panel responde UNA pregunta cada mes: ¿ganaste o perdiste, y cuánto? (Control de caja y utilidad — no reemplaza al contador ni la facturación DIAN.)',
+    impacto: 'Utilidad real del mes en grande con contador animado (ingresos − gastos) + comparativa vs. mes anterior. El número que el dueño nunca tiene claro.',
+    wow: [
+      'Registrar un gasto por WhatsApp ("gasté 50k en insumos") y verlo caer categorizado',
+      'Cuentas por cobrar vencidas en rojo con recordatorio de cobro automático',
+      'Cierre de mes con un clic que congela la utilidad del mes',
+    ],
     pipeline: ['Por cobrar', 'Facturado', 'Pago parcial', 'Pagado', 'Vencido'],
     estructura: [
       'movimientos — id, tipo (ingreso/gasto), categoria_id, monto, metodo (efectivo/transferencia/tarjeta), fecha, nota, comprobante_url, anulado',
@@ -192,7 +253,9 @@ Reglas automáticas de estado: sin asistir 10 días → en_riesgo; fecha vence p
       'Cierre de mes automático → resumen con utilidad al dueño por WhatsApp',
       'Categoría que supera su presupuesto → alerta inmediata',
     ],
-    prompt: `Actúa como desarrollador full-stack senior. Construye un panel de finanzas y control de caja para [NOMBRE DEL NEGOCIO], un(a) [TIPO DE NEGOCIO] en [CIUDAD]. Moneda: COP (formato es-CO, sin decimales).
+    prompt: `${DEMO_STANDARD}
+
+Actúa como desarrollador full-stack senior. Construye un panel de finanzas y control de caja para [NOMBRE DEL NEGOCIO], un(a) [TIPO DE NEGOCIO] en [CIUDAD]. Moneda: COP (formato es-CO, sin decimales).
 
 Stack: React + Vite + Supabase (Postgres con RLS, Auth por email). Colores de marca: [COLORES].
 
@@ -455,7 +518,7 @@ const TemplatesLibrary = () => {
       <div className="tpl-head glass-panel">
         <div>
           <h2>Plantillas de entrega</h2>
-          <p>Elige el tipo según el nicho del cliente, copia el prompt maestro y genera su sistema en minutos.</p>
+          <p>Elige el tipo según el nicho, copia el prompt maestro y genera su sistema. Cada prompt ya trae el estándar WOW de AutoScale (Next.js + panel de impacto + puente en vivo + IA), como la demo de Odontología.</p>
         </div>
         <div className="tpl-switch">
           <button
@@ -502,6 +565,13 @@ const TemplatesLibrary = () => {
 
           {category === 'crm' ? (
             <>
+              {tpl.impacto && (
+                <div className="tpl-impacto">
+                  <span className="tpl-impacto-tag">★ Métrica héroe del panel</span>
+                  <p>{tpl.impacto}</p>
+                </div>
+              )}
+
               <h4>Pipeline</h4>
               <div className="tpl-pipeline">
                 {tpl.pipeline.map((s, i) => (
@@ -520,6 +590,13 @@ const TemplatesLibrary = () => {
 
               <h4>Automatizaciones (n8n)</h4>
               <ul className="tpl-list">{tpl.automatizaciones.map((a) => <li key={a}>{a}</li>)}</ul>
+
+              {tpl.wow && (
+                <>
+                  <h4>Toques WOW de la demo</h4>
+                  <ul className="tpl-list">{tpl.wow.map((w) => <li key={w}>{w}</li>)}</ul>
+                </>
+              )}
             </>
           ) : (
             <>
