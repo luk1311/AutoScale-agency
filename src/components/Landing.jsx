@@ -3,6 +3,7 @@ import { trackViewContent } from '../lib/metaPixel';
 import Header from './Header';
 import Hero from './Hero';
 import Services from './Services';
+import Differentiators from './Differentiators';
 import Portfolio from './Portfolio';
 import Process from './Process';
 import UseCases from './UseCases';
@@ -25,6 +26,7 @@ const Landing = () => {
       
       <Hero openModal={openModal} />
       <Services openModal={openModal} />
+      <Differentiators openModal={openModal} />
       <Portfolio openModal={openModal} />
       <Process />
       <UseCases />

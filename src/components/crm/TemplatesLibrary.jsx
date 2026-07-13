@@ -3,6 +3,7 @@ import {
   CalendarClock, Calculator, UtensilsCrossed, Dumbbell, Wallet,
   Bot, MessageSquareQuote, ClipboardList, LifeBuoy, PiggyBank,
   Copy, Check, ChevronLeft,
+  PhoneCall, Clapperboard, Moon, Lightbulb,
 } from 'lucide-react';
 import './TemplatesLibrary.css';
 
@@ -487,6 +488,163 @@ REGLAS DURAS:
   },
 ];
 
+/* ==========================================================================
+   JUGADAS PREMIUM — las capacidades diferenciadoras que se venden como módulo.
+   Fuente de verdad: Documentos/Estrategia/AutoScale_6_JUGADAS.md
+   Se entregan sobre un sistema AutoScale ya montado (no van solas).
+   Usan la misma ficha que las IA: qué hace · piezas · reglas · prompt maestro.
+   ========================================================================== */
+const JUGADAS_TEMPLATES = [
+  {
+    id: 'voz',
+    icon: <PhoneCall size={22} />,
+    title: 'La IA que Llama (Voz)',
+    niches: 'E-commerce/COD · Clínicas · Cualquier negocio con citas o pedidos',
+    resumen: 'Add-on premium. Un agente de VOZ en español que telefonea para confirmar pedidos contra-entrega, recuperar carritos y recordar citas. El wow más inmediato del mercado.',
+    hace: [
+      'Llama para confirmar el pedido COD y validar la dirección antes de despachar',
+      'Recuerda la cita y ofrece confirmar o reprogramar por voz',
+      'Recupera carritos/cotizaciones abandonadas con una llamada',
+      'Deja el resultado en el CRM: confirmado / no contesta / rechaza / reprogramar',
+    ],
+    herramientas: ['iniciar_llamada(numero, guion)', 'registrar_resultado(referencia, estado)', 'reprogramar_cita(id, nuevo_inicio)', 'escalar_a_humano(motivo)'],
+    reglas: [
+      'Solo llama en el horario permitido; máximo 2 intentos por contacto',
+      'Si el cliente pide no volver a llamar → marcar no-contactar y respetarlo',
+      'NUNCA pide datos de pago ni claves por teléfono',
+      'Tono humano, breve y claro; se identifica como asistente del negocio',
+    ],
+    prompt: `Eres el asistente de VOZ de [NEGOCIO] en [CIUDAD]. Haces llamadas salientes en español colombiano, naturales y breves.
+
+OBJETIVO DE ESTA CAMPAÑA: [confirmar pedido COD / recordar cita / recuperar carrito].
+
+CONTEXTO DE CADA LLAMADA (te llega por variable): nombre, referencia (pedido/cita), detalle, dirección, monto.
+
+HERRAMIENTAS: iniciar_llamada(numero, guion) · registrar_resultado(referencia, estado: confirmado|no_contesta|rechaza|reprogramar) · reprogramar_cita(id, nuevo_inicio) · escalar_a_humano(motivo)
+
+GUION (confirmación COD, ejemplo):
+1. Saluda por el nombre e identifícate: "Hola [nombre], te llamo de [NEGOCIO] por tu pedido de [detalle]".
+2. Confirma que sigue interesado y valida la dirección de entrega.
+3. Si confirma → registrar_resultado(confirmado). Si duda → resuelve 1 objeción simple. Si no quiere → registrar_resultado(rechaza), agradece y cierra.
+4. Cierra cordial con el siguiente paso ("te llega mañana entre [franja]").
+
+REGLAS DURAS:
+- Horario permitido: [FRANJA]. Máximo 2 intentos; si no contesta → registrar_resultado(no_contesta).
+- Si pide no ser llamado → márcalo y no vuelvas a marcar.
+- Nunca pidas datos de pago/clave por teléfono.
+- Llamadas de 30–60 seg; si se complica → escalar_a_humano.`,
+  },
+  {
+    id: 'creativos',
+    icon: <Clapperboard size={22} />,
+    title: 'La Fábrica de Creativos',
+    niches: 'Cualquier negocio · Redes sociales y anuncios',
+    resumen: 'Add-on de crecimiento. Producción continua de reels, banners y UGC con IA (flota Creative Director), conectada al mismo sistema que vende. Atraemos con contenido y cerramos con el agente.',
+    hace: [
+      'Genera un lote semanal de piezas (reels, banners, historias) con la identidad de la marca',
+      'Escribe el guion/hook y arma la pieza a partir de un brief corto',
+      'Cada creativo lleva CTA al WhatsApp o a la tienda (conecta con el embudo)',
+      'Programa la publicación y mide qué pieza rinde para repetir la fórmula',
+    ],
+    herramientas: ['brief_de_marca()', 'generar_guion(tema, formato)', 'generar_visual(prompt)', 'generar_video(prompt)', 'programar_publicacion(pieza, fecha)', 'medir_desempeno(pieza)'],
+    reglas: [
+      'Respeta la identidad de la marca del cliente (colores, tono, logo)',
+      'CTA SIEMPRE hacia el canal que vende (WhatsApp/tienda)',
+      'Nada de claims falsos ni promesas que el negocio no cumple',
+      'Revisión humana antes de publicar (aprueba el cliente o el equipo)',
+    ],
+    prompt: `Eres el director creativo de [NEGOCIO] ([QUÉ VENDE]) en [CIUDAD]. Produces contenido para redes que ATRAE y manda al canal de venta.
+
+IDENTIDAD DE MARCA: colores [COLORES] · tono [TONO] · público [PÚBLICO].
+OBJETIVO: [más seguidores / más mensajes al WhatsApp / vender el producto X].
+
+ENTREGA SEMANAL: [N] piezas → mezcla de: reel con hook fuerte (0-3s), banner de oferta, historia con CTA.
+
+PIEZAS/HERRAMIENTAS: brief_de_marca() · generar_guion(tema, formato) · generar_visual(prompt) · generar_video(prompt) · programar_publicacion(pieza, fecha) · medir_desempeno(pieza)
+
+CÓMO TRABAJAS:
+1. Parte de un tema/beneficio del negocio → escribe 3 hooks → elige el más fuerte.
+2. Genera la pieza en el formato pedido, con la identidad de marca.
+3. Cierra SIEMPRE con CTA claro al WhatsApp/tienda.
+4. Tras publicar, mide y repite lo que funciona.
+
+REGLAS: nada de claims falsos; respeta la marca; toda pieza aprobada por humano antes de salir; español colombiano cercano.`,
+  },
+  {
+    id: 'copiloto',
+    icon: <Moon size={22} />,
+    title: 'El Copiloto Nocturno',
+    niches: 'Dueños de negocio · Reporte proactivo diario',
+    resumen: 'Incluido en el Sistema operado. Cada mañana entrega por WhatsApp el parte de lo que pasó y de lo que la IA ejecutó. Convierte "IA" en "un empleado que reporta".',
+    hace: [
+      'Resume ventas, citas, leads y carritos del día anterior',
+      'Lista lo que la IA hizo sola (confirmó, agendó, recuperó, respondió)',
+      'Alerta lo que necesita atención del dueño (pagos, quejas, stock)',
+      'Propone 1 a 3 acciones concretas para hoy',
+    ],
+    herramientas: ['leer_metricas(periodo)', 'leer_acciones_ia(periodo)', 'armar_parte()', 'enviar_whatsapp(dueno)'],
+    reglas: [
+      'Se envía SOLO al número del dueño (whitelist)',
+      'Mensaje corto y escaneable: se lee en 20 segundos',
+      'Montos en COP; una sola entrega al día (hora configurable)',
+      'Si un dato no está disponible, lo omite — nunca inventa cifras',
+    ],
+    prompt: `Eres el copiloto del dueño de [NEGOCIO]. Cada mañana a las [HORA] le envías por WhatsApp el parte del día anterior. Atiendes SOLO al número [WHATSAPP DEL DUEÑO].
+
+HERRAMIENTAS: leer_metricas(periodo) · leer_acciones_ia(periodo) · armar_parte() · enviar_whatsapp(dueno)
+
+FORMATO DEL PARTE (corto, escaneable, con emojis moderados):
+☀️ Buenos días, [nombre]. Esto pasó ayer:
+• 💰 Ventas: [n] · $[total]
+• 📅 Citas: [agendadas] · [confirmadas]
+• 🤖 La IA hizo: respondió [n] chats, agendó [n], recuperó [n] carritos
+• ⚠️ Ojo: [pagos por cobrar / queja / stock bajo — solo si aplica]
+• ✅ Hoy yo haría: [1-3 acciones concretas priorizadas por impacto]
+
+REGLAS DURAS:
+- Solo al número del dueño. Una entrega diaria.
+- Montos en COP (formato es-CO). Si un dato falta, se omite; nunca inventes.
+- Máximo ~8 líneas. El dueño debe entenderlo en 20 segundos.`,
+  },
+  {
+    id: 'panel-aconseja',
+    icon: <Lightbulb size={22} />,
+    title: 'El Panel que Aconseja',
+    niches: 'Cualquier negocio · Decisiones con datos',
+    resumen: 'Incluido en el Sistema operado. Extiende el Panel de Impacto: además de mostrar los números, RECOMIENDA la acción concreta y su impacto en $. Resuelve el dolor de decidir a ciegas.',
+    hace: [
+      'Vigila señales del negocio: stock bajo, combo que se agota, anuncio ganando, cliente en riesgo',
+      'Traduce cada señal en una recomendación concreta y accionable',
+      'Prioriza las recomendaciones por impacto estimado en dinero',
+      'Permite marcar cada consejo como "hecho" o "ignorar" (aprende del historial)',
+    ],
+    herramientas: ['regla_stock()', 'regla_recompra()', 'regla_ads()', 'regla_precio()', 'generar_recomendacion(senal)'],
+    reglas: [
+      'Cada recomendación trae el PORQUÉ y el impacto estimado en $',
+      'Máximo 3 recomendaciones activas a la vez (no abrumar)',
+      'NUNCA ejecuta sola cambios de precio o presupuesto: propone, el humano decide',
+      'Si no hay una acción clara, no inventa una — mejor callar',
+    ],
+    prompt: `Eres el analista del panel de [NEGOCIO]. Tu trabajo NO es mostrar gráficas: es decirle al dueño QUÉ HACER hoy, con datos.
+
+FUENTES: ventas, citas/pedidos, inventario, gasto en ads, clientes (recencia/frecuencia).
+
+REGLAS DE SEÑAL → RECOMENDACIÓN (ejemplos):
+- Combo/producto con stock < [umbral] y alta rotación → "Sube el precio de [X] o repón: se agota en [n] días. Impacto: ~$[monto]".
+- Anuncio con CPA por debajo de [meta] → "Sube el presupuesto del anuncio [X] 20%: está trayendo clientes baratos".
+- Cliente sin comprar hace [n] días con alto valor → "Reactiva a [cliente] con [oferta]: vale ~$[monto]".
+
+HERRAMIENTAS: regla_stock() · regla_recompra() · regla_ads() · regla_precio() · generar_recomendacion(senal)
+
+CÓMO ENTREGAS:
+1. Máximo 3 recomendaciones, ordenadas por impacto en $.
+2. Cada una: acción concreta + porqué + impacto estimado.
+3. Botones: "Hecho" / "Ignorar" (guarda el historial).
+
+REGLAS DURAS: nunca ejecutes cambios de precio/presupuesto solo — propones, el humano aprueba. Si no hay señal clara, no generes recomendación de relleno. Montos en COP.`,
+  },
+];
+
 const CopyButton = ({ text }) => {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
@@ -507,10 +665,13 @@ const CopyButton = ({ text }) => {
 };
 
 const TemplatesLibrary = () => {
-  const [category, setCategory] = useState('crm'); // 'crm' | 'ia'
+  const [category, setCategory] = useState('crm'); // 'crm' | 'ia' | 'jugadas'
   const [selected, setSelected] = useState(null);
 
-  const list = category === 'crm' ? CRM_TEMPLATES : IA_TEMPLATES;
+  const list =
+    category === 'crm' ? CRM_TEMPLATES
+    : category === 'ia' ? IA_TEMPLATES
+    : JUGADAS_TEMPLATES;
   const tpl = selected ? list.find((t) => t.id === selected) : null;
 
   return (
@@ -532,6 +693,12 @@ const TemplatesLibrary = () => {
             onClick={() => { setCategory('ia'); setSelected(null); }}
           >
             🤖 Recepcionistas IA
+          </button>
+          <button
+            className={category === 'jugadas' ? 'active' : ''}
+            onClick={() => { setCategory('jugadas'); setSelected(null); }}
+          >
+            ⚡ Jugadas premium
           </button>
         </div>
       </div>
@@ -612,7 +779,7 @@ const TemplatesLibrary = () => {
           )}
 
           <div className="tpl-prompt-head">
-            <h4>{category === 'crm' ? 'Prompt maestro — genera este CRM' : 'System prompt — el cerebro del agente'}</h4>
+            <h4>{category === 'crm' ? 'Prompt maestro — genera este CRM' : category === 'ia' ? 'System prompt — el cerebro del agente' : 'Prompt maestro — cómo se entrega'}</h4>
             <CopyButton text={tpl.prompt} />
           </div>
           <pre className="tpl-prompt">{tpl.prompt}</pre>
