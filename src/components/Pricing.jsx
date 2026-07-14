@@ -72,11 +72,15 @@ const Pricing = () => {
   const Precio = ({ setup, mes, plus }) => (
     <div className="mod-price">
       {setup > 0 && (
-        <>
-          <s className="price-was">{cop(setup)}</s> <b>{cop(disc(setup))}</b> <span>setup</span> ·{' '}
-        </>
+        <div className="mod-price-row">
+          <span>Inversión</span>
+          <div><s className="price-was">{cop(setup)}</s> <b>{cop(disc(setup))}</b></div>
+        </div>
       )}
-      <s className="price-was">{cop(mes)}</s> <b>{plus ? '+' : ''}{cop(disc(mes))}</b> <span>/mes</span>
+      <div className="mod-price-row">
+        <span>Mensual</span>
+        <div><s className="price-was">{cop(mes)}</s> <b>{plus ? '+' : ''}{cop(disc(mes))}</b></div>
+      </div>
     </div>
   );
 

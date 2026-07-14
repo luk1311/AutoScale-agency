@@ -113,9 +113,11 @@
 }
 .mod-check.on { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-.mod-price { font-size: .86rem; color: var(--muted); }
-.mod-price b { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
-.mod-price span { font-size: .78rem; }
+.mod-price { display: flex; flex-direction: column; gap: 0.35rem; margin-top: auto; padding-top: 0.8rem; border-top: 1px dashed var(--line); font-size: 0.86rem; color: var(--muted); }
+.mod-price-row { display: flex; justify-content: space-between; align-items: baseline; }
+.mod-price-row span { font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+.mod-price-row div { display: flex; gap: 0.4rem; align-items: baseline; }
+.mod-price b { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
 
 .base-incluye { display: grid; gap: .35rem; margin: 0; }
 .base-incluye li { display: flex; align-items: center; gap: .5rem; font-size: .88rem; color: var(--ink-2); }
