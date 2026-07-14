@@ -7,17 +7,17 @@ import './Pricing.css';
 // Los "planes" son solo presets de arranque. Precios en COP (editables aquí).
 const BASE = {
   setup: 990000,
-  mes: 220000,
+  mes: 120000,
   incluye: ['Web que convierte', 'CRM incluido', 'Automatización (WhatsApp + correo)'],
 };
 
 const MODULES = [
-  { id: 'manos', emoji: '🤲', name: 'IA con Manos', desc: 'Atiende, agenda y ejecuta en tu WhatsApp', setup: 700000, mes: 290000 },
-  { id: 'voz', emoji: '🗣️', name: 'La IA que Llama', desc: 'Agente de voz que confirma y reactiva', setup: 500000, mes: 290000 },
-  { id: 'copiloto', emoji: '🌙', name: 'Copiloto Nocturno', desc: 'El parte diario de lo que hizo la IA', setup: 0, mes: 90000 },
-  { id: 'panel', emoji: '🧠', name: 'Panel que Aconseja', desc: 'Te dice qué hacer con tus datos', setup: 0, mes: 120000 },
-  { id: 'creativos', emoji: '🎬', name: 'Fábrica de Creativos', desc: 'Reels y banners con IA para atraer', setup: 300000, mes: 400000 },
-  { id: 'finanzas', emoji: '💰', name: 'Contabilidad y Finanzas', desc: 'Tu utilidad real, registrada por WhatsApp', setup: 200000, mes: 180000 },
+  { id: 'manos', emoji: '🤲', name: 'IA con Manos', desc: 'Atiende, agenda y ejecuta en tu WhatsApp', setup: 700000, mes: 150000 },
+  { id: 'voz', emoji: '🗣️', name: 'La IA que Llama', desc: 'Agente de voz que confirma y reactiva', setup: 500000, mes: 160000 },
+  { id: 'copiloto', emoji: '🌙', name: 'Copiloto Nocturno', desc: 'El parte diario de lo que hizo la IA', setup: 0, mes: 49000 },
+  { id: 'panel', emoji: '🧠', name: 'Panel que Aconseja', desc: 'Te dice qué hacer con tus datos', setup: 0, mes: 69000 },
+  { id: 'creativos', emoji: '🎬', name: 'Fábrica de Creativos', desc: 'Reels y banners con IA para atraer', setup: 300000, mes: 190000 },
+  { id: 'finanzas', emoji: '💰', name: 'Contabilidad y Finanzas', desc: 'Tu utilidad real, registrada por WhatsApp', setup: 200000, mes: 99000 },
 ];
 
 const PRESETS = [
