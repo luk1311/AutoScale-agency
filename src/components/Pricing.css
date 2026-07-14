@@ -149,11 +149,12 @@
 .summary-list li.fixed { font-weight: 600; color: var(--ink); }
 .summary-list li.muted { color: var(--text-tertiary); font-style: italic; }
 
-.summary-totals { display: grid; gap: .5rem; margin-bottom: 1.3rem; }
-.total-row { display: flex; align-items: baseline; justify-content: space-between; }
+.summary-totals { display: grid; gap: 1rem; margin-bottom: 1.3rem; }
+.total-row { display: flex; flex-direction: column; gap: 0.2rem; align-items: flex-start; }
 .total-row span { font-size: .9rem; color: var(--muted); }
-.total-row b { font-size: 1.05rem; color: var(--ink); font-variant-numeric: tabular-nums; }
-.total-row.big b { font-size: 1.9rem; font-weight: 800; letter-spacing: -.02em; color: var(--accent-d); }
+.total-row b { font-size: 1.15rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+.total-row.big { margin-top: 0.2rem; padding-top: 0.8rem; border-top: 1px dashed var(--line); gap: 0.4rem; }
+.total-row.big b { font-size: 2.2rem; font-weight: 800; letter-spacing: -.03em; color: var(--accent-d); line-height: 1.1; }
 
 .summary-cta {
   display: flex; align-items: center; justify-content: center; gap: .6rem;
