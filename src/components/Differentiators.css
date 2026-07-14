@@ -1,10 +1,61 @@
-/* AutoScale · Las 6 Jugadas — "Tech Premium" */
+/* AutoScale · Servicios y jugadas — "Tech Premium" */
 
-.diff-head { max-width: 720px; margin-bottom: 3.2rem; }
+.diff-head { max-width: 720px; margin-bottom: 2.6rem; }
 .diff-head .eyebrow { margin-bottom: 1rem; }
 .diff-head h2 { font-size: clamp(2rem, 4.4vw, 3.1rem); }
 .diff-sub { margin-top: 1.1rem; max-width: 60ch; }
 
+/* ── Gemelo Digital: banner-gancho (tinta) ── */
+.diff-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem 2rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2.4rem;
+}
+.diff-banner-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-md);
+  background: rgba(37, 99, 235, 0.18);
+  border: 1px solid rgba(37, 99, 235, 0.45);
+  color: #7EA4F8;
+  flex-shrink: 0;
+}
+.diff-banner-text { flex: 1; min-width: 0; }
+.diff-banner-text h3 { color: #fff; font-size: 1.4rem; margin: .35rem 0 .5rem; }
+.diff-banner-text p { color: #A9B3C6; margin: 0; font-size: .98rem; }
+.diff-banner-text p b { color: #fff; }
+.diff-banner-cta { flex-shrink: 0; }
+
+/* Etiqueta separadora de los módulos */
+.diff-modules-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 1.4rem;
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.diff-modules-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ── Grilla de los 6 módulos ── */
 .diff-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -51,34 +102,17 @@
   color: var(--accent);
   margin-bottom: .55rem;
 }
+.diff-promise.inverse { color: #7EA4F8; }
 
 .diff-card h3 { font-size: 1.24rem; margin-bottom: .55rem; }
 .diff-card p { margin: 0; font-size: .96rem; }
 
-/* Jugada gancho — tarjeta tinta (mismo peso visual que el resto de la grilla) */
-.diff-card.diff-hero {
-  background: var(--ink);
-  border-color: var(--ink);
-}
-.diff-card.diff-hero h3 { color: #fff; }
-.diff-card.diff-hero p { color: #A9B3C6; }
-.diff-card.diff-hero .diff-promise { color: #7EA4F8; }
-.diff-card.diff-hero:hover { border-color: var(--accent); }
-.diff-icon.inverse {
-  background: rgba(37, 99, 235, 0.18);
-  border-color: rgba(37, 99, 235, 0.45);
-  color: #7EA4F8;
-}
-.diff-cta {
-  margin-top: 1.5rem;
-  background: var(--accent);
-  color: #fff;
-  border-color: transparent;
-}
-.diff-cta:hover { background: var(--accent-d); color: #fff; border-color: transparent; }
-
 @media (max-width: 920px) {
   .diff-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+  .diff-banner { flex-direction: column; align-items: flex-start; gap: 1.1rem; }
+  .diff-banner-cta { width: 100%; }
 }
 @media (max-width: 600px) {
   .diff-grid { grid-template-columns: 1fr; }
