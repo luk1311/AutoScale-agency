@@ -4,8 +4,14 @@ import {
   Bot, MessageSquareQuote, ClipboardList, LifeBuoy, PiggyBank,
   Copy, Check, ChevronLeft,
   PhoneCall, Clapperboard, Moon, Lightbulb,
+  Wrench, Coins,
 } from 'lucide-react';
+import { STACK_BY_ID, COSTOS_BY_ID, costoMensualTotal } from './templatesOps';
 import './TemplatesLibrary.css';
+
+/* Formato COP sin decimales, para los costos operacionales. */
+const cop = (n) =>
+  new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n);
 
 /* ==========================================================================
    Biblioteca de plantillas de entrega de AutoScale.
@@ -786,8 +792,60 @@ const TemplatesLibrary = () => {
           <p className="tpl-tip">
             💡 Reemplaza los [CAMPOS] con la info del kickoff del cliente antes de usarlo.
           </p>
+
+          <OperacionCard id={tpl.id} />
         </div>
       )}
+    </div>
+  );
+};
+
+/* Ficha operativa: stack técnico + costos mensuales por cliente. */
+const OperacionCard = ({ id }) => {
+  const stack = STACK_BY_ID[id] || [];
+  const costos = COSTOS_BY_ID[id] || [];
+  if (stack.length === 0 && costos.length === 0) return null;
+  const total = costoMensualTotal(id);
+
+  return (
+    <div className="tpl-ops">
+      <div className="tpl-ops-grid">
+        <section className="tpl-ops-card">
+          <h4><Wrench size={15} /> Stack técnico</h4>
+          <p className="tpl-ops-sub">Herramientas y proveedores que hacen que esto funcione en producción.</p>
+          <ul className="tpl-stack">
+            {stack.map((s) => (
+              <li key={s.tool}>
+                <span className="tpl-stack-tool">{s.tool}</span>
+                <span className="tpl-stack-proposito">{s.proposito}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="tpl-ops-card">
+          <h4><Coins size={15} /> Costos operacionales · por cliente / mes</h4>
+          <p className="tpl-ops-sub">Estimación en COP (jul-2026). Ajusta según volumen real del cliente.</p>
+          <ul className="tpl-costos">
+            {costos.map((c) => (
+              <li key={c.concepto}>
+                <span className="tpl-costo-concepto">
+                  {c.concepto}
+                  {c.nota && <span className="tpl-costo-nota"> · {c.nota}</span>}
+                </span>
+                <span className="tpl-costo-monto">{c.monto === 0 ? 'gratis' : cop(c.monto)}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="tpl-costo-total">
+            <span>Total estimado</span>
+            <b>{cop(total)}<span className="tpl-costo-mes"> /mes</span></b>
+          </div>
+          <p className="tpl-ops-hint">
+            💡 Compara este total con la mensualidad que cobras: la diferencia es tu <b>margen operativo</b> mensual por cliente.
+          </p>
+        </section>
+      </div>
     </div>
   );
 };
