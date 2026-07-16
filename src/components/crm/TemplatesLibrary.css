@@ -254,113 +254,122 @@
 }
 
 /* ── Ficha operativa: stack técnico + costos ── */
-.tpl-ops { margin-top: 1.6rem; padding-top: 1.6rem; border-top: 1px dashed rgba(255,255,255,.10); }
+.tpl-ops { margin-top: 1.6rem; padding-top: 1.6rem; border-top: 1px dashed var(--line); }
 .tpl-ops-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 .tpl-ops-card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 12px;
-  padding: 1.1rem 1.2rem;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.2rem 1.25rem;
 }
 .tpl-ops-card h4 {
   display: inline-flex; align-items: center; gap: .5rem;
-  font-size: .74rem;
+  font-size: .72rem;
   letter-spacing: .1em;
   text-transform: uppercase;
   font-weight: 700;
-  color: #7EA4F8;
-  margin: 0 0 .35rem;
+  color: var(--accent);
+  margin: 0 0 .3rem;
 }
-.tpl-ops-card h4 svg { color: #7EA4F8; }
+.tpl-ops-card h4 svg { color: var(--accent); }
 .tpl-ops-sub {
-  margin: 0 0 .9rem;
+  margin: 0 0 1rem;
   font-size: .78rem;
-  color: rgba(255,255,255,.55);
-  line-height: 1.4;
+  color: var(--muted);
+  line-height: 1.45;
 }
 
 /* Stack */
-.tpl-stack { margin: 0; padding: 0; list-style: none; display: grid; gap: .55rem; }
+.tpl-stack { margin: 0; padding: 0; list-style: none; display: grid; gap: .5rem; }
 .tpl-stack li {
-  display: grid;
-  grid-template-columns: minmax(0, auto) 1fr;
-  align-items: baseline;
-  gap: .65rem;
-  padding: .5rem .7rem;
-  background: rgba(0,0,0,.2);
-  border: 1px solid rgba(255,255,255,.06);
-  border-radius: 8px;
+  position: relative;
+  padding: .6rem .8rem .6rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.tpl-stack li::before {
+  content: "";
+  position: absolute;
+  left: .7rem; top: .95rem;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 .tpl-stack-tool {
+  display: block;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: .76rem;
   font-weight: 600;
-  color: #DCE3F2;
+  color: var(--ink);
+  letter-spacing: -.01em;
 }
 .tpl-stack-proposito {
+  display: block;
+  margin-top: .15rem;
   font-size: .78rem;
-  color: rgba(255,255,255,.65);
+  color: var(--muted);
   line-height: 1.35;
 }
 
 /* Costos */
-.tpl-costos { margin: 0 0 .8rem; padding: 0; list-style: none; display: grid; gap: .4rem; }
+.tpl-costos { margin: 0 0 .85rem; padding: 0; list-style: none; }
 .tpl-costos li {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: .8rem;
-  padding: .45rem 0;
-  border-bottom: 1px dashed rgba(255,255,255,.08);
+  gap: .9rem;
+  padding: .55rem .2rem;
+  border-bottom: 1px solid var(--line);
   font-size: .82rem;
-  color: rgba(255,255,255,.75);
 }
 .tpl-costos li:last-child { border-bottom: none; }
-.tpl-costo-concepto { flex: 1; min-width: 0; }
-.tpl-costo-nota { color: rgba(255,255,255,.4); font-size: .74rem; }
+.tpl-costo-concepto { flex: 1; min-width: 0; color: var(--ink); font-weight: 500; }
+.tpl-costo-nota { display: block; color: var(--muted); font-size: .72rem; font-weight: 400; margin-top: .05rem; }
 .tpl-costo-monto {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-weight: 600;
-  color: #DCE3F2;
+  color: var(--ink);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
+.tpl-costo-monto.free { color: var(--ok); }
 .tpl-costo-total {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  margin-top: .6rem;
-  padding: .75rem .85rem;
-  background: rgba(126,164,248,.12);
-  border: 1px solid rgba(126,164,248,.35);
-  border-radius: 8px;
+  margin-top: .7rem;
+  padding: .85rem 1rem;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  border-radius: 10px;
 }
 .tpl-costo-total span {
-  font-size: .74rem;
+  font-size: .72rem;
   text-transform: uppercase;
   letter-spacing: .1em;
   font-weight: 700;
-  color: #7EA4F8;
+  color: var(--accent-d);
 }
 .tpl-costo-total b {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--accent-d);
   font-variant-numeric: tabular-nums;
 }
-.tpl-costo-mes { font-size: .8rem; color: rgba(255,255,255,.5); font-weight: 500; }
+.tpl-costo-mes { font-size: .78rem; color: var(--accent); font-weight: 500; }
 .tpl-ops-hint {
-  margin: .7rem 0 0;
+  margin: .75rem 0 0;
   font-size: .76rem;
-  color: rgba(255,255,255,.55);
-  line-height: 1.4;
+  color: var(--muted);
+  line-height: 1.45;
 }
-.tpl-ops-hint b { color: #7EA4F8; }
+.tpl-ops-hint b { color: var(--accent-d); font-weight: 600; }
 
 @media (max-width: 860px) {
   .tpl-ops-grid { grid-template-columns: 1fr; }

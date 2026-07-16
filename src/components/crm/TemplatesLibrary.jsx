@@ -831,9 +831,9 @@ const OperacionCard = ({ id }) => {
               <li key={c.concepto}>
                 <span className="tpl-costo-concepto">
                   {c.concepto}
-                  {c.nota && <span className="tpl-costo-nota"> · {c.nota}</span>}
+                  {c.nota && <span className="tpl-costo-nota">{c.nota}</span>}
                 </span>
-                <span className="tpl-costo-monto">{c.monto === 0 ? 'gratis' : cop(c.monto)}</span>
+                <span className={`tpl-costo-monto ${c.monto === 0 ? 'free' : ''}`}>{c.monto === 0 ? 'gratis' : cop(c.monto)}</span>
               </li>
             ))}
           </ul>
