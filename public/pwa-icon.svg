@@ -1,5 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#0b0c10" rx="100" />
-  <text x="256" y="290" font-family="Arial" font-weight="bold" font-size="200" fill="#6366f1" text-anchor="middle">AS</text>
-  <text x="256" y="400" font-family="Arial" font-size="60" fill="#f8f8f8" text-anchor="middle">CRM</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 120 120">
+  <rect x="0" y="0" width="120" height="120" fill="#2563EB"/>
+  <rect x="30" y="64" width="26" height="26" rx="7" fill="#FFFFFF"/>
+  <rect x="64" y="64" width="26" height="26" rx="7" fill="#FFFFFF"/>
+  <rect x="30" y="30" width="26" height="26" rx="7" fill="#FFFFFF"/>
+  <rect x="64" y="30" width="26" height="26" rx="7" fill="#AFC7F7"/>
 </svg>
